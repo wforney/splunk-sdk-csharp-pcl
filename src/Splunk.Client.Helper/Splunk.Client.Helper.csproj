@@ -14,6 +14,7 @@
 		<Nullable>enable</Nullable>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/splunk/splunk-sdk-csharp-pcl</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Product>splunk-sdk-csharp-pcl</Product>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/splunk/splunk-sdk-csharp-pcl.git</RepositoryUrl>
@@ -21,6 +22,11 @@
 		<Title>Splunk.Client</Title>
 		<Version>2.2.9</Version>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Splunk.Client\Splunk.Client.csproj" />

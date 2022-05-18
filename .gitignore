@@ -59,7 +59,7 @@ _ReSharper*
 *.ncrunch*
 .*crunch*.local.xml
 
-# Installshield output folder 
+# Installshield output folder
 [Ee]xpress
 
 # DocProject is a documentation generator add-in
@@ -120,3 +120,9 @@ UpgradeLog*.XML
 
 # Omit built sandcastle docs
 docs/*/Help
+
+# ContextKeeper
+.contextkeeper/
+
+# Visual Studio
+.vs/
