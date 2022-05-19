@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>mock_object</RootNamespace>
     <AssemblyName>mock-object</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -53,12 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Splunk.Client\Splunk.Client.csproj">
-      <Project>{de65f0d5-7753-483e-8933-e6db22350f04}</Project>
-      <Name>Splunk.Client</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="search-results.xml">

@@ -14,18 +14,16 @@
  * under the License.
  */
 
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
+
+[assembly: InternalsVisibleTo("Splunk.Client.UnitTests")]
+
 namespace Splunk.ModularInputs
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Xml;
-    using System.Xml.Serialization;
-    using System.Threading;
-
     /// <summary>
     /// The <see cref="ModularInput"/> class represents the functionality of a
     /// modular input script (that is, an executable).
@@ -51,15 +49,9 @@ namespace Splunk.ModularInputs
 
         #region Methods
 
-        static ModularInput()
-        {
-            _isAttached = () => Debugger.IsAttached;
-        }
+        static ModularInput() => _isAttached = () => Debugger.IsAttached;
 
-        public static int Run<T>(string[] args) where T : ModularInput, new()
-        {
-            return Run<T>(args, DebuggerAttachPoints.None, 0);
-        }
+        public static int Run<T>(string[] args) where T : ModularInput, new() => Run<T>(args, DebuggerAttachPoints.None, 0);
 
         public static int Run<T>(string[] args, DebuggerAttachPoints attachPoints, uint timeout = 30) where T : ModularInput, new()
         {
@@ -68,13 +60,10 @@ namespace Splunk.ModularInputs
                 throw new ArgumentOutOfRangeException("timeout", timeout, "Timeout parameter must be greater than or equal to 1 second");
             }
 
-            T script = new T();
-            Task<int> run = script.RunAsync(args, _stdin, _stdout, _stderr, null, attachPoints, timeout);
+            var script = new T();
+            var run = script.RunAsync(args, _stdin, _stdout, _stderr, null, attachPoints, timeout);
             run.Wait();
-            if (run.IsCompleted)
-                return run.Result;
-
-            return -1;
+            return run.IsCompleted ? run.Result : -1;
         }
 
         internal static Func<bool> _isAttached;
@@ -114,26 +103,14 @@ namespace Splunk.ModularInputs
             return false;
         }
 
-        private static bool IsAttachPointNone(DebuggerAttachPoints attachPoints)
-        {
-            return attachPoints == DebuggerAttachPoints.None;
-        }
+        private static bool IsAttachPointNone(DebuggerAttachPoints attachPoints) => attachPoints == DebuggerAttachPoints.None;
 
-        private static bool IsStreamEvents(DebuggerAttachPoints attachPoints)
-        {
-            return (attachPoints & DebuggerAttachPoints.StreamEvents) == DebuggerAttachPoints.StreamEvents;
-        }
+        private static bool IsStreamEvents(DebuggerAttachPoints attachPoints) => (attachPoints & DebuggerAttachPoints.StreamEvents) == DebuggerAttachPoints.StreamEvents;
 
-        private static bool IsValidateArguments(string[] args, DebuggerAttachPoints attachPoints)
-        {
-            return (args[0].ToLower().Equals("--validate-arguments") &&
-                    ((attachPoints & DebuggerAttachPoints.ValidateArguments) == DebuggerAttachPoints.ValidateArguments));
-        }
+        private static bool IsValidateArguments(string[] args, DebuggerAttachPoints attachPoints) => args[0].ToLower().Equals("--validate-arguments") &&
+                    ((attachPoints & DebuggerAttachPoints.ValidateArguments) == DebuggerAttachPoints.ValidateArguments);
 
-        private static string RemoveNewLines(string message)
-        {
-            return message.Replace(Environment.NewLine, " | ");
-        }
+        private static string RemoveNewLines(string message) => message.Replace(Environment.NewLine, " | ");
 
         /// <summary>
         /// Performs the action specified by the <paramref name="args"/> parameter.
@@ -168,8 +145,8 @@ namespace Splunk.ModularInputs
         /// </returns>
         /// <remarks>
         /// If the <paramref name="args"/> are not in the supported set of values,
-        /// the method will do nothing and return a non-zero value. Any 
-        /// exceptions and internal progress messages encountered during 
+        /// the method will do nothing and return a non-zero value. Any
+        /// exceptions and internal progress messages encountered during
         /// execution are written to the splunkd log file.
         /// </remarks>
         public async Task<int> RunAsync(string[] args,
@@ -182,7 +159,7 @@ namespace Splunk.ModularInputs
             )
         {
             EventWriter writer = null;
-            string name = this.GetType().FullName;
+            var name = this.GetType().FullName;
             try
             {
                 /// Console default is OEM text encoding, which is not handled by Splunk,
@@ -205,12 +182,14 @@ namespace Splunk.ModularInputs
                 }
 
                 if (progress == null)
+                {
                     progress = new Progress<EventWrittenProgressReport>();
+                }
 
                 writer = new EventWriter(stdout, stderr, progress);
 
                 // Check if the developer has specified they want to attach a debugger
-                bool wait = ShouldWaitForDebuggerToAttach(args, attachPoints);
+                var wait = ShouldWaitForDebuggerToAttach(args, attachPoints);
 
                 // If a debugger is going to attach
                 if (wait)
@@ -226,14 +205,11 @@ namespace Splunk.ModularInputs
                         var inputDefinitions = (InputDefinitionCollection)serializer.Deserialize(stdin);
                         var instances = new List<Task>();
 
-                        foreach (InputDefinition inputDefinition in inputDefinitions)
+                        foreach (var inputDefinition in inputDefinitions)
                         {
                             var inputTask = this.StreamEventsAsync(inputDefinition, writer);
                             instances.Add(inputTask);
-
-#                           pragma warning disable 4014
-
-                            inputTask.ContinueWith(t =>
+                            _ = inputTask.ContinueWith(t =>
                             {
                                 if (inputTask.Exception != null)
                                 {
@@ -241,8 +217,6 @@ namespace Splunk.ModularInputs
                                     writer.LogAsync(Severity.Fatal, string.Format("Exception during streaming: name={0} | {1}", inputDefinition.Name, message)).Wait();
                                 }
                             });
-
-#                           pragma warning restore 4014
                         }
                         try
                         {
@@ -256,7 +230,7 @@ namespace Splunk.ModularInputs
                     catch (Exception e)
                     {
                         var message = RemoveNewLines(e.ToString());
-                        writer.LogAsync(Severity.Fatal, string.Format("Exception during streaming: name={0} | {1}", 
+                        writer.LogAsync(Severity.Fatal, string.Format("Exception during streaming: name={0} | {1}",
                             name, message)).Wait();
                         return -1;
                     }
@@ -272,7 +246,7 @@ namespace Splunk.ModularInputs
 
                         if (scheme != null)
                         {
-                            StringWriter stringWriter = new StringWriter();
+                            var stringWriter = new StringWriter();
                             new XmlSerializer(typeof(Scheme)).Serialize(stringWriter, scheme);
                             stdout.WriteLine(stringWriter.ToString());
                             return 0;
@@ -305,14 +279,14 @@ namespace Splunk.ModularInputs
 
                         writer.LogAsync(Severity.Info, inputDoc).Wait();
 
-                        Validation validation = (Validation)new XmlSerializer(typeof(Validation)).
+                        var validation = (Validation)new XmlSerializer(typeof(Validation)).
                             Deserialize(new StringReader(inputDoc));
 
                         name = validation.Name;
 
-                        bool validationSuccessful = true;
-                        Scheme scheme = this.Scheme;
-                        foreach (Argument arg in scheme.Arguments)
+                        var validationSuccessful = true;
+                        var scheme = this.Scheme;
+                        foreach (var arg in scheme.Arguments)
                         {
                             if (arg.ValidationDelegate != null)
                             {
@@ -344,18 +318,16 @@ namespace Splunk.ModularInputs
 
                     if (errorMessage != null)
                     {
-                        using (var xmlWriter = XmlWriter.Create(stdout, new XmlWriterSettings
+                        using var xmlWriter = XmlWriter.Create(stdout, new XmlWriterSettings
                         {
                             Async = true,
                             ConformanceLevel = ConformanceLevel.Fragment
-                        }))
-                        {
-                            await xmlWriter.WriteStartElementAsync(prefix: null, localName: "error", ns: null);
-                            await
-                                xmlWriter.WriteElementStringAsync(prefix: null, localName: "message", ns: null,
-                                    value: errorMessage);
-                            await xmlWriter.WriteEndElementAsync();
-                        }
+                        });
+                        await xmlWriter.WriteStartElementAsync(prefix: null, localName: "error", ns: null);
+                        await
+                            xmlWriter.WriteElementStringAsync(prefix: null, localName: "message", ns: null,
+                                value: errorMessage);
+                        await xmlWriter.WriteEndElementAsync();
                     }
 
                     return -1;

@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <Platform>AnyCPU</Platform>
     <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -52,16 +52,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Splunk.Client.Helpers\Splunk.Client.Helpers.csproj">
-      <Project>{0b0c43f2-ea9c-45ee-a8f7-7a2916dd1717}</Project>
-      <Name>Splunk.Client.Helpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Splunk.Client\Splunk.Client.csproj">
-      <Project>{de65f0d5-7753-483e-8933-e6db22350f04}</Project>
-      <Name>Splunk.Client</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets')" />

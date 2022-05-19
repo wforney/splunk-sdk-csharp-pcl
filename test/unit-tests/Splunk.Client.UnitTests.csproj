@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Splunk.Client.UnitTests</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Splunk.Client.Helper\Splunk.Client.Helper.csproj" />
+    <ProjectReference Include="..\..\src\Splunk.Client\Splunk.Client.csproj" />
+    <ProjectReference Include="..\..\src\Splunk.ModularInputs\Splunk.ModularInputs.csproj" />
+  </ItemGroup>
+
+</Project>

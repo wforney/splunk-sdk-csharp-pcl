@@ -14,20 +14,16 @@
  * under the License.
  */
 
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Net;
+
 //// TODO:
 //// [O] Contracts
 //// [O] Documentation
 
 namespace Splunk.Client
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Net;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Provides a base class for representing a collection of Splunk resources.
     /// </summary>
@@ -51,7 +47,7 @@ namespace Splunk.Client
     /// </typeparam>
     /// <seealso cref="T:Splunk.Client.BaseEntity{Splunk.Client.ResourceCollection}"/>
     /// <seealso cref="T:Splunk.Client.IEntityCollection{TEntity,TResource}"/>
-    public class EntityCollection<TEntity, TResource> : BaseEntity<ResourceCollection>, IEntityCollection<TEntity, TResource> 
+    public class EntityCollection<TEntity, TResource> : BaseEntity<ResourceCollection>, IEntityCollection<TEntity, TResource>
         where TEntity : BaseEntity<TResource>, new()
         where TResource : BaseResource, new()
     {
@@ -103,11 +99,9 @@ namespace Splunk.Client
         /// <param name="generatorVersion">
         /// The generator version.
         /// </param>
-        protected internal EntityCollection(Context context, AtomEntry entry, Version generatorVersion)
-        {
+        protected internal EntityCollection(Context context, AtomEntry entry, Version generatorVersion) =>
             // We cannot use the base constructor because it will use base.CreateEntity, not this.CreateEntity
             this.Initialize(context, entry, generatorVersion);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityCollection&lt;TEntity,TResource&gt;"/> class.
@@ -118,11 +112,9 @@ namespace Splunk.Client
         /// <param name="feed">
         /// A Splunk atom feed response.
         /// </param>
-        protected internal EntityCollection(Context context, AtomFeed feed)
-        {
+        protected internal EntityCollection(Context context, AtomFeed feed) =>
             // We cannot use the base constructor because it will use base.CreateResource, not this.CreateResource
             this.Initialize(context, feed);
-        }
 
         /// <summary>
         /// Infrastructure. Initializes a new instance of the <see cref= "EntityCollection&lt;TEntity,TResource&gt;"/> class.
@@ -147,10 +139,7 @@ namespace Splunk.Client
         /// <returns>
         /// An object representing the entity at <paramref name="index"/>.
         /// </returns>
-        public TEntity this[int index]
-        {
-            get { return this.Create((TResource)this.Snapshot.Resources[index]); }
-        }
+        public TEntity this[int index] => this.Create((TResource)this.Snapshot.Resources[index]);
 
         /// <summary>
         /// Gets the number of entries in the current
@@ -160,10 +149,7 @@ namespace Splunk.Client
         /// The number of entries in the current
         /// <see cref="EntityCollection&lt;TEntity,TResource&gt;"/>.
         /// </value>
-        public int Count
-        {
-            get { return this.Snapshot.Resources.Count; }
-        }
+        public int Count => this.Snapshot.Resources.Count;
 
         #endregion
 
@@ -180,10 +166,7 @@ namespace Splunk.Client
         /// <returns>
         /// An object representing the entity created.
         /// </returns>
-        public virtual async Task<TEntity> CreateAsync(params Argument[] arguments)
-        {
-            return await this.CreateAsync(arguments.AsEnumerable()).ConfigureAwait(false);
-        }
+        public virtual async Task<TEntity> CreateAsync(params Argument[] arguments) => await this.CreateAsync(arguments.AsEnumerable()).ConfigureAwait(false);
 
         /// <summary>
         /// Asynchronously creates a new Splunk entity.
@@ -196,11 +179,9 @@ namespace Splunk.Client
         /// </returns>
         public virtual async Task<TEntity> CreateAsync(IEnumerable<Argument> arguments)
         {
-            using (var response = await this.Context.PostAsync(this.Namespace, this.ResourceName, arguments).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.Created).ConfigureAwait(false);
-                return await BaseEntity<TResource>.CreateAsync<TEntity>(this.Context, response).ConfigureAwait(false);
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, this.ResourceName, arguments).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.Created).ConfigureAwait(false);
+            return await BaseEntity<TResource>.CreateAsync<TEntity>(this.Context, response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -217,11 +198,9 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, name);
 
-            using (Response response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                return await BaseEntity<TResource>.CreateAsync<TEntity>(this.Context, response).ConfigureAwait(false);
-            }
+            using var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            return await BaseEntity<TResource>.CreateAsync<TEntity>(this.Context, response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -238,11 +217,9 @@ namespace Splunk.Client
         /// </returns>
         public virtual async Task GetAllAsync()
         {
-            using (var response = await this.Context.GetAsync(this.Namespace, this.ResourceName, GetAll).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
-            }
+            using var response = await this.Context.GetAsync(this.Namespace, this.ResourceName, GetAll).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            _ = await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -255,22 +232,20 @@ namespace Splunk.Client
         /// An object representing entity <paramref name="name"/> or <c>null</c>,
         /// if no such entity exists.
         /// </returns>
-        public virtual async Task<TEntity> GetOrNullAsync(string name)
+        public virtual async Task<TEntity?> GetOrNullAsync(string name)
         {
             var resourceName = new ResourceName(this.ResourceName, name);
 
-            using (Response response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false))
+            using var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK, HttpStatusCode.NotFound).ConfigureAwait(false);
+
+            TEntity? resourceEndpoint = null;
+            if (response.Message.StatusCode == HttpStatusCode.OK)
             {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK, HttpStatusCode.NotFound).ConfigureAwait(false);
-                TEntity resourceEndpoint = null;
-
-                if (response.Message.StatusCode == HttpStatusCode.OK)
-                {
-                    resourceEndpoint = await BaseEntity<TResource>.CreateAsync<TEntity>(this.Context, response).ConfigureAwait(false);
-                }
-
-                return resourceEndpoint;
+                resourceEndpoint = await BaseEntity<TResource>.CreateAsync<TEntity>(this.Context, response).ConfigureAwait(false);
             }
+
+            return resourceEndpoint;
         }
 
         /// <summary>
@@ -288,10 +263,7 @@ namespace Splunk.Client
         /// <returns>
         /// A <see cref="Task"/> representing the operation.
         /// </returns>
-        public virtual async Task GetSliceAsync(params Argument[] arguments)
-        {
-            await this.GetSliceAsync(arguments.AsEnumerable()).ConfigureAwait(false);
-        }
+        public virtual async Task GetSliceAsync(params Argument[] arguments) => await this.GetSliceAsync(arguments.AsEnumerable()).ConfigureAwait(false);
 
         /// <summary>
         /// Asynchronously retrieves select entities from the list of entites in the
@@ -310,11 +282,9 @@ namespace Splunk.Client
         /// </returns>
         public virtual async Task GetSliceAsync(IEnumerable<Argument> arguments)
         {
-            using (Response response = await this.Context.GetAsync(this.Namespace, this.ResourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
-            }
+            using var response = await this.Context.GetAsync(this.Namespace, this.ResourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            _ = await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -328,20 +298,15 @@ namespace Splunk.Client
         {
             var reload = new ResourceName(this.ResourceName, "_reload");
 
-            using (Response response = await this.Context.GetAsync(this.Namespace, reload).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-            }
+            using var response = await this.Context.GetAsync(this.Namespace, reload).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
         }
 
         #endregion
 
         #region IReadOnlyList<TEntity> methods
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         /// <summary>
         /// Gets an enumerator that iterates through the current <see cref=
@@ -351,12 +316,7 @@ namespace Splunk.Client
         /// An object for iterating through the current
         /// <see cref= "EntityCollection&lt;TEntity,TResource&gt;"/>.
         /// </returns>
-        public IEnumerator<TEntity> GetEnumerator()
-        {
-            return this.Snapshot.Resources.Select(resource => {
-                return Create((TResource)resource);
-            }).GetEnumerator();
-        }
+        public IEnumerator<TEntity> GetEnumerator() => this.Snapshot.Resources.Select(resource => this.Create((TResource)resource)).GetEnumerator();
 
         #endregion
 
@@ -377,10 +337,7 @@ namespace Splunk.Client
         }
 
         /// <inheritdoc/>
-        protected override void CreateSnapshot(ResourceCollection resource)
-        {
-            this.Snapshot = resource;
-        }
+        protected override void CreateSnapshot(ResourceCollection resource) => this.Snapshot = resource;
 
         #endregion
 
@@ -388,13 +345,13 @@ namespace Splunk.Client
 
         #region Privates/internals
 
-        internal static readonly ReadOnlyCollection<Message> NoMessages = new ReadOnlyCollection<Message>(new List<Message>());
-        static readonly Argument[] GetAll = new Argument[] { new Argument("count", 0) };
+        internal static readonly ReadOnlyCollection<Message> NoMessages = new(new List<Message>());
+        private static readonly Argument[] GetAll = new Argument[] { new Argument("count", 0) };
 
-        TEntity Create(TResource resource)
+        private TEntity Create(TResource resource)
         {
             var entity = new TEntity();
-            
+
             entity.Initialize(this.Context, resource);
             return entity;
         }

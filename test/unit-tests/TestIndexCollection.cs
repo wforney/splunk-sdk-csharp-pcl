@@ -14,145 +14,118 @@
  * under the License.
  */
 
-namespace Splunk.Client.UnitTests
+namespace Splunk.Client.UnitTests;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Splunk.Client;
+using Xunit;
+
+public class TestIndexCollection
 {
-    using Microsoft.CSharp.RuntimeBinder;
+    [Trait("unit-test", "Splunk.Client.Index")]
+    [Fact]
+    private async Task CanConstructIndex()
+    {
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "Index.GetAsync.xml"));
 
-    using Splunk.Client;
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var index = new Client.Index(context, feed);
+        CheckCommonProperties("_audit", index);
 
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
+        var canList = index.Eai.Acl.CanList;
+        var app = index.Eai.Acl.App;
+        dynamic eai = index.Eai;
+        Assert.Equal(app, eai.Acl.App);
+        Assert.Equal(canList, eai.Acl.CanList);
+    }
 
-    using Xunit;
+    [Trait("unit-test", "Splunk.Client.IndexCollection")]
+    [Fact]
+    private async Task CanConstructIndexCollection()
+    {
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "IndexCollection.GetAsync.xml"));
 
-    public class TestIndexCollection
-    {      
-        [Trait("unit-test", "Splunk.Client.Index")]
-        [Fact]
-        async Task CanConstructIndex()
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var expectedNames = new string[]
         {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "Index.GetAsync.xml"));
+                "_audit",
+                "_blocksignature",
+                "_internal",
+                "_thefishbucket",
+                "history",
+                "main",
+                "splunklogger",
+                "summary"
+        };
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var index = new Index(context, feed);
-                CheckCommonProperties("_audit", index);
-                
-                Assert.DoesNotThrow(() =>
-                {
-                    bool canList = index.Eai.Acl.CanList;
-                    string app = index.Eai.Acl.App;
-                    dynamic eai = index.Eai;
-                    Assert.Equal(app, eai.Acl.App);
-                    Assert.Equal(canList, eai.Acl.CanList);
-                });
-            }
-        }
+        var indexes = new ConfigurationCollection(context, feed);
 
-        [Trait("unit-test", "Splunk.Client.IndexCollection")]
-        [Fact]
-        async Task CanConstructIndexCollection()
+        Assert.Equal(expectedNames, from index in indexes select index.Title);
+        Assert.Equal(expectedNames.Length, indexes.Count);
+        CheckCommonProperties("indexes", indexes);
+
+        for (var i = 0; i < indexes.Count; i++)
         {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "IndexCollection.GetAsync.xml"));
-
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var expectedNames = new string[] 
-                { 
-                    "_audit",
-                    "_blocksignature",
-                    "_internal",
-                    "_thefishbucket",
-                    "history",
-                    "main",
-                    "splunklogger",
-                    "summary"
-                };
-
-                var indexes = new ConfigurationCollection(context, feed);
-
-                Assert.Equal(expectedNames, from index in indexes select index.Title);
-                Assert.Equal(expectedNames.Length, indexes.Count);
-                CheckCommonProperties("indexes", indexes);
-
-                for (int i = 0; i < indexes.Count; i++)
-                {
-                    CheckCommonProperties(expectedNames[i], indexes[i]);
-                }
-            }
+            CheckCommonProperties(expectedNames[i], indexes[i]);
         }
+    }
 
-        [Trait("unit-test", "Splunk.Client.IndexCollection.Filter")]
-        [Fact]
-        void CanSpecifyFilter()
+    [Trait("unit-test", "Splunk.Client.IndexCollection.Filter")]
+    [Fact]
+    private void CanSpecifyFilter()
+    {
+        // Checked against http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#GET_data.2Findexes
+
+        var criteria = new IndexCollection.Filter();
+        Assert.Equal("count=30; offset=0; search=null; sort_dir=asc; sort_key=name; sort_mode=auto; summarize=0", criteria.ToString());
+        Assert.Empty(criteria);
+
+        criteria = new IndexCollection.Filter()
         {
-            // Checked against http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#GET_data.2Findexes
+            Count = 100,
+            Offset = 100,
+            Search = "some_unchecked_string",
+            SortDirection = SortDirection.Descending,
+            SortKey = "some_unchecked_string",
+            SortMode = SortMode.Alphabetic,
+            Summarize = true
+        };
 
-            IndexCollection.Filter criteria = new IndexCollection.Filter();
-            Assert.Equal("count=30; offset=0; search=null; sort_dir=asc; sort_key=name; sort_mode=auto; summarize=0", criteria.ToString());
-            Assert.Equal(0, ((IEnumerable<Argument>)criteria).Count());
+        Assert.Equal("count=100; offset=100; search=some_unchecked_string; sort_dir=desc; sort_key=some_unchecked_string; sort_mode=alpha; summarize=1", criteria.ToString());
 
-            criteria = new IndexCollection.Filter()
+        Assert.Equal(new List<Argument>()
             {
-                Count = 100,
-                Offset = 100,
-                Search = "some_unchecked_string",
-                SortDirection = SortDirection.Descending,
-                SortKey = "some_unchecked_string",
-                SortMode = SortMode.Alphabetic,
-                Summarize = true
-            };
+                new Argument("count", 100),
+                new Argument("offset", 100),
+                new Argument("search", "some_unchecked_string"),
+                new Argument("sort_dir", "desc"),
+                new Argument("sort_key", "some_unchecked_string"),
+                new Argument("sort_mode", "alpha"),
+                new Argument("summarize", 1)
+            },
+            criteria.AsEnumerable());
+    }
 
-            Assert.Equal("count=100; offset=100; search=some_unchecked_string; sort_dir=desc; sort_key=some_unchecked_string; sort_mode=alpha; summarize=1", criteria.ToString());
+    private static void CheckCommonProperties<TResource>(string expectedName, BaseEntity<TResource> entity) where TResource : BaseResource, new()
+    {
+        Assert.Equal(expectedName, entity.Title);
 
-            Assert.Equal(new List<Argument>()
-                { 
-                    new Argument("count", 100),
-                    new Argument("offset", 100),
-                    new Argument("search", "some_unchecked_string"),
-                    new Argument("sort_dir", "desc"),
-                    new Argument("sort_key", "some_unchecked_string"),
-                    new Argument("sort_mode", "alpha"),
-                    new Argument("summarize", 1)
-                },
-                criteria.AsEnumerable());
-        }
+        //// Properties common to all resources
 
-        static void CheckCommonProperties<TResource>(string expectedName, BaseEntity<TResource> entity) where TResource : BaseResource, new()
-        {
-            Assert.Equal(expectedName, entity.Title);
+        var value = entity.GeneratorVersion;
+        Assert.NotNull(value);
 
-            //// Properties common to all resources
+        var value2 = entity.Id;
+        Assert.NotNull(value2);
 
-            Assert.DoesNotThrow(() =>
-            {
-                Version value = entity.GeneratorVersion;
-                Assert.NotNull(value);
-            });
+        var value3 = entity.Title;
+        Assert.NotNull(value3);
 
-            Assert.DoesNotThrow(() =>
-            {
-                Uri value = entity.Id;
-                Assert.NotNull(value);
-            });
-
-            Assert.DoesNotThrow(() =>
-            {
-                string value = entity.Title;
-                Assert.NotNull(value);
-            });
-
-            Assert.DoesNotThrow(() =>
-            {
-                DateTime value = entity.Updated;
-                Assert.NotEqual(DateTime.MinValue, value);
-            });
-        }
+        var value4 = entity.Updated;
+        Assert.NotEqual(DateTime.MinValue, value4);
     }
 }

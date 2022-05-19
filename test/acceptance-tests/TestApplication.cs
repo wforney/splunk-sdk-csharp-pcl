@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2013 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -14,221 +14,263 @@
  * under the License.
  */
 
-namespace Splunk.Client.AcceptanceTests
+namespace Splunk.Client.AcceptanceTests;
+
+using System;
+using System.Threading.Tasks;
+using Splunk.Client;
+using Splunk.Client.Helper;
+using Xunit;
+
+/// <summary>
+/// Application tests
+/// </summary>
+public class ApplicationTest
 {
-    using Splunk.Client;
-    using Splunk.Client.Helpers;
-
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    
-    using Xunit;
-    
     /// <summary>
-    /// Application tests
+    /// The app tests
     /// </summary>
-    public class ApplicationTest
+    [Trait("acceptance-test", "Splunk.Client.Application")]
+    [MockContext]
+    [Fact]
+    public async Task Application()
     {
-        /// <summary>
-        /// The app tests
-        /// </summary>
-        [Trait("acceptance-test", "Splunk.Client.Application")]
-        [MockContext]
-        [Fact]
-        public async Task Application()
+        using var service = await SdkHelper.CreateService();
+        var apps = service.Applications;
+        await apps.GetAllAsync();
+
+        foreach (var app in apps)
         {
-            using (var service = await SdkHelper.CreateService())
-            {
-                ApplicationCollection apps = service.Applications;
-                await apps.GetAllAsync();
-
-                foreach (Application app in apps)
-                {
-                    await CheckApplication(app);
-                }
-
-                for (int i = 0; i < apps.Count; i++)
-                {
-                    await CheckApplication(apps[i]);
-                }
-
-                if (await service.Applications.RemoveAsync("sdk-tests"))
-                {
-                    await service.Server.RestartAsync(2 * 60 * 1000);
-                    await service.LogOnAsync();
-                }
-
-                ApplicationAttributes attributes = new ApplicationAttributes
-                {
-                    ApplicationAuthor = "me",
-                    Description = "this is a description",
-                    Label = "SDKTEST",
-                    Visible = false
-                };
-
-                var testApp = await service.Applications.CreateAsync("sdk-tests", "barebones", attributes);
-                testApp = await service.Applications.GetAsync("sdk-tests");
-
-                Assert.Equal("SDKTEST", testApp.Label);
-                Assert.Equal("me", testApp.ApplicationAuthor);
-                Assert.Equal("nobody", testApp.Author);
-                Assert.False(testApp.Configured);
-                Assert.False(testApp.Visible);
-
-                Assert.DoesNotThrow(() =>
-                {
-                    bool p = testApp.CheckForUpdates;
-                });
-
-                attributes = new ApplicationAttributes
-                {
-                    ApplicationAuthor = "not me",
-                    Description = "new description",
-                    Label = "new label",
-                    Visible = false,
-                    Version = "1.5"
-                };
-
-                //// Update the application
-
-                await testApp.UpdateAsync(attributes, true);
-                await testApp.GetAsync();
-
-                Assert.Equal("not me", testApp.ApplicationAuthor);
-                Assert.Equal("nobody", testApp.Author);
-                Assert.Equal("new description", testApp.Description);
-                Assert.Equal("new label", testApp.Label);
-                Assert.Equal("1.5", testApp.Version);
-                Assert.False(testApp.Visible);
-
-                ApplicationUpdateInfo updateInfo = await testApp.GetUpdateInfoAsync();
-                Assert.NotNull(updateInfo.Eai.Acl);
-
-                //// Package the application
-
-                ApplicationArchiveInfo archiveInfo = await testApp.PackageAsync();
-            
-                Assert.Equal("Package", archiveInfo.Title);
-                Assert.NotEqual(DateTime.MinValue, archiveInfo.Updated);
-
-                Assert.DoesNotThrow(() =>
-                {
-                    string p = archiveInfo.ApplicationName;
-                });
-                Assert.True(archiveInfo.ApplicationName.Length > 0);
-
-                Assert.DoesNotThrow(() =>
-                {
-                    Eai p = archiveInfo.Eai;
-                });
-                Assert.NotNull(archiveInfo.Eai);
-                Assert.NotNull(archiveInfo.Eai.Acl);
-
-                Assert.DoesNotThrow(() =>
-                {
-                    string p = archiveInfo.Path;
-                });
-                Assert.True(archiveInfo.Path.Length > 0);
-
-                Assert.DoesNotThrow(() =>
-                {
-                    bool p = archiveInfo.Refresh;
-                });
-
-                Assert.DoesNotThrow(() =>
-                {
-                    Uri p = archiveInfo.Uri;
-                });
-                Assert.True(archiveInfo.Uri.AbsolutePath.Length > 0);
-
-                Assert.True(await service.Applications.RemoveAsync("sdk-tests"));
-                await service.Server.RestartAsync(2 * 60 * 1000);
-            }
+            await CheckApplication(app);
         }
 
-        #region Privates/internals
-
-        internal async Task CheckApplication(Application app)
+        for (var i = 0; i < apps.Count; i++)
         {
-            ApplicationSetupInfo setupInfo = null;
+            await CheckApplication(apps[i]);
+        }
 
-            try 
+        if (await service.Applications.RemoveAsync("sdk-tests"))
+        {
+            await service.Server.RestartAsync(2 * 60 * 1000);
+            await service.LogOnAsync();
+        }
+
+        var attributes = new ApplicationAttributes
+        {
+            ApplicationAuthor = "me",
+            Description = "this is a description",
+            Label = "SDKTEST",
+            Visible = false
+        };
+
+        var testApp = await service.Applications.CreateAsync("sdk-tests", "barebones", attributes);
+        testApp = await service.Applications.GetAsync("sdk-tests");
+
+        Assert.Equal("SDKTEST", testApp.Label);
+        Assert.Equal("me", testApp.ApplicationAuthor);
+        Assert.Equal("nobody", testApp.Author);
+        Assert.False(testApp.Configured);
+        Assert.False(testApp.Visible);
+
+        var exception = await Record.ExceptionAsync(async () =>
+        {
+            var p = testApp.CheckForUpdates;
+            await Task.CompletedTask;
+        });
+        Assert.Null(exception);
+
+        attributes = new ApplicationAttributes
+        {
+            ApplicationAuthor = "not me",
+            Description = "new description",
+            Label = "new label",
+            Visible = false,
+            Version = "1.5"
+        };
+
+        //// Update the application
+
+        _ = await testApp.UpdateAsync(attributes, true);
+        await testApp.GetAsync();
+
+        Assert.Equal("not me", testApp.ApplicationAuthor);
+        Assert.Equal("nobody", testApp.Author);
+        Assert.Equal("new description", testApp.Description);
+        Assert.Equal("new label", testApp.Label);
+        Assert.Equal("1.5", testApp.Version);
+        Assert.False(testApp.Visible);
+
+        var updateInfo = await testApp.GetUpdateInfoAsync();
+        Assert.NotNull(updateInfo.Eai.Acl);
+
+        //// Package the application
+
+        var archiveInfo = await testApp.PackageAsync();
+
+        Assert.Equal("Package", archiveInfo.Title);
+        Assert.NotEqual(DateTime.MinValue, archiveInfo.Updated);
+
+        exception = await Record.ExceptionAsync(async () =>
+        {
+            var p = archiveInfo.ApplicationName;
+            await Task.CompletedTask;
+        });
+        Assert.Null(exception);
+
+        Assert.True(archiveInfo.ApplicationName.Length > 0);
+
+        exception = await Record.ExceptionAsync(async () =>
+        {
+            var p = archiveInfo.Eai;
+            await Task.CompletedTask;
+        });
+        Assert.Null(exception);
+
+        Assert.NotNull(archiveInfo.Eai);
+        Assert.NotNull(archiveInfo.Eai.Acl);
+
+        exception = await Record.ExceptionAsync(async () =>
+        {
+            var p = archiveInfo.Path;
+            await Task.CompletedTask;
+        });
+        Assert.Null(exception);
+
+        Assert.True(archiveInfo.Path.Length > 0);
+
+        exception = await Record.ExceptionAsync(async () =>
+        {
+            var p = archiveInfo.Refresh;
+            await Task.CompletedTask;
+        });
+        Assert.Null(exception);
+
+        exception = await Record.ExceptionAsync(async () =>
+        {
+            var p = archiveInfo.Uri;
+            await Task.CompletedTask;
+        });
+        Assert.Null(exception);
+
+        Assert.True(archiveInfo.Uri.AbsolutePath.Length > 0);
+
+        Assert.True(await service.Applications.RemoveAsync("sdk-tests"));
+        await service.Server.RestartAsync(2 * 60 * 1000);
+    }
+
+    internal static async Task CheckApplication(Application app)
+    {
+        ApplicationSetupInfo? setupInfo = null;
+
+        Exception exception;
+        try
+        {
+            setupInfo = await app.GetSetupInfoAsync();
+
+            //// TODO: Install an app which hits this code before this test runs
+
+            Assert.NotNull(setupInfo.Eai);
+            exception = await Record.ExceptionAsync(
+                async () =>
+                {
+                    var p = setupInfo.Refresh;
+                    await Task.CompletedTask;
+                });
+            Assert.Null(exception);
+        }
+        catch (InternalServerErrorException e)
+        {
+            Assert.Contains("Internal Server Error", e.Message);
+        }
+
+        var archiveInfo = await app.PackageAsync();
+
+        exception = await Record.ExceptionAsync(
+            async () =>
             {
-                setupInfo = await app.GetSetupInfoAsync();
-
-                //// TODO: Install an app which hits this code before this test runs
-
-                Assert.NotNull(setupInfo.Eai);
-                Assert.DoesNotThrow(() => { bool p = setupInfo.Refresh; });
-            } 
-            catch (InternalServerErrorException e) 
-            {
-                Assert.Contains("Internal Server Error", e.Message);
-            }
-
-            ApplicationArchiveInfo archiveInfo = await app.PackageAsync();
-
-            Assert.DoesNotThrow(() => 
-            { 
-                string p = app.Author; 
+                var p = app.Author;
                 Assert.NotNull(p);
+                await Task.CompletedTask;
             });
+        Assert.Null(exception);
 
-            Assert.DoesNotThrow(() => { string p = app.ApplicationAuthor; });
-            Assert.DoesNotThrow(() => { bool p = app.CheckForUpdates; });
-            Assert.DoesNotThrow(() => { string p = app.Description; });
-            Assert.DoesNotThrow(() => { string p = app.Label; });
-            Assert.DoesNotThrow(() => { bool p = app.Refresh; });
-            Assert.DoesNotThrow(() => { string p = app.Version; });
-            Assert.DoesNotThrow(() => { bool p = app.Configured; });
-            Assert.DoesNotThrow(() => { bool p = app.StateChangeRequiresRestart; });
-            Assert.DoesNotThrow(() => { bool p = app.Visible; });
+        exception = await Record.ExceptionAsync(async () => { var p = app.ApplicationAuthor; await Task.CompletedTask; });
+        Assert.Null(exception);
+        exception = await Record.ExceptionAsync(async () => { var p = app.CheckForUpdates; await Task.CompletedTask; });
+        Assert.Null(exception);
+        exception = await Record.ExceptionAsync(async () => { var p = app.Description; await Task.CompletedTask; });
+        Assert.Null(exception);
+        exception = await Record.ExceptionAsync(async () => { var p = app.Label; await Task.CompletedTask; });
+        Assert.Null(exception);
+        exception = await Record.ExceptionAsync(async () => { var p = app.Refresh; await Task.CompletedTask; });
+        Assert.Null(exception);
+        exception = await Record.ExceptionAsync(async () => { var p = app.Version; await Task.CompletedTask; });
+        Assert.Null(exception);
+        exception = await Record.ExceptionAsync(async () => { var p = app.Configured; await Task.CompletedTask; });
+        Assert.Null(exception);
+        exception = await Record.ExceptionAsync(async () => { var p = app.StateChangeRequiresRestart; await Task.CompletedTask; });
+        Assert.Null(exception);
+        exception = await Record.ExceptionAsync(async () => { var p = app.Visible; await Task.CompletedTask; });
+        Assert.Null(exception);
 
-            ApplicationUpdateInfo updateInfo = await app.GetUpdateInfoAsync();
-            Assert.NotNull(updateInfo.Eai);
+        var updateInfo = await app.GetUpdateInfoAsync();
+        Assert.NotNull(updateInfo.Eai);
 
-            if (updateInfo.Update != null)
+        if (updateInfo.Update is not null)
+        {
+            var update = updateInfo.Update;
+
+            exception = await Record.ExceptionAsync(async () =>
             {
-                var update = updateInfo.Update;
-
-                Assert.DoesNotThrow(() =>
-                {
-                    string p = updateInfo.Update.ApplicationName;
-                });
-                Assert.DoesNotThrow(() =>
-                {
-                    Uri p = updateInfo.Update.ApplicationUri;
-                });
-                Assert.DoesNotThrow(() =>
-                {
-                    string p = updateInfo.Update.ApplicationName;
-                });
-                Assert.DoesNotThrow(() =>
-                {
-                    string p = updateInfo.Update.ChecksumType;
-                });
-                Assert.DoesNotThrow(() =>
-                {
-                    string p = updateInfo.Update.Homepage;
-                });
-                Assert.DoesNotThrow(() =>
-                {
-                    bool p = updateInfo.Update.ImplicitIdRequired;
-                });
-                Assert.DoesNotThrow(() =>
-                {
-                    long p = updateInfo.Update.Size;
-                });
-                Assert.DoesNotThrow(() =>
-                {
-                    string p = updateInfo.Update.Version;
-                });
-            }
-
-            Assert.DoesNotThrow(() => { DateTime p = updateInfo.Updated; });
+                var p = updateInfo.Update.ApplicationName;
+                await Task.CompletedTask;
+            });
+            Assert.Null(exception);
+            exception = await Record.ExceptionAsync(async () =>
+            {
+                var p = updateInfo.Update.ApplicationUri;
+                await Task.CompletedTask;
+            });
+            Assert.Null(exception);
+            exception = await Record.ExceptionAsync(async () =>
+            {
+                var p = updateInfo.Update.ApplicationName;
+                await Task.CompletedTask;
+            });
+            Assert.Null(exception);
+            exception = await Record.ExceptionAsync(async () =>
+            {
+                var p = updateInfo.Update.ChecksumType;
+                await Task.CompletedTask;
+            });
+            Assert.Null(exception);
+            exception = await Record.ExceptionAsync(async () =>
+            {
+                var p = updateInfo.Update.Homepage;
+                await Task.CompletedTask;
+            });
+            Assert.Null(exception);
+            exception = await Record.ExceptionAsync(async () =>
+            {
+                var p = updateInfo.Update.ImplicitIdRequired;
+                await Task.CompletedTask;
+            });
+            Assert.Null(exception);
+            exception = await Record.ExceptionAsync(async () =>
+            {
+                var p = updateInfo.Update.Size;
+                await Task.CompletedTask;
+            });
+            Assert.Null(exception);
+            exception = await Record.ExceptionAsync(async () =>
+            {
+                var p = updateInfo.Update.Version;
+                await Task.CompletedTask;
+            });
+            Assert.Null(exception);
         }
 
-        #endregion
+        exception = await Record.ExceptionAsync(async () => { var p = updateInfo.Updated; await Task.CompletedTask; });
+        Assert.Null(exception);
     }
 }

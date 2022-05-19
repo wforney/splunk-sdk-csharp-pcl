@@ -14,97 +14,74 @@
  * under the License.
  */
 
-namespace Splunk.Client.UnitTests
+namespace Splunk.Client.UnitTests;
+
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Splunk.Client;
+using Xunit;
+
+public class TestApplicationCollection
 {
-    using Microsoft.CSharp.RuntimeBinder;
-
-    using Splunk.Client;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
-
-    using Xunit;
-
-    public class TestApplicationCollection
+    [Trait("unit-test", "Splunk.Client.Application")]
+    [Fact]
+    private async Task CanConstructApplication()
     {
-        [Trait("unit-test", "Splunk.Client.Application")]
-        [Fact]
-        async Task CanConstructApplication()
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "Application.GetAsync.xml"));
+
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var exception = Record.Exception(() => new Application(context, feed));
+        Assert.Null(exception);
+    }
+
+    [Trait("unit-test", "Splunk.Client.ApplicationCollection")]
+    [Fact]
+    private async Task CanConstructApplicationCollection()
+    {
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ApplicationCollection.GetAsync.xml"));
+
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var expectedApplicationNames = new string[]
         {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "Application.GetAsync.xml"));
+                "delete-me-cc314e4eda254dec885f9465e55729e5",
+                "delete-me-db1bc2678174495a9f91d0c2360f53bc",
+                "delete-me-decd5a97569440768914cd0629c5501d",
+                "delete-me-e341f711346a4898b15accd7f77c5c92",
+                "framework",
+                "gettingstarted",
+                "introspection_generator_addon",
+                "launcher",
+                "learned",
+                "legacy",
+                "sample_app",
+                "search",
+                "splunk_datapreview",
+                "SplunkForwarder",
+                "SplunkLightForwarder"
+        };
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                Assert.DoesNotThrow(() => new Application(context, feed));
-            }
-        }
+        var applications = new ApplicationCollection(context, feed);
 
-        [Trait("unit-test", "Splunk.Client.ApplicationCollection")]
-        [Fact]
-        async Task CanConstructApplicationCollection()
+        Assert.Equal(expectedApplicationNames, from application in applications select application.Title);
+        Assert.Equal(expectedApplicationNames.Length, applications.Count);
+
+        for (var i = 0; i < applications.Count; i++)
         {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ApplicationCollection.GetAsync.xml"));
+            Assert.Equal(expectedApplicationNames[i], applications[i].Title);
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var expectedApplicationNames = new string[] 
-                { 
-                    "delete-me-cc314e4eda254dec885f9465e55729e5",
-                    "delete-me-db1bc2678174495a9f91d0c2360f53bc",
-                    "delete-me-decd5a97569440768914cd0629c5501d",
-                    "delete-me-e341f711346a4898b15accd7f77c5c92",
-                    "framework",
-                    "gettingstarted",
-                    "introspection_generator_addon",
-                    "launcher",
-                    "learned",
-                    "legacy",
-                    "sample_app",
-                    "search",
-                    "splunk_datapreview",
-                    "SplunkForwarder",
-                    "SplunkLightForwarder"
-                };
+            var value = applications[i].GeneratorVersion;
+            Assert.NotNull(value);
 
-                var applications = new ApplicationCollection(context, feed);
+            var value2 = applications[i].Id;
+            Assert.NotNull(value2);
 
-                Assert.Equal(expectedApplicationNames, from application in applications select application.Title);
-                Assert.Equal(expectedApplicationNames.Length, applications.Count);
+            var value3 = applications[i].Title;
+            Assert.NotNull(value3);
 
-                for (int i = 0; i < applications.Count; i++)
-                {
-                    Assert.Equal(expectedApplicationNames[i], applications[i].Title);
-
-                    Assert.DoesNotThrow(() => { 
-                        Version value = applications[i].GeneratorVersion;
-                        Assert.NotNull(value);
-                    });
-
-                    Assert.DoesNotThrow(() => 
-                    { 
-                        Uri value = applications[i].Id;
-                        Assert.NotNull(value);
-                    });
-
-                    Assert.DoesNotThrow(() => 
-                    { 
-                        string value = applications[i].Title;
-                        Assert.NotNull(value);
-                    });
-
-                    Assert.DoesNotThrow(() => 
-                    { 
-                        DateTime value = applications[i].Updated;
-                        Assert.NotEqual(DateTime.MinValue, value);
-                    });
-                }
-            }
+            var value4 = applications[i].Updated;
+            Assert.NotEqual(DateTime.MinValue, value4);
         }
     }
 }

@@ -14,23 +14,19 @@
  * under the License.
  */
 
-namespace Splunk.Client.AcceptanceTests
+namespace Splunk.Client.AcceptanceTests;
+
+using System.Net;
+
+/// <summary>
+/// The acceptance testing setup class.
+/// </summary>
+public class AcceptanceTestingSetup
 {
-    using System.Net;
-
-    public class AcceptanceTestingSetup
-    {
-        static AcceptanceTestingSetup()
-        {
-            // TODO: Use WebRequestHandler.ServerCertificateValidationCallback instead
-            // 1. Instantiate a WebRequestHandler
-            // 2. Set its ServerCertificateValidationCallback
-            // 3. Instantiate a Splunk.Client.Context with the WebRequestHandler
-
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) =>
-            {
-                return true;
-            };
-        }
-    }
+    static AcceptanceTestingSetup() =>
+        // TODO: Use WebRequestHandler.ServerCertificateValidationCallback instead
+        // 1. Instantiate a WebRequestHandler
+        // 2. Set its ServerCertificateValidationCallback
+        // 3. Instantiate a Splunk.Client.Context with the WebRequestHandler
+        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 }

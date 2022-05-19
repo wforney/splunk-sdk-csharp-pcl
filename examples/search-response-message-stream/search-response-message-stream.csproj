@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>search_response_message_stream</RootNamespace>
     <AssemblyName>search-response-message-stream</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -50,16 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Splunk.Client.Helpers\Splunk.Client.Helpers.csproj">
-      <Project>{21a7de9f-1e62-484f-945f-01e222b26b5b}</Project>
-      <Name>Splunk.Client.Helpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Splunk.Client\Splunk.Client.csproj">
-      <Project>{de65f0d5-7753-483e-8933-e6db22350f04}</Project>
-      <Name>Splunk.Client</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

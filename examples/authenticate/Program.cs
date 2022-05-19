@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2013 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -16,8 +16,6 @@
 
 namespace Splunk.Examples.Authenticate
 {
-    using Splunk.Client;
-    using Splunk.Client.Helpers;
     using System;
     using System.Net;
     using System.Threading.Tasks;
@@ -35,17 +33,14 @@ namespace Splunk.Examples.Authenticate
             // 2. Set its ServerCertificateValidationCallback
             // 3. Instantiate a Splunk.Client.Context with the WebRequestHandler
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) =>
-            {
-                return true;
-            };
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
         /// <summary>
         /// Mains function
         /// </summary>
         /// <param name="args">The arguments.</param>
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             using (var service = new Service(SdkHelper.Splunk.Scheme, SdkHelper.Splunk.Host, SdkHelper.Splunk.Port))
             {
@@ -54,7 +49,7 @@ namespace Splunk.Examples.Authenticate
             }
 
             Console.Write("Press return to exit: ");
-            Console.ReadLine();
+            _ = Console.ReadLine();
         }
 
         /// <summary>

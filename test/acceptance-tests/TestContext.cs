@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2014 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -14,29 +14,33 @@
  * under the License.
  */
 
-namespace Splunk.Client.AcceptanceTests
+namespace Splunk.Client.AcceptanceTests;
+
+using Splunk.Client.Helper;
+using Xunit;
+
+/// <summary>
+/// Class TestContext.
+/// </summary>
+public class TestContext
 {
-    using Splunk.Client.Helpers;
-    using Xunit;
+    private static Context? client;
 
-    public class TestContext
+    /// <summary>
+    /// Defines the test method CanConstructContext.
+    /// </summary>
+    [Trait("acceptance-test", "Splunk.Client.Context")]
+    [MockContext]
+    [Fact]
+    public void CanConstructContext()
     {
-        [Trait("acceptance-test", "Splunk.Client.Context")]
-        [MockContext]
-        [Fact]
-        public void CanConstructContext()
-        {
-            client = new Context(SdkHelper.Splunk.Scheme, SdkHelper.Splunk.Host, SdkHelper.Splunk.Port);
+        client = new Context(SdkHelper.Splunk.Scheme, SdkHelper.Splunk.Host, SdkHelper.Splunk.Port);
 
-            Assert.Equal(client.Scheme, Scheme.Https);
-            Assert.Equal(client.Host.ToLower(), SdkHelper.Splunk.Host);
-            Assert.Equal(client.Port, SdkHelper.Splunk.Port);
-            Assert.Null(client.SessionKey);
+        Assert.Equal(Scheme.Https, client.Scheme);
+        Assert.Equal(client.Host.ToLower(), SdkHelper.Splunk.Host);
+        Assert.Equal(client.Port, SdkHelper.Splunk.Port);
+        Assert.Null(client.SessionKey);
 
-            Assert.Equal(client.ToString().ToLower(), string.Format("https://{0}:{1}", SdkHelper.Splunk.Host.ToLower(), SdkHelper.Splunk.Port));
-        }
-
-        static Context client;
-       
+        Assert.Equal(client.ToString()?.ToLower(), string.Format("https://{0}:{1}", SdkHelper.Splunk.Host.ToLower(), SdkHelper.Splunk.Port));
     }
 }

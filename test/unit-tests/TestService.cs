@@ -14,58 +14,55 @@
  * under the License.
  */
 
-using Splunk.Client.Helpers;
+namespace Splunk.Client.UnitTests;
+
 using System;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Splunk.Client.UnitTests
+public class TestService
 {
-    public class TestService
+
+    /*[Trait("unit-test", "Splunk.Client.Context")]
+    [Fact]
+    public async Task TestContextThrowsOnForbidden()
     {
-
-        /*[Trait("unit-test", "Splunk.Client.Context")]
-        [Fact]
-        public async Task TestContextThrowsOnForbidden()
+        using (var context = new Context(Scheme.Https, "localhost", 8089))
         {
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
+            await SdkHelper.ThrowsAsync<AuthenticationFailureException>(async () =>
             {
-                await SdkHelper.ThrowsAsync<AuthenticationFailureException>(async () =>
-                {
-                    var response = await context.GetAsync(new Namespace("nobody", "search"), new ResourceName(new[] { "search", "jobs" }));
-                    await response.EnsureStatusCodeAsync(System.Net.HttpStatusCode.Forbidden);
-                });
-            }
+                var response = await context.GetAsync(new Namespace("nobody", "search"), new ResourceName(new[] { "search", "jobs" }));
+                await response.EnsureStatusCodeAsync(System.Net.HttpStatusCode.Forbidden);
+            });
         }
+    }
 
-        [Trait("unit-test", "Splunk.Client.Context")]
-        [Fact]
-        public async Task TestContextThrowsOn404()
+    [Trait("unit-test", "Splunk.Client.Context")]
+    [Fact]
+    public async Task TestContextThrowsOn404()
+    {
+        using (var context = new Context(Scheme.Https, "localhost", 8089))
         {
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
+            await SdkHelper.ThrowsAsync<ResourceNotFoundException>(async () =>
             {
-                await SdkHelper.ThrowsAsync<ResourceNotFoundException>(async () =>
+                using (var service = new Service(context))
                 {
-                    using (var service = new Service(context))
-                    {
-                        await service.LogOnAsync(SdkHelper.Splunk.Username, SdkHelper.Splunk.Password);
-                        var response = await service.Context.GetAsync(new Namespace("admin", "search"), new ResourceName(new[] { "abc", "def", "ghi" }));
-                        await response.EnsureStatusCodeAsync(System.Net.HttpStatusCode.NotFound);
-                    }
-                });
-            }
-        }*/
-
-        [Trait("unit-test", "Splunk.Client.Service")]
-        [Fact]
-        public void ServiceCanBeConstructedWithAUri()
-        {
-            var uri = new Uri("https://localhost:8000");
-            var service = new Service(uri);
-            var context = service.Context;
-            Assert.Equal<string>("localhost", context.Host);
-            Assert.Equal<int>(8000, context.Port);
-            Assert.Equal<Scheme>(Scheme.Https, context.Scheme);
+                    await service.LogOnAsync(SdkHelper.Splunk.Username, SdkHelper.Splunk.Password);
+                    var response = await service.Context.GetAsync(new Namespace("admin", "search"), new ResourceName(new[] { "abc", "def", "ghi" }));
+                    await response.EnsureStatusCodeAsync(System.Net.HttpStatusCode.NotFound);
+                }
+            });
         }
+    }*/
+
+    [Trait("unit-test", "Splunk.Client.Service")]
+    [Fact]
+    public void ServiceCanBeConstructedWithAUri()
+    {
+        var uri = new Uri("https://localhost:8000");
+        var service = new Service(uri);
+        var context = service.Context;
+        Assert.Equal<string>("localhost", context.Host);
+        Assert.Equal<int>(8000, context.Port);
+        Assert.Equal<Scheme>(Scheme.Https, context.Scheme);
     }
 }

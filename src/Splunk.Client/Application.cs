@@ -13,6 +13,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+using System.ComponentModel;
+using System.Net;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+
+[assembly: InternalsVisibleTo("Splunk.Client.UnitTests")]
 
 //// TODO:
 //// [O] Contracts
@@ -20,14 +26,6 @@
 
 namespace Splunk.Client
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Net;
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Provides a class for managing Splunk applications.
     /// </summary>
@@ -65,10 +63,7 @@ namespace Splunk.Client
         /// <paramref name="service"/> is <c>null</c>.
         /// </exception>
         protected internal Application(Service service, string name)
-            : this(service.Context, service.Namespace, name)
-        {
-            Contract.Requires<ArgumentNullException>(service != null);
-        }
+            : this(service.Context, service.Namespace, name) => Contract.Requires<ArgumentNullException>(service != null);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Application"/> class.
@@ -79,10 +74,7 @@ namespace Splunk.Client
         /// <param name="feed">
         /// A Splunk response atom feed.
         /// </param>
-        protected internal Application(Context context, AtomFeed feed)
-        {
-            this.Initialize(context, feed);
-        }
+        protected internal Application(Context context, AtomFeed feed) => this.Initialize(context, feed);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Application"/> class.
@@ -116,52 +108,28 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual string ApplicationAuthor
-        {
-            get { return this.Content.GetValue("Author", StringConverter.Instance); }
-        }
+        public virtual string ApplicationAuthor => this.Content.GetValue("Author", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Author
-        {
-            get { return this.GetValue("Author", StringConverter.Instance); }
-        }
+        public virtual string Author => this.GetValue("Author", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool CheckForUpdates
-        {
-            get { return this.Content.GetValue("CheckForUpdates", BooleanConverter.Instance); }
-        }
+        public virtual bool CheckForUpdates => this.Content.GetValue("CheckForUpdates", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool Configured
-        {
-            get { return this.Content.GetValue("Configured", BooleanConverter.Instance); }
-        }
+        public virtual bool Configured => this.Content.GetValue("Configured", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Description
-        {
-            get { return this.Content.GetValue("Description", StringConverter.Instance); }
-        }
+        public virtual string Description => this.Content.GetValue("Description", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool Disabled
-        {
-            get { return this.Content.GetValue("Disabled", BooleanConverter.Instance); }
-        }
+        public virtual bool Disabled => this.Content.GetValue("Disabled", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public virtual Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Label
-        {
-            get { return this.Content.GetValue("Label", StringConverter.Instance); }
-        }
+        public virtual string Label => this.Content.GetValue("Label", StringConverter.Instance);
 
         /// <summary>
         /// Gets the links.
@@ -170,35 +138,20 @@ namespace Splunk.Client
         /// The links.
         /// </value>
         /// <seealso cref="P:Splunk.Client.IApplication.Links"/>
-        public virtual IReadOnlyDictionary<string, Uri> Links
-        {
-            get { return this.Snapshot.GetValue("Links"); }
-        }
+        public virtual IReadOnlyDictionary<string, Uri> Links => this.Snapshot.GetValue("Links");
 
         /// <inheritdoc/>
-        public virtual bool Refresh
-        {
-            get { return this.Content.GetValue("Refresh", BooleanConverter.Instance); }
-        }
+        public virtual bool Refresh => this.Content.GetValue("Refresh", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool StateChangeRequiresRestart
-        {
-            get { return this.Content.GetValue("StateChangeRequiresRestart", BooleanConverter.Instance); }
-        }
+        public virtual bool StateChangeRequiresRestart => this.Content.GetValue("StateChangeRequiresRestart", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Version
-        {
-            get { return this.Content.GetValue("Version", StringConverter.Instance); }
-        }
+        public virtual string Version => this.Content.GetValue("Version", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool Visible
-        {
-            get { return this.Content.GetValue("Visible", BooleanConverter.Instance); }
-        }
-        
+        public virtual bool Visible => this.Content.GetValue("Visible", BooleanConverter.Instance);
+
         #endregion
 
         #region Methods
@@ -208,10 +161,8 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "disable");
 
-            using (var response = await this.Context.PostAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -219,10 +170,8 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "enable");
 
-            using (var response = await this.Context.PostAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -230,13 +179,11 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "setup");
 
-            using (var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            using var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
 
-                var resource = await BaseResource.CreateAsync<ApplicationSetupInfo>(response).ConfigureAwait(false);
-                return resource;
-            }
+            var resource = await BaseResource.CreateAsync<ApplicationSetupInfo>(response).ConfigureAwait(false);
+            return resource;
         }
 
         /// <inheritdoc/>
@@ -244,13 +191,11 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "update");
 
-            using (var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            using var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
 
-                var resource = await BaseResource.CreateAsync<ApplicationUpdateInfo>(response).ConfigureAwait(false);
-                return resource;
-            }
+            var resource = await BaseResource.CreateAsync<ApplicationUpdateInfo>(response).ConfigureAwait(false);
+            return resource;
         }
 
         /// <inheritdoc/>
@@ -258,13 +203,11 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "package");
 
-            using (var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            using var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
 
-                var resource = await BaseResource.CreateAsync<ApplicationArchiveInfo>(response).ConfigureAwait(false);
-                return resource;
-            }
+            var resource = await BaseResource.CreateAsync<ApplicationArchiveInfo>(response).ConfigureAwait(false);
+            return resource;
         }
 
         /// <inheritdoc/>
@@ -282,7 +225,7 @@ namespace Splunk.Client
         /// Arguments for update.
         /// </summary>
         /// <seealso cref="T:Splunk.Client.Args{Splunk.Client.Application.UpdateArgs}"/>
-        class UpdateArgs : Args<UpdateArgs>
+        private class UpdateArgs : Args<UpdateArgs>
         {
             /// <summary>
             /// Gets or sets a value that indicates whether Splunk should check

@@ -14,18 +14,15 @@
  * under the License.
  */
 
+using System.Collections.ObjectModel;
+using System.Xml;
+
 //// TODO:
 //// [O] Contracts
 //// [O] Documentation
 
 namespace Splunk.Client
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Threading.Tasks;
-    using System.Xml;
-
     /// <summary>
     /// Provides a class that represents a Splunk service response message.
     /// </summary>
@@ -45,9 +42,9 @@ namespace Splunk.Client
         /// <param name="text">
         /// The message text.
         /// </param>
-        internal Message(MessageType type, string text)
+        public Message(MessageType type, string text)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(MessageType.Debug <= type && type <= MessageType.Fatal, "type");
+            Contract.Requires<ArgumentOutOfRangeException>(type is >= MessageType.Debug and <= MessageType.Fatal, "type");
             Contract.Requires<ArgumentNullException>(text != null, "text");
             this.MessageType = type;
             this.Text = text;
@@ -131,10 +128,7 @@ namespace Splunk.Client
         /// </list>
         /// </returns>
         /// <seealso cref="M:System.IComparable.CompareTo(object)"/>
-        public int CompareTo(object other)
-        {
-            return this.CompareTo(other as Message);
-        }
+        public int CompareTo(object other) => this.CompareTo(other as Message);
 
         /// <summary>
         /// Compares the current <see cref="Message"/> with another one and returns
@@ -197,8 +191,8 @@ namespace Splunk.Client
             {
                 return 0;
             }
-            
-            int difference = this.MessageType - other.MessageType;
+
+            var difference = this.MessageType - other.MessageType;
 
             return difference != 0 ? difference : string.Compare(this.Text, other.Text, StringComparison.Ordinal);
         }
@@ -217,10 +211,7 @@ namespace Splunk.Client
         /// otherwise, <c>false</c>.
         /// </returns>
         /// <seealso cref="M:System.Object.Equals(object)"/>
-        public override bool Equals(object other)
-        {
-            return this.Equals(other as Message);
-        }
+        public override bool Equals(object other) => this.Equals(other as Message);
 
         /// <summary>
         /// Determines whether the current <see cref="Message"/> and another one are
@@ -233,14 +224,8 @@ namespace Splunk.Client
         /// <c>true</c> if <paramref name="other"/> is non <c>null</c> and is the
         /// same as the current <see cref="Message"/>; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(Message other)
-        {
-            if ((object)other == null)
-            {
-                return false;
-            }
-            return object.ReferenceEquals(this, other) || (this.MessageType == other.MessageType && this.Text == other.Text);
-        }
+        public bool Equals(Message other) => other is not null
+&& (object.ReferenceEquals(this, other) || (this.MessageType == other.MessageType && this.Text == other.Text));
 
         /// <summary>
         /// Computes the hash code for the current <see cref="Message"/>.
@@ -252,11 +237,11 @@ namespace Splunk.Client
         public override int GetHashCode()
         {
             // TODO: Check this against the algorithm presented in Effective Java
-            int hash = 17;
+            var hash = 17;
 
             hash = (hash * 23) + this.MessageType.GetHashCode();
             hash = (hash * 23) + this.Text.GetHashCode();
-            
+
             return hash;
         }
 
@@ -272,15 +257,7 @@ namespace Splunk.Client
         /// <returns>
         /// The result of the operation.
         /// </returns>
-        public static bool operator >(Message a, Message b)
-        {
-            if ((object)a == null)
-            {
-                return false;
-            }
-
-            return a.CompareTo(b) > 0;
-        }
+        public static bool operator >(Message a, Message b) => a is not null && a.CompareTo(b) > 0;
 
         /// <summary>
         /// Greater-than-or-equal comparison operator.
@@ -294,15 +271,7 @@ namespace Splunk.Client
         /// <returns>
         /// The result of the operation.
         /// </returns>
-        public static bool operator >=(Message a, Message b)
-        {
-            if ((object)a == null)
-            {
-                return (object)b == null;
-            }
-
-            return a.CompareTo(b) < 0;
-        }
+        public static bool operator >=(Message a, Message b) => a is null ? b is null : a.CompareTo(b) < 0;
 
         /// <summary>
         /// Determines whether two <see cref="Message"/> instances have the same
@@ -325,12 +294,7 @@ namespace Splunk.Client
                 return true;
             }
 
-            if ((object)a == null || (object)b == null)
-            {
-                return false;
-            }
-
-            return a.Equals(b);
+            return a is not null && b is not null && a.Equals(b);
         }
 
         /// <summary>
@@ -347,10 +311,7 @@ namespace Splunk.Client
         /// <c>true</c> if the value of <paramref name="a"/> is different than the
         /// value of <paramref name="b"/>; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(Message a, Message b)
-        {
-            return !(a == b);
-        }
+        public static bool operator !=(Message a, Message b) => !(a == b);
 
         /// <summary>
         /// Gets a string representation for the current <see cref="Message"/>.
@@ -359,10 +320,7 @@ namespace Splunk.Client
         /// A string representation of the current <see cref="Message"/>.
         /// </returns>
         /// <seealso cref="M:System.Object.ToString()"/>
-        public override string ToString()
-        {
-            return string.Concat(this.MessageType.ToString(), ": ", this.Text);
-        }
+        public override string ToString() => string.Concat(this.MessageType.ToString(), ": ", this.Text);
 
         /// <summary>
         /// Less-than comparison operator.
@@ -376,15 +334,7 @@ namespace Splunk.Client
         /// <returns>
         /// The result of the operation.
         /// </returns>
-        public static bool operator <(Message a, Message b)
-        {
-            if ((object)a == null)
-            {
-                return (object)b != null;
-            }
-
-            return a.CompareTo(b) < 0;
-        }
+        public static bool operator <(Message a, Message b) => a is null ? b is not null : a.CompareTo(b) < 0;
 
         /// <summary>
         /// Less-than-or-equal comparison operator.
@@ -398,15 +348,7 @@ namespace Splunk.Client
         /// <returns>
         /// The result of the operation.
         /// </returns>
-        public static bool operator <=(Message a, Message b)
-        {
-            if ((object)a == null)
-            {
-                return true;
-            }
-
-            return a.CompareTo(b) < 0;
-        }
+        public static bool operator <=(Message a, Message b) => a is null || a.CompareTo(b) < 0;
 
         #endregion
 
@@ -427,16 +369,16 @@ namespace Splunk.Client
 
             if (await reader.MoveToDocumentElementAsync("response").ConfigureAwait(false))
             {
-                await reader.ReadAsync().ConfigureAwait(false);
+                _ = await reader.ReadAsync().ConfigureAwait(false);
                 reader.EnsureMarkup(XmlNodeType.Element, "messages");
-                await reader.ReadAsync().ConfigureAwait(false);
+                _ = await reader.ReadAsync().ConfigureAwait(false);
 
                 while (reader.NodeType == XmlNodeType.Element && reader.Name == "msg")
                 {
                     var name = reader.GetRequiredAttribute("type");
                     var type = EnumConverter<MessageType>.Instance.Convert(name);
                     var text = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    
+
                     messages.Add(new Message(type, text));
                 }
 

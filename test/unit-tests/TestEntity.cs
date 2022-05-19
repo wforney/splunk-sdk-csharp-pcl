@@ -14,154 +14,116 @@
  * under the License.
  */
 
-namespace Splunk.Client.UnitTests
+namespace Splunk.Client.UnitTests;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Splunk.Client;
+using Xunit;
+
+public class TestBaseEntity
 {
-    using Microsoft.CSharp.RuntimeBinder;
-    using Splunk.Client;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
-
-    using Xunit;
-
-    public class TestBaseEntity
+    [Trait("unit-test", "Splunk.Client.Entity")]
+    [Fact]
+    public async Task CanConstructEntity()
     {
-        [Trait("unit-test", "Splunk.Client.Entity")]
-        [Fact]
-        public async Task CanConstructEntity()
-        {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "Application.GetAsync.xml"));
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "Application.GetAsync.xml"));
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var entity = new Entity<Resource>(context, feed);
-                CheckApplication(entity, feed.Entries[0], feed.GeneratorVersion);
-            }
-        }
-
-        [Trait("unit-test", "Splunk.Client.EntityCollection<Entity>")]
-        [Fact]
-        public async Task CanConstructEntityCollectionOfEntity()
-        {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ApplicationCollection.GetAsync.xml"));
-
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                //// EntityCollection<TEntity> checks
-
-                var collection = new EntityCollection<Entity<Resource>, Resource>(context, feed);
-                CheckCommonStaticPropertiesEntity(collection);
-
-                Assert.Equal(feed.Id, collection.Id);
-                Assert.Equal(feed.GeneratorVersion, collection.GeneratorVersion);
-                Assert.Equal(feed.Title, collection.Title);
-                Assert.Equal(feed.Entries.Count, collection.Count);
-
-                for (int i = 0; i < collection.Count; i++)
-                {
-                    var entry = feed.Entries[i];
-                    var entity = collection[i];
-                    CheckApplication(entity, entry, feed.GeneratorVersion);
-                }
-            }
-        }
-
-        [Trait("unit-test", "Splunk.Client.EntityCollection<EntityCollection<Entity>")]
-        [Fact]
-        public async Task CanConstructEntityCollectionOfEntityCollection()
-        {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ConfigurationCollection.GetAsync.xml"));
-
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var collection = new EntityCollection<EntityCollection<Entity<Resource>, Resource>, ResourceCollection>(context, feed);
-
-                CheckCommonStaticPropertiesEntity(collection);
-                Assert.Equal("properties", collection.Name);
-                Assert.Equal(83, collection.Count);
-
-                foreach (EntityCollection<Entity<Resource>, Resource> entity in collection)
-                {
-                    Assert.Equal(0, entity.Count);
-                }
-            }
-        }
-
-        #region Privates/internals
-
-        static void CheckCommonStaticPropertiesEntity<TResource>(BaseEntity<TResource> entity) where TResource : BaseResource, new()
-        {
-            Assert.DoesNotThrow(() => 
-            { 
-                dynamic o = entity; 
-                Assert.True(o.Context.Equals(entity.Context));
-            });
-
-            Assert.DoesNotThrow(() => 
-            { 
-                dynamic o = entity; 
-                Assert.True(o.Namespace.Equals(entity.Namespace)); 
-            });
-
-            Assert.DoesNotThrow(() =>
-            {
-                dynamic o = entity; 
-                Assert.True(o.ResourceName.Equals(entity.ResourceName));
-            });
-
-            Assert.DoesNotThrow(() =>
-            {
-                dynamic o = entity; 
-                Assert.True(o.GeneratorVersion.Equals(entity.GeneratorVersion));
-            });
-            
-            Assert.DoesNotThrow(() =>
-            {
-                dynamic o = entity; 
-                Assert.True(o.Id.Equals(entity.Id));
-            });
-
-            Assert.DoesNotThrow(() =>
-            {
-                dynamic o = entity; 
-                Assert.True(o.Title.Equals(entity.Title));
-            });
-            
-            Assert.DoesNotThrow(() =>
-            {
-                dynamic o = entity; 
-                Assert.True(o.Updated.Equals(entity.Updated)); 
-            });
-        }
-
-        static void CheckApplication(Entity<Resource> application, AtomEntry entry, Version generatorVersion)
-        {
-            CheckCommonStaticPropertiesEntity(application);
-
-            Assert.Equal(entry.Author, application.Dynamic.Author);
-            Assert.Equal(entry.Title, application.Name);
-            Assert.Equal(entry.Title, application.Title);
-            Assert.Equal(entry.Updated, application.Updated);
-
-            Assert.NotNull(application.Dynamic.Links);
-            
-            Assert.DoesNotThrow(() => 
-            {
-                IReadOnlyDictionary<string, Uri> links = application.Dynamic.Links;
-                Assert.NotEqual(0, links.Count);
-            });
-
-            Assert.Equal(generatorVersion, application.GeneratorVersion);
-
-            TestResource.CheckExistenceOfApplicationProperties(application.Dynamic);
-        }
-
-        #endregion
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var entity = new Entity<Resource>(context, feed);
+        CheckApplication(entity, feed.Entries[0], feed.GeneratorVersion);
     }
+
+    [Trait("unit-test", "Splunk.Client.EntityCollection<Entity>")]
+    [Fact]
+    public async Task CanConstructEntityCollectionOfEntity()
+    {
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ApplicationCollection.GetAsync.xml"));
+
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        //// EntityCollection<TEntity> checks
+
+        var collection = new EntityCollection<Entity<Resource>, Resource>(context, feed);
+        CheckCommonStaticPropertiesEntity(collection);
+
+        Assert.Equal(feed.Id, collection.Id);
+        Assert.Equal(feed.GeneratorVersion, collection.GeneratorVersion);
+        Assert.Equal(feed.Title, collection.Title);
+        Assert.Equal(feed.Entries.Count, collection.Count);
+
+        for (var i = 0; i < collection.Count; i++)
+        {
+            var entry = feed.Entries[i];
+            var entity = collection[i];
+            CheckApplication(entity, entry, feed.GeneratorVersion);
+        }
+    }
+
+    [Trait("unit-test", "Splunk.Client.EntityCollection<EntityCollection<Entity>")]
+    [Fact]
+    public async Task CanConstructEntityCollectionOfEntityCollection()
+    {
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ConfigurationCollection.GetAsync.xml"));
+
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var collection = new EntityCollection<EntityCollection<Entity<Resource>, Resource>, ResourceCollection>(context, feed);
+
+        CheckCommonStaticPropertiesEntity(collection);
+        Assert.Equal("properties", collection.Name);
+        Assert.Equal(83, collection.Count);
+
+        foreach (var entity in collection)
+        {
+            Assert.Empty(entity);
+        }
+    }
+
+    #region Privates/internals
+
+    private static void CheckCommonStaticPropertiesEntity<TResource>(BaseEntity<TResource> entity) where TResource : BaseResource, new()
+    {
+        dynamic o = entity;
+        Assert.True(o.Context.Equals(entity.Context));
+
+        o = entity;
+        Assert.True(o.Namespace.Equals(entity.Namespace));
+
+        o = entity;
+        Assert.True(o.ResourceName.Equals(entity.ResourceName));
+
+        o = entity;
+        Assert.True(o.GeneratorVersion.Equals(entity.GeneratorVersion));
+
+        o = entity;
+        Assert.True(o.Id.Equals(entity.Id));
+
+        o = entity;
+        Assert.True(o.Title.Equals(entity.Title));
+
+        o = entity;
+        Assert.True(o.Updated.Equals(entity.Updated));
+    }
+
+    private static void CheckApplication(Entity<Resource> application, AtomEntry entry, Version generatorVersion)
+    {
+        CheckCommonStaticPropertiesEntity(application);
+
+        Assert.Equal(entry.Author, application.Dynamic.Author);
+        Assert.Equal(entry.Title, application.Name);
+        Assert.Equal(entry.Title, application.Title);
+        Assert.Equal(entry.Updated, application.Updated);
+
+        Assert.NotNull(application.Dynamic.Links);
+
+        IReadOnlyDictionary<string, Uri> links = application.Dynamic.Links;
+        Assert.NotEqual(0, links.Count);
+
+        Assert.Equal(generatorVersion, application.GeneratorVersion);
+
+        TestResource.CheckExistenceOfApplicationProperties(application.Dynamic);
+    }
+
+    #endregion
 }
