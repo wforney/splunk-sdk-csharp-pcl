@@ -19,6 +19,8 @@ namespace Splunk.Examples.Authenticate
     using System;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client;
+    using Splunk.Client.Helper;
 
     /// <summary>
     /// An example program to authenticate to the server and print the received

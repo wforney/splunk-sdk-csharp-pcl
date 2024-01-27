@@ -21,39 +21,39 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		REST API coverage.xlsx = REST API coverage.xlsx
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "authenticate", "examples\authenticate\authenticate.csproj", "{74FFC42D-76D4-48F8-805D-80F134423194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "authenticate", "examples\authenticate\authenticate.csproj", "{74FFC42D-76D4-48F8-805D-80F134423194}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "submit", "examples\submit\submit.csproj", "{A585A939-E070-455D-9A99-A68618B54E1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "submit", "examples\submit\submit.csproj", "{A585A939-E070-455D-9A99-A68618B54E1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "list_apps", "examples\list_apps\list_apps.csproj", "{4D090E62-8E8F-45F8-9382-97AFE56578AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "list_apps", "examples\list_apps\list_apps.csproj", "{4D090E62-8E8F-45F8-9382-97AFE56578AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "random-numbers", "examples\random-numbers\random-numbers.csproj", "{92ED069A-80B3-468A-BDA8-510F84907EB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "random-numbers", "examples\random-numbers\random-numbers.csproj", "{92ED069A-80B3-468A-BDA8-510F84907EB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "saved-searches", "examples\saved-searches\saved-searches.csproj", "{DC60AAA9-0A1B-48CF-A253-08711F477CB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "saved-searches", "examples\saved-searches\saved-searches.csproj", "{DC60AAA9-0A1B-48CF-A253-08711F477CB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "search", "examples\normal-search\search.csproj", "{C9314719-623E-44F6-AB7E-9D2512D63941}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "search", "examples\normal-search\search.csproj", "{C9314719-623E-44F6-AB7E-9D2512D63941}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "search-oneshot", "examples\search\search-oneshot.csproj", "{F3692BB4-E692-4ED8-B999-FB7FBCF3126F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "search-oneshot", "examples\search\search-oneshot.csproj", "{F3692BB4-E692-4ED8-B999-FB7FBCF3126F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "search-export", "examples\search-export\search-export.csproj", "{907193BC-937D-4353-93FC-53F8B7AF0092}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "search-export", "examples\search-export\search-export.csproj", "{907193BC-937D-4353-93FC-53F8B7AF0092}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "search-realtime", "examples\search-realtime\search-realtime.csproj", "{D10A0063-A2DA-4F41-B54F-EE6E7FC57C41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "search-realtime", "examples\search-realtime\search-realtime.csproj", "{D10A0063-A2DA-4F41-B54F-EE6E7FC57C41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-context", "examples\mock-context\mock-context.csproj", "{58A036C5-1219-4D2E-9EB8-A2C247832831}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mock-context", "examples\mock-context\mock-context.csproj", "{58A036C5-1219-4D2E-9EB8-A2C247832831}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-interface", "examples\mock-interface\mock-interface.csproj", "{F102F57B-D988-4B0A-82CF-F9420F0DFE39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mock-interface", "examples\mock-interface\mock-interface.csproj", "{F102F57B-D988-4B0A-82CF-F9420F0DFE39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-object", "examples\mock-object\mock-object.csproj", "{8992B3EF-E2E6-4E5D-B488-986F2A5FE713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mock-object", "examples\mock-object\mock-object.csproj", "{8992B3EF-E2E6-4E5D-B488-986F2A5FE713}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "environment_variable_monitor", "examples\environment_variable_monitor\environment_variable_monitor.csproj", "{97C3A57B-8ED8-42A7-9FB3-8120BA265FCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "environment_variable_monitor", "examples\environment_variable_monitor\environment_variable_monitor.csproj", "{97C3A57B-8ED8-42A7-9FB3-8120BA265FCC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modular_input", "Modular_input", "{AE98AECD-D551-4DF7-84FA-A6C76B930639}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "github-commits", "examples\github-commits\github-commits.csproj", "{35B8F1F4-E7F6-4988-8737-5290BF787199}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "github-commits", "examples\github-commits\github-commits.csproj", "{35B8F1F4-E7F6-4988-8737-5290BF787199}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "get-splunk-data-inputs", "examples\Get-SplunkDataInput\get-splunk-data-inputs.csproj", "{443CB5CF-1086-40E3-B60C-6B35D7DFCF90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "get-splunk-data-inputs", "examples\Get-SplunkDataInput\get-splunk-data-inputs.csproj", "{443CB5CF-1086-40E3-B60C-6B35D7DFCF90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "search-response-message-stream", "examples\search-response-message-stream\search-response-message-stream.csproj", "{6BE565DA-A2C6-4ADD-AC8D-F53D4CBD0F5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "search-response-message-stream", "examples\search-response-message-stream\search-response-message-stream.csproj", "{6BE565DA-A2C6-4ADD-AC8D-F53D4CBD0F5E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Splunk.Client", "src\Splunk.Client\Splunk.Client.csproj", "{13787315-E83E-4B89-9C3A-3FFEB85ACBBB}"
 EndProject

@@ -16,6 +16,7 @@
 
 namespace Splunk.Client.Examples
 {
+    using Splunk.Client.Helper;
     using Splunk.Client.Helpers;
 
     using System;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2013 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -17,6 +17,7 @@
 namespace Splunk.Examples.GetSplunkDataInputs
 {
     using Splunk.Client;
+    using Splunk.Client.Helper;
     using Splunk.Client.Helpers;
     using System;
     using System.Dynamic;

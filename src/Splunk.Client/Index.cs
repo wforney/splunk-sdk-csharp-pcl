@@ -530,11 +530,9 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "disable");
 
-            using (var response = await this.Context.PostAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -542,11 +540,9 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "enable");
 
-            using (var response = await this.Context.PostAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

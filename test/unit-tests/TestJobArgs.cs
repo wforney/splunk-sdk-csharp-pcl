@@ -64,7 +64,7 @@ namespace Splunk.Client.UnitTests
                 "timeout=null", 
                 args.ToString());
 
-            Assert.Equal(0, args.Count());
+            Assert.Empty(args);
         }
 
         [Trait("unit-test", "Splunk.Client.JobArgs")]

@@ -14,16 +14,15 @@
  * under the License.
  */
 
+using System.ComponentModel;
+using System.Runtime.Serialization;
+
 //// TODO:
 //// [O] Contracts
 //// [O] Documentation
 
 namespace Splunk.Client
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Provides the arguments required for starting a new search export job.
     /// </summary>
@@ -121,7 +120,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "earliest_time", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string EarliestTime
+        public string? EarliestTime
         { get; set; }
 
         /// <summary>
@@ -150,7 +149,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "f", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public IReadOnlyList<string> FieldList
+        public IReadOnlyList<string>? FieldList
         { get; set; }
 
         /// <summary>
@@ -183,7 +182,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "id", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string Id
+        public string? Id
         { get; set; }
 
         /// <summary>
@@ -202,7 +201,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "index_earliest", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string IndexEarliest
+        public string? IndexEarliest
         { get; set; }
 
         /// <summary>
@@ -221,7 +220,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "index_latest", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string IndexLatest
+        public string? IndexLatest
         { get; set; }
 
         /// <summary>
@@ -240,7 +239,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "latest_time", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string LatestTime
+        public string? LatestTime
         { get; set; }
 
         /// <summary>
@@ -302,7 +301,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "namespace", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string Namespace
+        public string? Namespace
         { get; set; }
 
         /// <summary>
@@ -324,7 +323,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "now", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string Now
+        public string? Now
         { get; set; }
 
         /// <summary>
@@ -355,7 +354,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "output_time_format", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string OutputTimeFormat
+        public string? OutputTimeFormat
         { get; set; }
 
         /// <summary>
@@ -470,7 +469,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "remote_server_list", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string RemoteServerList
+        public string? RemoteServerList
         { get; set; }
 
         /// <summary>
@@ -486,7 +485,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "rf", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public IReadOnlyList<string> RequiredFieldList
+        public IReadOnlyList<string>? RequiredFieldList
         { get; set; }
 
         /// <summary>
@@ -501,7 +500,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "search_listener", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string SearchListener
+        public string? SearchListener
         { get; set; }
 
         /// <summary>
@@ -544,7 +543,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "segmentation", EmitDefaultValue = false)]
         [DefaultValue("raw")]
-        public string Segmentation
+        public string? Segmentation
         { get; set; }
 
         /// <summary>
@@ -575,7 +574,7 @@ namespace Splunk.Client
         /// </value>
         [DataMember(Name = "time_format", EmitDefaultValue = false)]
         [DefaultValue(null)]
-        public string TimeFormat
+        public string? TimeFormat
         { get; set; }
 
         /// <summary>

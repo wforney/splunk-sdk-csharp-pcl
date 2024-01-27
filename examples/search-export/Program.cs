@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2014 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -17,6 +17,7 @@
 namespace search_export
 {
     using Splunk.Client;
+    using Splunk.Client.Helper;
     using Splunk.Client.Helpers;
     using System;
     using System.Net;
@@ -26,7 +27,9 @@ namespace search_export
     {
         static void Main(string[] args)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+#pragma warning restore CS0618 // Type or member is obsolete
             using (var service = new Service(Scheme.Https, "localhost", 8089, new Namespace(user: "nobody", app: "search")))
             {
                 Run(service).Wait();
@@ -42,20 +45,18 @@ namespace search_export
 
             //// Search : Export Previews
 
-            using (SearchPreviewStream stream = await service.ExportSearchPreviewsAsync("search index=_internal | head 100"))
+            using SearchPreviewStream stream = await service.ExportSearchPreviewsAsync("search index=_internal | head 100");
+            int previewNumber = 0;
+
+            foreach (SearchPreview preview in stream)
             {
-                int previewNumber = 0;
+                int resultNumber = 0;
 
-                foreach (SearchPreview preview in stream)
+                Console.WriteLine("Preview {0:D8}: {1}", ++previewNumber, preview.IsFinal ? "final" : "partial");
+
+                foreach (var result in preview.Results)
                 {
-                    int resultNumber = 0;
-
-                    Console.WriteLine("Preview {0:D8}: {1}", ++previewNumber, preview.IsFinal ? "final" : "partial");
-
-                    foreach (var result in preview.Results)
-                    {
-                        Console.WriteLine(string.Format("{0:D8}: {1}", ++resultNumber, result));
-                    }
+                    Console.WriteLine(string.Format("{0:D8}: {1}", ++resultNumber, result));
                 }
             }
         }

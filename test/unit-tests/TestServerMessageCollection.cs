@@ -14,108 +14,75 @@
  * under the License.
  */
 
-namespace Splunk.Client.UnitTests
+using Xunit;
+
+namespace Splunk.Client.UnitTests;
+
+public class TestServerMessageCollection
 {
-    using Microsoft.CSharp.RuntimeBinder;
-
-    using Splunk.Client;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
-
-    using Xunit;
-
-    public class TestServerMessageCollection
+    [Trait("unit-test", "Splunk.Client.ServerMessage")]
+    [Fact]
+    public async Task CanConstructServerMessage()
     {
-        [Trait("unit-test", "Splunk.Client.ServerMessage")]
-        [Fact]
-        async Task CanConstructServerMessage()
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ServerMessageCollection.CreateAsync.xml"));
+
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var message = new ServerMessage(context, feed);
+
+        CheckCommonProperties("some_message_name", message);
+
+        Assert.Equal("some_message_text", message.Text);
+        Assert.Equal(ServerMessageSeverity.Information, message.Severity);
+        Assert.Equal("2014-05-27 15:28:02Z", message.TimeCreated.ToString("u"));
+
+        bool canList = message.Eai.Acl.CanList;
+        string app = message.Eai.Acl.App;
+        dynamic eai = message.Eai;
+        Assert.Equal(app, eai.Acl.App);
+        Assert.Equal(canList, eai.Acl.CanList);
+    }
+
+    [Trait("unit-test", "Splunk.Client.ServerMessageCollection")]
+    [Fact]
+    public async Task CanConstructServerMessageCollection()
+    {
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ServerMessageCollection.GetAsync.xml"));
+
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var expectedNames = new string[]
         {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ServerMessageCollection.CreateAsync.xml"));
+                "some_message_name",
+                "some_other_message_name",
+        };
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var message = new ServerMessage(context, feed);
+        var messages = new ConfigurationCollection(context, feed);
 
-                CheckCommonProperties("some_message_name", message);
-                
-                Assert.Equal("some_message_text", message.Text);
-                Assert.Equal(ServerMessageSeverity.Information, message.Severity);
-                Assert.Equal("2014-05-27 15:28:02Z", message.TimeCreated.ToString("u"));
-                
-                Assert.DoesNotThrow(() =>
-                {
-                    bool canList = message.Eai.Acl.CanList;
-                    string app = message.Eai.Acl.App;
-                    dynamic eai = message.Eai;
-                    Assert.Equal(app, eai.Acl.App);
-                    Assert.Equal(canList, eai.Acl.CanList);
-                });
-            }
-        }
+        Assert.Equal(expectedNames, from message in messages select message.Title);
+        Assert.Equal(expectedNames.Length, messages.Count);
+        CheckCommonProperties("messages", messages);
 
-        [Trait("unit-test", "Splunk.Client.ServerMessageCollection")]
-        [Fact]
-        async Task CanConstructServerMessageCollection()
+        for (int i = 0; i < messages.Count; i++)
         {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ServerMessageCollection.GetAsync.xml"));
-
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var expectedNames = new string[] 
-                { 
-                    "some_message_name",
-                    "some_other_message_name",
-                };
-
-                var messages = new ConfigurationCollection(context, feed);
-
-                Assert.Equal(expectedNames, from message in messages select message.Title);
-                Assert.Equal(expectedNames.Length, messages.Count);
-                CheckCommonProperties("messages", messages);
-
-                for (int i = 0; i < messages.Count; i++)
-                {
-                    CheckCommonProperties(expectedNames[i], messages[i]);
-                }
-            }
+            CheckCommonProperties(expectedNames[i], messages[i]);
         }
+    }
 
-        void CheckCommonProperties<TResource>(string expectedName, BaseEntity<TResource> entity) where TResource : BaseResource, new()
-        {
-            Assert.Equal(expectedName, entity.Title);
+    public void CheckCommonProperties<TResource>(string expectedName, BaseEntity<TResource> entity) where TResource : BaseResource, new()
+    {
+        Assert.Equal(expectedName, entity.Title);
 
-            //// Properties common to all resources
+        //// Properties common to all resources
 
-            Assert.DoesNotThrow(() =>
-            {
-                Version value = entity.GeneratorVersion;
-                Assert.NotNull(value);
-            });
+        Version value = entity.GeneratorVersion;
+        Assert.NotNull(value);
 
-            Assert.DoesNotThrow(() =>
-            {
-                Uri value = entity.Id;
-                Assert.NotNull(value);
-            });
+        Uri value2 = entity.Id;
+        Assert.NotNull(value2);
 
-            Assert.DoesNotThrow(() =>
-            {
-                string value = entity.Title;
-                Assert.NotNull(value);
-            });
+        string value3 = entity.Title;
+        Assert.NotNull(value3);
 
-            Assert.DoesNotThrow(() =>
-            {
-                DateTime value = entity.Updated;
-                Assert.NotEqual(DateTime.MinValue, value);
-            });
-        }
+        DateTime value4 = entity.Updated;
+        Assert.NotEqual(DateTime.MinValue, value4);
     }
 }

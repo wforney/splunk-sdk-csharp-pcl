@@ -20,6 +20,7 @@ namespace Splunk.Examples.Authenticate
     using System.Net;
     using System.Threading.Tasks;
     using Splunk.Client;
+    using Splunk.Client.Helper;
     using Splunk.Client.Helpers;
 
     /// <summary>
@@ -92,12 +93,10 @@ namespace Splunk.Examples.Authenticate
                 //// This example shows how to fetch raw search results in a specific format: JSON. Select an alternative format by
                 //// by selecting the OutputMode you like.
 
-                using (var message = await job.GetSearchResponseMessageAsync(outputMode: OutputMode.Json))
-                {
-                    Console.Error.WriteLine("Search results (Press Control-C to cancel:");
-                    var content = await message.Content.ReadAsStringAsync();
-                    Console.WriteLine(content);
-                }
+                using var message = await job.GetSearchResponseMessageAsync(outputMode: OutputMode.Json);
+                Console.Error.WriteLine("Search results (Press Control-C to cancel:");
+                var content = await message.Content.ReadAsStringAsync();
+                Console.WriteLine(content);
             }
             finally
             {

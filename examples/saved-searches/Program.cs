@@ -14,56 +14,46 @@
  * under the License.
  */
 
-namespace Splunk.Examples.saved_searches
+using System;
+using System.Net;
+using System.Threading.Tasks;
+using Splunk.Client;
+using Splunk.Client.Helper;
+
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls; // DevSkim: ignore DS112835 // DevSkim: ignore DS440020
+using (var service = new Service(SdkHelper.Splunk.Scheme, SdkHelper.Splunk.Host, SdkHelper.Splunk.Port, new Namespace(user: "nobody", app: "search")))
 {
-    using Splunk.Client.Helpers;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Splunk.Client;
-    using System.Net;
+    Run(service).Wait();
+}
 
-    class Program
+Console.Write("Press return to exit: ");
+Console.ReadLine();
+
+static async Task Run(Service service)
+{
+    await service.LogOnAsync(SdkHelper.Splunk.Username, SdkHelper.Splunk.Password);
+
+    string savedSearchName = "example_search";
+    string savedSearchQuery = "search index=_internal | head 10";
+
+    // Delete the saved search if it exists before we start.
+    SavedSearch savedSearch = await service.SavedSearches.GetOrNullAsync(savedSearchName);
+
+    if (savedSearch != null)
     {
-        static void Main(string[] args)
+        await savedSearch.RemoveAsync();
+    }
+
+    savedSearch = await service.SavedSearches.CreateAsync(savedSearchName, savedSearchQuery);
+    Job savedSearchJob = await savedSearch.DispatchAsync();
+
+    using (SearchResultStream stream = await savedSearchJob.GetSearchResultsAsync())
+    {
+        foreach (SearchResult result in stream)
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-            using (var service = new Service(SdkHelper.Splunk.Scheme, SdkHelper.Splunk.Host, SdkHelper.Splunk.Port, new Namespace(user: "nobody", app: "search")))
-            {
-                Run(service).Wait();
-            }
-
-            Console.Write("Press return to exit: ");
-            Console.ReadLine();
-        }
-
-        private static async Task Run(Service service)
-        {
-            await service.LogOnAsync(SdkHelper.Splunk.Username, SdkHelper.Splunk.Password);
-
-            string savedSearchName = "example_search";
-            string savedSearchQuery = "search index=_internal | head 10";
-
-            // Delete the saved search if it exists before we start.
-            SavedSearch savedSearch = await service.SavedSearches.GetOrNullAsync(savedSearchName);
-
-            if (savedSearch != null)
-            {
-                await savedSearch.RemoveAsync();
-            }
-
-            savedSearch = await service.SavedSearches.CreateAsync(savedSearchName, savedSearchQuery);
-            Job savedSearchJob = await savedSearch.DispatchAsync();
-
-            using (SearchResultStream stream = await savedSearchJob.GetSearchResultsAsync())
-            {
-                foreach (SearchResult result in stream)
-                {
-                    Console.WriteLine(result);
-                }
-            }
-
-            await savedSearch.RemoveAsync();
+            Console.WriteLine(result);
         }
     }
+
+    await savedSearch.RemoveAsync();
 }

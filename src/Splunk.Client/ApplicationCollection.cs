@@ -14,20 +14,17 @@
  * under the License.
  */
 
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Net;
+using System.Runtime.Serialization;
+
 //// TODO:
 //// [O] Contracts
 //// [O] Documentation
 
 namespace Splunk.Client
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Net;
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Provides an object representation of a collection of Splunk applications.
     /// </summary>
@@ -67,10 +64,7 @@ namespace Splunk.Client
         /// <exception cref="System.IO.InvalidDataException">
         /// <paramref name="feed"/> is in an invalid format.
         /// </exception>
-        protected internal ApplicationCollection(Context context, AtomFeed feed)
-        {
-            this.Initialize(context, feed);
-        }
+        protected internal ApplicationCollection(Context context, AtomFeed feed) => this.Initialize(context, feed);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCollection"/>
@@ -108,23 +102,17 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual ReadOnlyCollection<Message> Messages
-        {
-            get { return this.Snapshot.GetValue("Messages") ?? NoMessages; }
-        }
+        public virtual ReadOnlyCollection<Message> Messages => this.Snapshot.GetValue("Messages") ?? NoMessages;
 
         /// <inheritdoc/>
-        public virtual Pagination Pagination
-        {
-            get { return this.Snapshot.GetValue("Pagination") ?? Pagination.None; }
-        }
+        public virtual Pagination Pagination => this.Snapshot.GetValue("Pagination") ?? Pagination.None;
 
         #endregion
 
         #region Methods
 
         /// <inheritdoc/>
-        public async Task<Application> CreateAsync(string name, string template, ApplicationAttributes attributes = null)
+        public async Task<Application> CreateAsync(string name, string template, ApplicationAttributes? attributes = null)
         {
             var arguments = new CreationArgs
             {
@@ -145,13 +133,10 @@ namespace Splunk.Client
         }
 
         /// <inheritdoc/>
-        public virtual async Task GetSliceAsync(Filter criteria)
-        {
-            await this.GetSliceAsync(criteria.AsEnumerable()).ConfigureAwait(false);
-        }
+        public virtual async Task GetSliceAsync(Filter criteria) => await this.GetSliceAsync(criteria.AsEnumerable()).ConfigureAwait(false);
 
         /// <inheritdoc/>
-        public async Task<Application> InstallAsync(string path, string name = null, bool update = false)
+        public async Task<Application> InstallAsync(string path, string? name = null, bool update = false)
         {
             var resourceName = ClassResourceName;
 
@@ -163,13 +148,11 @@ namespace Splunk.Client
                 Update = update
             };
 
-            using (var response = await this.Context.PostAsync(this.Namespace, resourceName, args).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.Created).ConfigureAwait(false);
+            using var response = await this.Context.PostAsync(this.Namespace, resourceName, args).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.Created).ConfigureAwait(false);
 
-                var resourceEndpoint = await Entity<Resource>.CreateAsync<Application>(this.Context, response).ConfigureAwait(false);
-                return resourceEndpoint;
-            }
+            var resourceEndpoint = await Entity<Resource>.CreateAsync<Application>(this.Context, response).ConfigureAwait(false);
+            return resourceEndpoint;
         }
 
         #endregion
@@ -179,7 +162,7 @@ namespace Splunk.Client
         /// <summary>
         /// Name of the class resource.
         /// </summary>
-        internal static readonly ResourceName ClassResourceName = new ResourceName("apps", "local");
+        internal static readonly ResourceName ClassResourceName = new("apps", "local");
 
         #endregion
 
@@ -189,27 +172,22 @@ namespace Splunk.Client
         /// Arguments for creation.
         /// </summary>
         /// <seealso cref="T:Splunk.Client.Args{Splunk.Client.ApplicationCollection.CreationArgs}"/>
-        class CreationArgs : Args<CreationArgs>
+        private class CreationArgs : Args<CreationArgs>
         {
             [DataMember(Name = "explicit_appname", IsRequired = true)]
-            public string ExplicitApplicationName
-            { get; set; }
+            public string ExplicitApplicationName { get; set; } = string.Empty;
 
             [DataMember(Name = "filename", IsRequired = true)]
-            public bool? Filename
-            { get; set; }
+            public bool? Filename { get; set; }
 
             [DataMember(Name = "name", IsRequired = true)]
-            public string Name
-            { get; set; }
+            public string Name { get; set; } = string.Empty;
 
             [DataMember(Name = "template", EmitDefaultValue = true)]
-            public string Template
-            { get; set; }
+            public string Template { get; set; } = default!;
 
             [DataMember(Name = "update", EmitDefaultValue = false)]
-            public bool? Update
-            { get; set; }
+            public bool? Update { get; set; }
         }
 
         /// <summary>
@@ -292,7 +270,7 @@ namespace Splunk.Client
             /// </value>
             [DataMember(Name = "search", EmitDefaultValue = false)]
             [DefaultValue(null)]
-            public string Search
+            public string? Search
             { get; set; }
 
             /// <summary>

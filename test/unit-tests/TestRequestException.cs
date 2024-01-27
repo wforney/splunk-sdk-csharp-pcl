@@ -49,7 +49,7 @@ namespace Splunk.Client.UnitTests
 
             requestException = new RequestException(new HttpResponseMessage(HttpStatusCode.NotFound), null);
             Assert.Equal("404: Not Found", requestException.Message);
-            Assert.Equal(0, requestException.Details.Count);
+            Assert.Empty(requestException.Details);
             Assert.Equal(HttpStatusCode.NotFound, requestException.StatusCode);
 
             for (int i = 2; i < 10; ++i)
@@ -60,8 +60,8 @@ namespace Splunk.Client.UnitTests
                 for (int j = 0; j < i; ++j)
                 {
                     details[j] = new Message(MessageType.Warning, "Information on the cause of the RequestException");
-                    message.Append("\n  ");
-                    message.Append(details[j]);
+                    _ = message.Append("\n  ");
+                    _ = message.Append(details[j]);
                 }
 
                 requestException = new RequestException(

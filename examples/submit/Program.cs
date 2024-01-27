@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2013 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -14,15 +14,15 @@
  * under the License.
  */
 
+using System;
+using System.Net;
+using System.Threading.Tasks;
+using Splunk.Client;
+using Splunk.Client.Helper;
+using Index = Splunk.Client.Index;
+
 namespace Splunk.Examples.Submit
 {
-    using Splunk.Client;
-    using Splunk.Client.Helpers;
-    using System;
-    using System.Linq;
-    using System.Net;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// An example program to submit events into Splunk.
     /// </summary>
@@ -85,12 +85,10 @@ namespace Splunk.Examples.Submit
                 result = await transmitter.SendAsync("Hello World.", indexName);
                 result = await transmitter.SendAsync("Goodbye world.", indexName);
 
-                using (var results = await service.SearchOneShotAsync(string.Format("search index={0}", indexName)))
+                using var results = await service.SearchOneShotAsync(string.Format("search index={0}", indexName));
+                foreach (SearchResult task in results)
                 {
-                    foreach (SearchResult task in results)
-                    {
-                        Console.WriteLine(task);
-                    }
+                    Console.WriteLine(task);
                 }
             }
             catch (Exception e)

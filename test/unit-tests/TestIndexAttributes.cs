@@ -67,7 +67,7 @@ namespace Splunk.Client.UnitTests
                 "warmToColdScript=null",
                 attributes.ToString());
 
-            Assert.Equal(0, ((IEnumerable<Argument>)attributes).Count());
+            Assert.Empty(((IEnumerable<Argument>)attributes));
         }
 
         [Trait("unit-test", "Splunk.Client.IndexAttributes")]

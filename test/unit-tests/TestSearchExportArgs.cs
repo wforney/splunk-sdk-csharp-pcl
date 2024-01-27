@@ -68,7 +68,7 @@ namespace Splunk.Client.UnitTests
                 "truncation_mode=abstract",
                 args.ToString());
 
-            Assert.Equal(0, args.ToArray().Length);
+            Assert.Empty(args.ToArray());
         }
 
         [Trait("unit-test", "Splunk.Client.SearchExportArgs")]
@@ -103,9 +103,9 @@ namespace Splunk.Client.UnitTests
                 ReloadMacros = false,
                 RemoteServerList = "server1,server2",
                 RequiredFieldList = new string[] { "some_unchecked_string", "some_other_uncheck_string" },
-                Search = "some_unchecked_string",
+                //Search = "some_unchecked_string",
                 SearchListener = "some_unchecked_string",
-                SearchMode = SearchMode.Realtime,
+                SearchMode = SearchMode.RealTime,
                 Segmentation = "some_unchecked_string",
                 SyncBundleReplication = true,
                 TimeFormat = "some_unchecked_string",

@@ -156,15 +156,13 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, keyName);
 
-            using (var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            using var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
 
-                var reader = new StreamReader(response.Stream);
-                var value = await reader.ReadToEndAsync().ConfigureAwait(false);
+            var reader = new StreamReader(response.Stream);
+            var value = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-                return value;
-            }
+            return value;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -201,20 +199,16 @@ namespace Splunk.Client
         {
             var rn = new ResourceName("configs", string.Concat("conf-", this.ResourceName[1]), this.ResourceName[2]);
 
-            using (var response = await this.Context.DeleteAsync(this.Namespace, rn).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-            }
+            using var response = await this.Context.DeleteAsync(this.Namespace, rn).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public override async Task<bool> UpdateAsync(IEnumerable<Argument> arguments)
         {
-            using (var response = await this.Context.PostAsync(this.Namespace, this.ResourceName, arguments).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                return false;
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, this.ResourceName, arguments).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            return false;
         }
 
         /// <inheritdoc/>
@@ -223,10 +217,8 @@ namespace Splunk.Client
             var resourceName = new ResourceName(this.ResourceName, keyName);
             var arguments = new Argument[] { new Argument("value", value) };
 
-            using (var response = await this.Context.PostAsync(this.Namespace, resourceName, arguments).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, resourceName, arguments).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2014 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -17,6 +17,7 @@
 namespace search_realtime
 {
     using Splunk.Client;
+    using Splunk.Client.Helper;
     using Splunk.Client.Helpers;
     using System;
     using System.Collections.Generic;
@@ -78,20 +79,18 @@ namespace search_realtime
 
             while (!tokenSource.IsCancellationRequested)
             {
-                using (SearchResultStream stream = await realtimeJob.GetSearchPreviewAsync())
+                using SearchResultStream stream = await realtimeJob.GetSearchPreviewAsync();
+                Console.WriteLine("fieldnames: " + string.Join(";", stream.FieldNames));
+                Console.WriteLine("fieldname count: " + stream.FieldNames.Count);
+                Console.WriteLine("final result: " + stream.IsFinal);
+
+                foreach (SearchResult result in stream)
                 {
-                    Console.WriteLine("fieldnames: " + string.Join(";", stream.FieldNames));
-                    Console.WriteLine("fieldname count: " + stream.FieldNames.Count);
-                    Console.WriteLine("final result: " + stream.IsFinal);
-
-                    foreach (SearchResult result in stream)
-                    {
-                        Console.WriteLine(result);
-                    }
-
-                    Console.WriteLine("");
-                    await Task.Delay(2000, tokenSource.Token);
+                    Console.WriteLine(result);
                 }
+
+                Console.WriteLine("");
+                await Task.Delay(2000, tokenSource.Token);
             }
         }
     }

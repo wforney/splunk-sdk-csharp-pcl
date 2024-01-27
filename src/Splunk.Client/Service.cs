@@ -259,38 +259,34 @@ namespace Splunk.Client
         /// <inheritdoc/>
         public virtual async Task<ReadOnlyCollection<string>> GetCapabilitiesAsync()
         {
-            using (var response = await this.Context.GetAsync(this.Namespace, AuthorizationCapabilities).ConfigureAwait(false))
+            using var response = await this.Context.GetAsync(this.Namespace, AuthorizationCapabilities).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+
+            var feed = new AtomFeed();
+            await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
+
+            if (feed.Entries.Count != 1)
             {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-
-                var feed = new AtomFeed();
-                await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
-
-                if (feed.Entries.Count != 1)
-                {
-                    throw new InvalidDataException(); // TODO: Diagnostics : cardinality violation
-                }
-
-                var entry = feed.Entries[0];
-
-                ReadOnlyCollection<dynamic> capabilities = entry.Content["Capabilities"];
-                return new ReadOnlyCollection<string>(capabilities.Cast<string>().ToList());
+                throw new InvalidDataException(); // TODO: Diagnostics : cardinality violation
             }
+
+            var entry = feed.Entries[0];
+
+            ReadOnlyCollection<dynamic> capabilities = entry.Content["Capabilities"];
+            return new ReadOnlyCollection<string>(capabilities.Cast<string>().ToList());
         }
 
         /// <inheritdoc/>
         public virtual async Task LogOnAsync(string username, string password)
         {
-            using (var response = await this.Context.PostAsync(Namespace.Default, AuthLogin, new Argument[]
+            using var response = await this.Context.PostAsync(Namespace.Default, AuthLogin, new Argument[]
             {
                 new Argument("username", username),
                 new Argument("password", password),
                 new Argument("cookie", 1)
-            }).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                this.SessionKey = await response.XmlReader.ReadResponseElementAsync("sessionKey").ConfigureAwait(false);
-            }
+            }).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            this.SessionKey = await response.XmlReader.ReadResponseElementAsync("sessionKey").ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -298,12 +294,10 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(AuthenticationHttpAuthTokens, this.SessionKey);
 
-            using (var response = await this.Context.DeleteAsync(Namespace.Default, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                this.SessionKey = null;
-                this.Context.CookieJar.ClearCookies();
-            }
+            using var response = await this.Context.DeleteAsync(Namespace.Default, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            this.SessionKey = null;
+            this.Context.CookieJar.ClearCookies();
         }
 
         #endregion

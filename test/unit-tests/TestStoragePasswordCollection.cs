@@ -14,122 +14,89 @@
  * under the License.
  */
 
-namespace Splunk.Client.UnitTests
+using Xunit;
+
+namespace Splunk.Client.UnitTests;
+
+public class TestStoragePasswordCollection
 {
-    using Microsoft.CSharp.RuntimeBinder;
-
-    using Splunk.Client;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
-
-    using Xunit;
-
-    public class TestStoragePasswordCollection
+    [Trait("unit-test", "Splunk.Client.StoragePassword")]
+    [Fact]
+    public async Task CanConstructStoragePassword()
     {
-        [Trait("unit-test", "Splunk.Client.StoragePassword")]
-        [Fact]
-        async Task CanConstructStoragePassword()
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "StoragePassword.GetAsync.xml"));
+
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var password = new StoragePassword(context, feed);
+        CheckStoragePassword(feed.Entries[0], password);
+    }
+
+    [Trait("unit-test", "Splunk.Client.StoragePasswordCollection")]
+    [Fact]
+    public async Task CanConstructStoragePasswordCollection()
+    {
+        var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "StoragePasswordCollection.GetAsync.xml"));
+
+        using var context = new Context(Scheme.Https, "localhost", 8089);
+        var expectedNames = new string[]
         {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "StoragePassword.GetAsync.xml"));
+                ":foobar:",
+                "splunk.com:foobar:",
+                "splunk\\:com:foobar:"
+        };
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var password = new StoragePassword(context, feed);
-                CheckStoragePassword(feed.Entries[0], password);
-            }
-        }
+        var passwords = new StoragePasswordCollection(context, feed);
 
-        [Trait("unit-test", "Splunk.Client.StoragePasswordCollection")]
-        [Fact]
-        async Task CanConstructStoragePasswordCollection()
+        Assert.Equal(expectedNames, from password in passwords select password.Title);
+        Assert.Equal(expectedNames.Length, passwords.Count);
+        CheckCommonProperties("passwords", passwords);
+
+        for (int i = 0; i < passwords.Count; i++)
         {
-            var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "StoragePasswordCollection.GetAsync.xml"));
-
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var expectedNames = new string[] 
-                { 
-                    ":foobar:",
-                    "splunk.com:foobar:",
-                    "splunk\\:com:foobar:"
-                };
-
-                var passwords = new StoragePasswordCollection(context, feed);
-
-                Assert.Equal(expectedNames, from password in passwords select password.Title);
-                Assert.Equal(expectedNames.Length, passwords.Count);
-                CheckCommonProperties("passwords", passwords);
-
-                for (int i = 0; i < passwords.Count; i++)
-                {
-                    var entry = feed.Entries[i];
-                    var password = passwords[i];
-                    CheckStoragePassword(entry, password);
-                }
-            }
+            var entry = feed.Entries[i];
+            var password = passwords[i];
+            CheckStoragePassword(entry, password);
         }
+    }
 
-        void CheckCommonProperties<TResource>(string expectedName, BaseEntity<TResource> entity) where TResource : BaseResource, new()
-        {
-            Assert.Equal(expectedName, entity.Title);
+    public void CheckCommonProperties<TResource>(string expectedName, BaseEntity<TResource> entity) where TResource : BaseResource, new()
+    {
+        Assert.Equal(expectedName, entity.Title);
 
-            //// Properties common to all resources
+        //// Properties common to all resources
 
-            Assert.DoesNotThrow(() =>
-            {
-                Version value = entity.GeneratorVersion;
-                Assert.NotNull(value);
-            });
+        Version value = entity.GeneratorVersion;
+        Assert.NotNull(value);
 
-            Assert.DoesNotThrow(() =>
-            {
-                Uri value = entity.Id;
-                Assert.NotNull(value);
-            });
+        Uri value2 = entity.Id;
+        Assert.NotNull(value2);
 
-            Assert.DoesNotThrow(() =>
-            {
-                string value = entity.Title;
-                Assert.NotNull(value);
-            });
+        string value3 = entity.Title;
+        Assert.NotNull(value3);
 
-            Assert.DoesNotThrow(() =>
-            {
-                DateTime value = entity.Updated;
-                Assert.NotEqual(DateTime.MinValue, value);
-            });
-        }
+        DateTime value4 = entity.Updated;
+        Assert.NotEqual(DateTime.MinValue, value4);
+    }
 
-        void CheckEai(StoragePassword password)
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                bool canList = password.Eai.Acl.CanList;
-                string app = password.Eai.Acl.App;
-                dynamic eai = password.Eai;
-                Assert.Equal(app, eai.Acl.App);
-                Assert.Equal(canList, eai.Acl.CanList);
-            });
-        }
+    public void CheckEai(StoragePassword password)
+    {
+            bool canList = password.Eai.Acl.CanList;
+            string app = password.Eai.Acl.App;
+            dynamic eai = password.Eai;
+            Assert.Equal(app, eai.Acl.App);
+            Assert.Equal(canList, eai.Acl.CanList);
+    }
 
-        void CheckStoragePassword(AtomEntry entry, StoragePassword password)
-        {
-            CheckCommonProperties(entry.Title, password);
-            CheckEai(password);
+    public void CheckStoragePassword(AtomEntry entry, StoragePassword password)
+    {
+        CheckCommonProperties(entry.Title, password);
+        CheckEai(password);
 
-            Assert.Equal(entry.Content["ClearPassword"], password.ClearPassword);
-            Assert.Equal(entry.Content["EncrPassword"], password.EncryptedPassword);
-            Assert.Equal(entry.Content["Password"], password.Password);
-            Assert.Equal(entry.Content["Username"], password.Username);
-            var dictionary = (IDictionary<string, object>)entry.Content;
-            Assert.Equal(dictionary["Realm"], password.Realm);
-        }
+        Assert.Equal(entry.Content["ClearPassword"], password.ClearPassword);
+        Assert.Equal(entry.Content["EncrPassword"], password.EncryptedPassword);
+        Assert.Equal(entry.Content["Password"], password.Password);
+        Assert.Equal(entry.Content["Username"], password.Username);
+        var dictionary = (IDictionary<string, object>)entry.Content;
+        Assert.Equal(dictionary["Realm"], password.Realm);
     }
 }

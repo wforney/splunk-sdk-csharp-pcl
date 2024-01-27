@@ -161,11 +161,9 @@ namespace Splunk.Client
         /// <inheritdoc/>
         public virtual async Task GetAsync()
         {
-            using (var response = await this.Context.GetAsync(this.Namespace, this.ResourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
-            }
+            using var response = await this.Context.GetAsync(this.Namespace, this.ResourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -173,29 +171,25 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, action);
 
-            using (var response = await this.Context.SendAsync(method, this.Namespace, resourceName, arguments).ConfigureAwait(false))
+            using var response = await this.Context.SendAsync(method, this.Namespace, resourceName, arguments).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            var reader = response.XmlReader;
+
+            await reader.MoveToDocumentElementAsync("feed", "entry", "response").ConfigureAwait(false);
+
+            if (reader.Name == "response")
             {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                var reader = response.XmlReader;
-
-                await reader.MoveToDocumentElementAsync("feed", "entry", "response").ConfigureAwait(false);
-
-                if (reader.Name == "response")
-                {
-                    return false;
-                }
-
-                return await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
+                return false;
             }
+
+            return await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public virtual async Task RemoveAsync()
         {
-            using (var response = await this.Context.DeleteAsync(this.Namespace, this.ResourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-            }
+            using var response = await this.Context.DeleteAsync(this.Namespace, this.ResourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -207,20 +201,18 @@ namespace Splunk.Client
         /// <inheritdoc/>
         public virtual async Task<bool> UpdateAsync(IEnumerable<Argument> arguments)
         {
-            using (var response = await this.Context.PostAsync(this.Namespace, this.ResourceName, arguments).ConfigureAwait(false))
+            using var response = await this.Context.PostAsync(this.Namespace, this.ResourceName, arguments).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            var reader = response.XmlReader;
+
+            await reader.MoveToDocumentElementAsync("feed", "entry", "response").ConfigureAwait(false);
+
+            if (reader.Name == "response")
             {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                var reader = response.XmlReader;
-
-                await reader.MoveToDocumentElementAsync("feed", "entry", "response").ConfigureAwait(false);
-
-                if (reader.Name == "response")
-                {
-                    return false;
-                }
-
-                return await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
+                return false;
             }
+
+            return await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
         }
 
         #endregion

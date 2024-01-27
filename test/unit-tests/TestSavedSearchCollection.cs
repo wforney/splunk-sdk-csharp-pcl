@@ -14,83 +14,70 @@
  * under the License.
  */
 
-namespace Splunk.Client.UnitTests
+using Xunit;
+
+namespace Splunk.Client.UnitTests;
+
+public class TestSavedSearchCollection
 {
-    using Microsoft.CSharp.RuntimeBinder;
-    using Splunk.Client;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
-
-    using Xunit;
-
-    class TestSavedSearchCollection
+    [Trait("unit-test", "SavedSearchCollection.Filter")]
+    [Fact]
+    private void CanSpecifyFilter()
     {
-        [Trait("unit-test", "SavedSearchCollection.Filter")]
-        [Fact]
-        void CanSpecifyFilter()
+        var expectedString = new string[] {
+            "count=30; earliest_time=null; latest_time=null; listDefaultActionArgs=f; offset=0; search=null; sort_dir=asc; sort_key=name; sort_mode=auto",
+            "count=30; earliest_time=null; latest_time=null; listDefaultActionArgs=f; offset=0; search=some_unchecked_string; sort_dir=asc; sort_key=name; sort_mode=auto",
+        };
+        var expectedArguments = new List<Argument>[]
         {
-            string[] expectedString = new string[] {
-                "count=30; earliest_time=null; latest_time=null; listDefaultActionArgs=f; offset=0; search=null; sort_dir=asc; sort_key=name; sort_mode=auto",
-                "count=30; earliest_time=null; latest_time=null; listDefaultActionArgs=f; offset=0; search=some_unchecked_string; sort_dir=asc; sort_key=name; sort_mode=auto",
-            };
-            var expectedArguments = new List<Argument>[]
+            new()
             {
-                new List<Argument>() 
-                { 
-                },
-                new List<Argument>() 
-                { 
-                    new Argument("search", "some_unchecked_string")
-                }
-            };
+            },
+            new()
+            {
+                new Argument("search", "some_unchecked_string")
+            }
+        };
 
-            SavedSearchCollection.Filter args;
+        SavedSearchCollection.Filter args;
 
-            args = new SavedSearchCollection.Filter();
-            Assert.Equal(expectedString[0], args.ToString());
-            Assert.Equal(expectedArguments[0], args);
-        }
+        args = new SavedSearchCollection.Filter();
+        Assert.Equal(expectedString[0], args.ToString());
+        Assert.Equal(expectedArguments[0], args);
+    }
 
-        [Trait("class", "Splunk.Client.Args")]
-        [Fact]
-        void CanSetEveryValue()
+    [Trait("class", "Splunk.Client.Args")]
+    [Fact]
+    private void CanSetEveryValue()
+    {
+        var args = new SavedSearchCollection.Filter()
         {
-            var args = new SavedSearchCollection.Filter()
-            {
-                Count = 100,
-                EarliestTime = "some_unchecked_string",
-                LatestTime = "some_unchecked_string",
-                ListDefaultActions = true,
-                Offset = 100,
-                Search = "some_unchecked_string",
-                SortDirection = SortDirection.Descending,
-                SortKey = "some_unchecked_string",
-                SortMode = SortMode.Alphabetic
-            };
+            Count = 100,
+            EarliestTime = "some_unchecked_string",
+            LatestTime = "some_unchecked_string",
+            ListDefaultActions = true,
+            Offset = 100,
+            Search = "some_unchecked_string",
+            SortDirection = SortDirection.Descending,
+            SortKey = "some_unchecked_string",
+            SortMode = SortMode.Alphabetic
+        };
 
-            Assert.Equal("count=100; earliest_time=some_unchecked_string; latest_time=some_unchecked_string; listDefaultActionArgs=t; offset=100; search=some_unchecked_string; sort_dir=desc; sort_key=some_unchecked_string; sort_mode=alpha", args.ToString());
+        Assert.Equal("count=100; earliest_time=some_unchecked_string; latest_time=some_unchecked_string; listDefaultActionArgs=t; offset=100; search=some_unchecked_string; sort_dir=desc; sort_key=some_unchecked_string; sort_mode=alpha", args.ToString());
 
-            var list = new List<Argument>()
-            { 
-                new Argument("count", "100"),
-                new Argument("earliest_time", "some_unchecked_string"),
-                new Argument("latest_time", "some_unchecked_string"),
-                new Argument("listDefaultActionArgs", "t"),
-                new Argument("offset", "100"),
-                new Argument("search", "some_unchecked_string"),
-                new Argument("sort_dir", "desc"),
-                new Argument("sort_key", "some_unchecked_string"),
-                new Argument("sort_mode", "alpha")
-            };
+        var list = new List<Argument>()
+        {
+            new("count", "100"),
+            new("earliest_time", "some_unchecked_string"),
+            new("latest_time", "some_unchecked_string"),
+            new("listDefaultActionArgs", "t"),
+            new("offset", "100"),
+            new("search", "some_unchecked_string"),
+            new("sort_dir", "desc"),
+            new("sort_key", "some_unchecked_string"),
+            new("sort_mode", "alpha")
+        };
 
-            Assert.Equal(list, args);
-        }
+        Assert.Equal(list, args);
     }
 }

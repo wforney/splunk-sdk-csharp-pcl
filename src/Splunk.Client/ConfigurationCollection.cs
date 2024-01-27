@@ -124,15 +124,13 @@ namespace Splunk.Client
         {
             //// We override this method because the "POST properties" endpoint returns nothing.
 
-            using (var response = await this.Context.PostAsync(this.Namespace, this.ResourceName, arguments).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.Created).ConfigureAwait(false);
-                
-                var fileName = arguments.First(arg => arg.Name == "__conf").Value;
-                var configuration = new Configuration(this.Context, this.Namespace, fileName);
+            using var response = await this.Context.PostAsync(this.Namespace, this.ResourceName, arguments).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.Created).ConfigureAwait(false);
 
-                return configuration;
-            }
+            var fileName = arguments.First(arg => arg.Name == "__conf").Value;
+            var configuration = new Configuration(this.Context, this.Namespace, fileName);
+
+            return configuration;
         }
 
         /// <inheritdoc/>

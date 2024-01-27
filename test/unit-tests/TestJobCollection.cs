@@ -14,23 +14,10 @@
  * under the License.
  */
 
+using Xunit;
+
 namespace Splunk.Client.UnitTests
 {
-    using Microsoft.CSharp.RuntimeBinder;
-
-    using Splunk.Client;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
-
-    using Xunit;
-
     public class TestJobCollection
     {
         [Trait("unit-test", "Splunk.Client.Job")]
@@ -39,11 +26,9 @@ namespace Splunk.Client.UnitTests
         {
             var entry = await TestAtomFeed.ReadEntry(Path.Combine(TestAtomFeed.Directory, "Job.GetAsync.xml"));
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
-            {
-                var job = new Job(context, entry);
-                CheckJob(entry, job);
-            }
+            using var context = new Context(Scheme.Https, "localhost", 8089);
+            var job = new Job(context, entry);
+            CheckJob(entry, job);
         }
 
         [Trait("unit-test", "Splunk.Client.JobCollection")]
@@ -52,10 +37,9 @@ namespace Splunk.Client.UnitTests
         {
             var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "JobCollection.GetAsync.xml"));
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
+            using var context = new Context(Scheme.Https, "localhost", 8089);
+            var expectedNames = new string[]
             {
-                var expectedNames = new string[]
-                {
                     "scheduler__admin__search__RMD50aa4c13eb03d1730_at_1401390000_866",
                     "scheduler__admin__search__RMD54d0063ad31759fca_at_1401390000_867",
                     "scheduler__admin__search__RMD581bb7159c0bb0bbb_at_1401390000_862",
@@ -70,21 +54,20 @@ namespace Splunk.Client.UnitTests
                     "scheduler__admin__search__RMD5a7321db12d7631bf_at_1401386400_858",
                     "scheduler__admin__search__RMD5e658dbdf77ae86f8_at_1401386400_857",
                     "scheduler__admin__search__RMD5f8965a6a2fa31c5d_at_1401386400_854"
-                };
+            };
 
-                var jobs = new JobCollection(context, feed);
+            var jobs = new JobCollection(context, feed);
 
-                Assert.Equal(expectedNames.Length, jobs.Count);
-                var names = from job in jobs select job.Name;
-                Assert.Equal(expectedNames, names);
-                CheckCommonProperties("jobs", jobs);
+            Assert.Equal(expectedNames.Length, jobs.Count);
+            var names = from job in jobs select job.Name;
+            Assert.Equal(expectedNames, names);
+            CheckCommonProperties("jobs", jobs);
 
-                for (int i = 0; i < jobs.Count; i++)
-                {
-                    var entry = feed.Entries[i];
-                    var job = jobs[i];
-                    CheckJob(entry, job);
-                }
+            for (int i = 0; i < jobs.Count; i++)
+            {
+                var entry = feed.Entries[i];
+                var job = jobs[i];
+                CheckJob(entry, job);
             }
         }
 
@@ -155,42 +138,26 @@ namespace Splunk.Client.UnitTests
             Assert.Equal(expectedName, entity.Title);
 
             //// Properties common to all resources
+            var value = entity.GeneratorVersion;
+            Assert.NotNull(value);
 
-            Assert.DoesNotThrow(() =>
-            {
-                Version value = entity.GeneratorVersion;
-                Assert.NotNull(value);
-            });
+            var value2 = entity.Id;
+            Assert.NotNull(value2);
 
-            Assert.DoesNotThrow(() =>
-            {
-                Uri value = entity.Id;
-                Assert.NotNull(value);
-            });
+            var value3 = entity.Title;
+            Assert.NotNull(value3);
 
-            Assert.DoesNotThrow(() =>
-            {
-                string value = entity.Title;
-                Assert.NotNull(value);
-            });
-
-            Assert.DoesNotThrow(() =>
-            {
-                DateTime value = entity.Updated;
-                Assert.NotEqual(DateTime.MinValue, value);
-            });
+            var value4 = entity.Updated;
+            Assert.NotEqual(DateTime.MinValue, value4);
         }
 
         void CheckEai(Job password)
         {
-            Assert.DoesNotThrow(() =>
-            {
                 bool canList = password.Eai.Acl.CanList;
                 string app = password.Eai.Acl.App;
                 dynamic eai = password.Eai;
                 Assert.Equal(app, eai.Acl.App);
                 Assert.Equal(canList, eai.Acl.CanList);
-            });
         }
 
         void CheckJob(AtomEntry entry, Job job)

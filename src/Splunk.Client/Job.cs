@@ -456,32 +456,30 @@ namespace Splunk.Client
         /// <inheritdoc/>
         public virtual async Task GetAsync(DispatchState dispatchState, int delay = 30000, int retryInterval = 250)
         {
-            using (var cancellationTokenSource = new CancellationTokenSource())
+            using var cancellationTokenSource = new CancellationTokenSource();
+            // Timeout if Job is never at least the requiredState
+            cancellationTokenSource.CancelAfter(delay);
+            var token = cancellationTokenSource.Token;
+
+            for (int i = 0; ; i++)
             {
-                // Timeout if Job is never at least the requiredState
-                cancellationTokenSource.CancelAfter(delay);
-                var token = cancellationTokenSource.Token;
-
-                for (int i = 0; ; i++)
+                using (var response = await this.Context.GetAsync(this.Namespace, this.ResourceName, token).ConfigureAwait(false))
                 {
-                    using (var response = await this.Context.GetAsync(this.Namespace, this.ResourceName, token).ConfigureAwait(false))
+                    if (response.Message.StatusCode != HttpStatusCode.NoContent)
                     {
-                        if (response.Message.StatusCode != HttpStatusCode.NoContent)
-                        {
-                            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                            await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
+                        await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+                        await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
 
-                            // None or Parsing are the only states to continue checking status for
-                            if (this.DispatchState >= dispatchState || this.DispatchState == DispatchState.Queued)
-                            {
-                                break;
-                            }
+                        // None or Parsing are the only states to continue checking status for
+                        if (this.DispatchState >= dispatchState || this.DispatchState == DispatchState.Queued)
+                        {
+                            break;
                         }
                     }
-
-                    await Task.Delay(retryInterval).ConfigureAwait(false);
-                    retryInterval += retryInterval / 2;
                 }
+
+                await Task.Delay(retryInterval).ConfigureAwait(false);
+                retryInterval += retryInterval / 2;
             }
         }
 
@@ -760,10 +758,8 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "control");
 
-            using (var response = await this.Context.PostAsync(this.Namespace, resourceName, args).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, resourceName, args).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
         }
 
         #endregion

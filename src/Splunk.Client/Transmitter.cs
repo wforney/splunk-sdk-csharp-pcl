@@ -68,61 +68,53 @@ namespace Splunk.Client
         /// <inheritdoc/>
         public virtual async Task SendAsync(Stream eventStream, string indexName = null, TransmitterArgs args = null)
         {
-            using (var content = new StreamContent(eventStream))
+            using var content = new StreamContent(eventStream);
+            content.Headers.Add("x-splunk-input-mode", "streaming");
+            var arguments = Enumerable.Empty<Argument>();
+
+            if (indexName != null)
             {
-                content.Headers.Add("x-splunk-input-mode", "streaming");
-                var arguments = Enumerable.Empty<Argument>();
-                
-                if (indexName != null)
-                {
-                    arguments = arguments.Concat(new Argument[] { new Argument("index", indexName) });
-                }
-
-                if (args != null)
-                {
-                    arguments = arguments.Concat(args);
-                }
-
-                using (var response = await this.Context.PostAsync(this.Namespace, StreamReceiver, content, arguments).ConfigureAwait(false))
-                {
-                    await response.EnsureStatusCodeAsync(HttpStatusCode.NoContent).ConfigureAwait(false);
-                }
+                arguments = arguments.Concat(new Argument[] { new Argument("index", indexName) });
             }
+
+            if (args != null)
+            {
+                arguments = arguments.Concat(args);
+            }
+
+            using var response = await this.Context.PostAsync(this.Namespace, StreamReceiver, content, arguments).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.NoContent).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public virtual async Task<SearchResult> SendAsync(string eventText, string indexName = null, TransmitterArgs args = null)
         {
-            using (var content = new StringContent(eventText))
+            using var content = new StringContent(eventText);
+            var arguments = Enumerable.Empty<Argument>();
+
+            if (indexName != null)
             {
-                var arguments = Enumerable.Empty<Argument>();
-
-                if (indexName != null)
-                {
-                    arguments = arguments.Concat(new Argument[] { new Argument("index", indexName) });
-                }
-
-                if (args != null)
-                {
-                    arguments = arguments.Concat(args);
-                }
-
-                using (var response = await this.Context.PostAsync(this.Namespace, SimpleReceiver, content, arguments).ConfigureAwait(false))
-                {
-                    await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                    var reader = response.XmlReader;
-
-                    reader.Requires(await reader.MoveToDocumentElementAsync("response").ConfigureAwait(false));
-                    await reader.ReadElementSequenceAsync("results", "result").ConfigureAwait(false);
-
-                    var result = new SearchResult(SearchResultMetadata.Missing);
-
-                    await result.ReadXmlAsync(reader).ConfigureAwait(false);
-                    await reader.ReadEndElementSequenceAsync("result", "results", "response").ConfigureAwait(false);
-
-                    return result;
-                }
+                arguments = arguments.Concat(new Argument[] { new Argument("index", indexName) });
             }
+
+            if (args != null)
+            {
+                arguments = arguments.Concat(args);
+            }
+
+            using var response = await this.Context.PostAsync(this.Namespace, SimpleReceiver, content, arguments).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            var reader = response.XmlReader;
+
+            reader.Requires(await reader.MoveToDocumentElementAsync("response").ConfigureAwait(false));
+            await reader.ReadElementSequenceAsync("results", "result").ConfigureAwait(false);
+
+            var result = new SearchResult(SearchResultMetadata.Missing);
+
+            await result.ReadXmlAsync(reader).ConfigureAwait(false);
+            await reader.ReadEndElementSequenceAsync("result", "results", "response").ConfigureAwait(false);
+
+            return result;
         }
 
         #endregion

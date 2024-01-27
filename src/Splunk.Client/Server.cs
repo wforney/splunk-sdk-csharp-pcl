@@ -91,31 +91,27 @@ namespace Splunk.Client
         /// <inheritdoc/>
         public virtual async Task<ServerInfo> GetInfoAsync()
         {
-            using (var response = await this.Context.GetAsync(this.Namespace, Info).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            using var response = await this.Context.GetAsync(this.Namespace, Info).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
 
-                var feed = new AtomFeed();
-                await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
-                var info = new ServerInfo(feed);
-                
-                return info;
-            }
+            var feed = new AtomFeed();
+            await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
+            var info = new ServerInfo(feed);
+
+            return info;
         }
 
         /// <inheritdoc/>
         public virtual async Task<ServerSettings> GetSettingsAsync()
         {
-            using (var response = await this.Context.GetAsync(this.Namespace, Settings).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            using var response = await this.Context.GetAsync(this.Namespace, Settings).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
 
-                var feed = new AtomFeed();
-                await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
-                var settings = new ServerSettings(feed);
+            var feed = new AtomFeed();
+            await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
+            var settings = new ServerSettings(feed);
 
-                return settings;
-            }
+            return settings;
         }
 
         /// <inheritdoc/>
@@ -136,71 +132,67 @@ namespace Splunk.Client
                 return;
             }
 
-            using (var cancellationTokenSource = new CancellationTokenSource())
+            using var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(millisecondsDelay);
+            var token = cancellationTokenSource.Token;
+
+            for (int i = 0; !token.IsCancellationRequested; i++)
             {
-                cancellationTokenSource.CancelAfter(millisecondsDelay);
-                var token = cancellationTokenSource.Token;
-
-                for (int i = 0; !token.IsCancellationRequested ; i++)
+                try
                 {
-                    try
-                    {
-                        info = await this.GetInfoAsync().ConfigureAwait(false);
+                    info = await this.GetInfoAsync().ConfigureAwait(false);
 
-                        if (startupTime < info.StartupTime)
-                        {
-                            return;
-                        }
+                    if (startupTime < info.StartupTime)
+                    {
+                        return;
                     }
-                    catch (RequestException re)
+                }
+                catch (RequestException re)
+                {
+                    if (re.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        if (re.StatusCode == HttpStatusCode.Unauthorized)
-                        {
-                            return;
-                        }
-
-                        //// Because the server may return a failure code on the way up or down
-                    }
-                    catch (WebException e) 
-                    {
-                        //// Because the HttpClient that Mono 3.4 depends on is known to throw a WebException on 
-                        //// connection failure
-
-                        if (e.Status != WebExceptionStatus.ConnectFailure) 
-                        {
-                            throw new HttpRequestException(e.Message, e);
-                        }
-                    }
-                    catch (HttpRequestException e)
-                    {
-                        //// Because Microsoft's HttpClient code always throws an HttpRequestException
-
-                        if (!e.InnerException.Message.Contains("Unable to connect to the remote server"))
-                        {
-                            throw;
-                        }
+                        return;
                     }
 
-                    await Task.Delay(millisecondsDelay: retryInterval).ConfigureAwait(false);
+                    //// Because the server may return a failure code on the way up or down
+                }
+                catch (WebException e)
+                {
+                    //// Because the HttpClient that Mono 3.4 depends on is known to throw a WebException on 
+                    //// connection failure
+
+                    if (e.Status != WebExceptionStatus.ConnectFailure)
+                    {
+                        throw new HttpRequestException(e.Message, e);
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    //// Because Microsoft's HttpClient code always throws an HttpRequestException
+
+                    if (!e.InnerException.Message.Contains("Unable to connect to the remote server"))
+                    {
+                        throw;
+                    }
                 }
 
-                throw new OperationCanceledException("restart splunk failed");
+                await Task.Delay(millisecondsDelay: retryInterval).ConfigureAwait(false);
             }
+
+            throw new OperationCanceledException("restart splunk failed");
         }
 
         /// <inheritdoc/>
         public virtual async Task<ServerSettings> UpdateSettingsAsync(ServerSettingValues values)
         {
-            using (var response = await this.Context.PostAsync(this.Namespace, Settings, values).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            using var response = await this.Context.PostAsync(this.Namespace, Settings, values).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
 
-                var feed = new AtomFeed();
-                await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
-                var settings = new ServerSettings(feed);
+            var feed = new AtomFeed();
+            await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
+            var settings = new ServerSettings(feed);
 
-                return settings;
-            }
+            return settings;
         }
 
         #endregion

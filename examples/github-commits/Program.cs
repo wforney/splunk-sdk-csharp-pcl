@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Splunk.ModularInputs;
 using System.IO;
-using System.Linq;
-using Octokit;
 using System.Text.RegularExpressions;
-using Octokit.Reactive;
-using Octokit.Internal;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Octokit;
+using Octokit.Internal;
+using Octokit.Reactive;
+using Splunk.ModularInputs;
 
 namespace github_commits
 {
@@ -127,7 +126,7 @@ namespace github_commits
         public async Task StreamCommit(GitHubCommit githubCommit, EventWriter eventWriter, string owner, string repositoryName)
         {
             string authorName = githubCommit.Commit.Author.Name;
-            DateTime date = githubCommit.Commit.Author.Date;
+            var date = githubCommit.Commit.Author.Date;
 
             // Replace any newlines with a space
             string commitMessage = Regex.Replace(githubCommit.Commit.Message, "\\n|\\r", " ");
@@ -143,7 +142,7 @@ namespace github_commits
             var commitEvent = new Event();
             commitEvent.Stanza = repositoryName;
             commitEvent.SourceType = "github_commits";
-            commitEvent.Time = date;
+            commitEvent.Time = date.DateTime;
             commitEvent.Data = json.ToString(Formatting.None);
 
             await eventWriter.QueueEventForWriting(commitEvent);
@@ -191,7 +190,7 @@ namespace github_commits
             bool done = false;
             var fileWriter = new StreamWriter(checkpointFilePath);
             // Use Rx to stream an event for each commit as they come in
-            client.Repository.Commits.GetAll(owner, repository).Subscribe(
+            client.Repository.Commit.GetAll(owner, repository).Subscribe(
                 async githubCommit =>
                 {
                     if (!shaKeys.Contains(githubCommit.Sha))

@@ -841,11 +841,11 @@ public class TestService
             //// Create, read, update, and delete a stanza through the Service object
 
             var configurationStanza = await configuration.CreateAsync("stanza");
-            Assert.Equal(0, configurationStanza.Count);
+            Assert.Empty(configurationStanza);
 
             var isUpdatedSnapshot = await configurationStanza.UpdateAsync(new Argument("foo", 5), new Argument("bar", 6));
             Assert.False(isUpdatedSnapshot);
-            Assert.Equal(0, configurationStanza.Count);
+            Assert.Empty(configurationStanza);
 
             await configurationStanza.GetAsync();
             Assert.Equal(4, configurationStanza.Count); // because all stanzas inherit from the default stanza
@@ -1419,7 +1419,7 @@ public class TestService
         //// Read history
 
         var jobHistory = await savedSearch.GetHistoryAsync();
-        Assert.Equal(0, jobHistory.Count);
+        Assert.Empty(jobHistory);
 
         var job1 = await savedSearch.DispatchAsync();
 
@@ -1449,7 +1449,7 @@ public class TestService
         await job2.CancelAsync();
 
         jobHistory = await savedSearch.GetHistoryAsync();
-        Assert.Equal(0, jobHistory.Count);
+        Assert.Empty(jobHistory);
 
         //// Read schedule
 

@@ -80,13 +80,11 @@ namespace Splunk.ModularInputs.UnitTests
                 SessionKey = "abcdefg"
             };
 
-            using (var service = inputDefinition.Service)
-            {
-                Assert.Equal(Splunk.Client.Scheme.Https, service.Context.Scheme);
-                Assert.Equal("localhost", service.Context.Host);
-                Assert.Equal(8089, service.Context.Port);
-                Assert.Equal("abcdefg", service.Context.SessionKey);
-            }
+            using var service = inputDefinition.Service;
+            Assert.Equal(Splunk.Client.Scheme.Https, service.Context.Scheme);
+            Assert.Equal("localhost", service.Context.Host);
+            Assert.Equal(8089, service.Context.Port);
+            Assert.Equal("abcdefg", service.Context.SessionKey);
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.InputDefinition")]
@@ -102,7 +100,7 @@ namespace Splunk.ModularInputs.UnitTests
                 CheckpointDirectory = "",
                 SessionKey = "abcdefg"
             };
-            Assert.Throws<FormatException>(() => inputDefinition.Service);
+            _ = Assert.Throws<FormatException>(() => inputDefinition.Service);
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.SingleValueParameter")]
@@ -131,13 +129,11 @@ namespace Splunk.ModularInputs.UnitTests
         [Fact]
         public void SingleValueParameterParsing()
         {
-            using (TextReader reader = new StringReader("<param name=\"param1\">value1</param>"))
-            {
-                SingleValueParameter parameter =
-                    (SingleValueParameter)new XmlSerializer(typeof(SingleValueParameter)).Deserialize(reader);
-                Assert.Equal("param1", parameter.Name);
-                Assert.Equal("value1", parameter.Value);
-            }
+            using TextReader reader = new StringReader("<param name=\"param1\">value1</param>");
+            SingleValueParameter parameter =
+                (SingleValueParameter)new XmlSerializer(typeof(SingleValueParameter)).Deserialize(reader);
+            Assert.Equal("param1", parameter.Name);
+            Assert.Equal("value1", parameter.Value);
 
         }
 
@@ -145,14 +141,12 @@ namespace Splunk.ModularInputs.UnitTests
         [Fact]
         public void MultiValueParameterParsing()
         {
-            using (TextReader reader = new StringReader("<param_list name=\"multiValue\"><value>value3</value>" +
-                "<value>value4</value></param_list>"))
-            {
-                MultiValueParameter parameter =
-                    (MultiValueParameter)new XmlSerializer(typeof(MultiValueParameter)).Deserialize(reader);
-                Assert.Equal("multiValue", parameter.Name);
-                Assert.Equal(new List<string> { "value3", "value4" }, parameter.Values);
-            }
+            using TextReader reader = new StringReader("<param_list name=\"multiValue\"><value>value3</value>" +
+                "<value>value4</value></param_list>");
+            MultiValueParameter parameter =
+                (MultiValueParameter)new XmlSerializer(typeof(MultiValueParameter)).Deserialize(reader);
+            Assert.Equal("multiValue", parameter.Name);
+            Assert.Equal(new List<string> { "value3", "value4" }, parameter.Values);
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.MultiValueParameter")]
@@ -304,21 +298,19 @@ namespace Splunk.ModularInputs.UnitTests
         public async Task GeneratesSchemeCorrectly()
         {
 
-            using (StringReader stdin = new StringReader(""))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { "--scheme" };
-                await new TestInput().RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader("");
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--scheme" };
+            _ = await new TestInput().RunAsync(args, stdin, stdout, stderr);
 
-                XDocument doc = XDocument.Parse(stdout.ToString());
-                Assert.Equal("Random numbers", doc.Element("scheme").Element("title").Value);
-                Assert.Equal("Generate random numbers in the specified range",
-                    doc.Element("scheme").Element("description").Value);
-                Assert.NotNull(doc.Element("scheme").Element("endpoint").Element("args"));
-                Assert.Equal(String.Empty, stderr.ToString());
-                Assert.Equal("xml", doc.Element("scheme").Element("streaming_mode").Value);
-            }
+            XDocument doc = XDocument.Parse(stdout.ToString());
+            Assert.Equal("Random numbers", doc.Element("scheme").Element("title").Value);
+            Assert.Equal("Generate random numbers in the specified range",
+                doc.Element("scheme").Element("description").Value);
+            Assert.NotNull(doc.Element("scheme").Element("endpoint").Element("args"));
+            Assert.Equal(String.Empty, stderr.ToString());
+            Assert.Equal("xml", doc.Element("scheme").Element("streaming_mode").Value);
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.ModularInput")]
@@ -335,17 +327,15 @@ namespace Splunk.ModularInputs.UnitTests
                         new XAttribute("name", "aaa"),
                         new XElement("param", new XAttribute("name", "min"), 0),
                         new XElement("param", new XAttribute("name", "max"), 12))));
-            using (StringReader stdin = new StringReader(doc.ToString()))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { "--validate-arguments" };
-                TestInput testInput = new TestInput();
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader(doc.ToString());
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--validate-arguments" };
+            TestInput testInput = new TestInput();
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.Equal(0, exitCode);
-                Assert.Equal("", stdout.ToString());
-            }
+            Assert.Equal(0, exitCode);
+            Assert.Equal("", stdout.ToString());
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.ModularInput")]
@@ -362,20 +352,18 @@ namespace Splunk.ModularInputs.UnitTests
                        new XAttribute("name", "aaa"),
                        new XElement("param", new XAttribute("name", "min"), 48),
                        new XElement("param", new XAttribute("name", "max"), 12))));
-            using (StringReader stdin = new StringReader(doc.ToString()))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { "--validate-arguments" };
-                TestInput testInput = new TestInput();
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader(doc.ToString());
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--validate-arguments" };
+            TestInput testInput = new TestInput();
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.NotEqual(0, exitCode);
-                Assert.Equal(
-                    "<error><message>Max must be greater than min.</message></error>",
-                    stdout.ToString().Trim()
-                );
-            }
+            Assert.NotEqual(0, exitCode);
+            Assert.Equal(
+                "<error><message>Max must be greater than min.</message></error>",
+                stdout.ToString().Trim()
+            );
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.ModularInput")]
@@ -392,37 +380,33 @@ namespace Splunk.ModularInputs.UnitTests
                        new XAttribute("name", "aaa"),
                        new XElement("param", new XAttribute("name", "min"), "boris"),
                        new XElement("param", new XAttribute("name", "max"), 12))));
-            using (StringReader stdin = new StringReader(doc.ToString()))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { "--validate-arguments" };
-                TestInput testInput = new TestInput();
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader(doc.ToString());
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--validate-arguments" };
+            TestInput testInput = new TestInput();
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.NotEqual(0, exitCode);
-                Assert.Equal(
-                    "<error><message>min should be a floating point number.</message></error>",
-                    stdout.ToString().Trim()
-                );
-            }
+            Assert.NotEqual(0, exitCode);
+            Assert.Equal(
+                "<error><message>min should be a floating point number.</message></error>",
+                stdout.ToString().Trim()
+            );
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.ModularInput")]
         [Fact]
         public async Task ValidationThrows()
         {
-            using (StringReader stdin = new StringReader("blargh!"))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { "--validate-arguments" };
-                TestInput testInput = new TestInput();
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader("blargh!");
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--validate-arguments" };
+            TestInput testInput = new TestInput();
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.NotEqual(0, exitCode);
-                Assert.NotEqual("", stderr.ToString());
-            }
+            Assert.NotEqual(0, exitCode);
+            Assert.NotEqual("", stderr.ToString());
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.Event")]
@@ -526,11 +510,11 @@ namespace Splunk.ModularInputs.UnitTests
 
             Task<EventWrittenProgressReport> t = progress.AwaitProgressAsync();
 
-            #pragma warning disable 4014
+#pragma warning disable 4014
             //// Because this call is not awaited, execution of the current 
             //// method continues before the call is completed. Consider 
             //// applying the 'await' operator to the result of the call.
-            eventWriter.CompleteAsync();
+            _ = eventWriter.CompleteAsync();
             #pragma warning restore 4014
 
             EventWrittenProgressReport r = await t;
@@ -586,7 +570,7 @@ namespace Splunk.ModularInputs.UnitTests
         [Fact]
         public async Task ModularInputWritesEvents()
         {
-            using (StringReader stdin = new StringReader(@"<?xml version=""1.0"" encoding=""utf-16""?>
+            using StringReader stdin = new StringReader(@"<?xml version=""1.0"" encoding=""utf-16""?>
                 <input xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
                     <server_host>tiny</server_host>
                     <server_uri>https://127.0.0.1:8089</server_uri>
@@ -598,19 +582,17 @@ namespace Splunk.ModularInputs.UnitTests
                             <param name=""max"">5</param>
                         </stanza>
                     </configuration>
-                </input>"))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { };
-                TestInput testInput = new TestInput();
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+                </input>");
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { };
+            TestInput testInput = new TestInput();
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.Equal(0, exitCode);
-                Assert.Equal("", stderr.ToString());
-                Assert.False(stdout.ToString().Contains("xmlns:xsi"));
-                Assert.True(stdout.ToString().Contains("<data>Boris!</data>"));
-            }
+            Assert.Equal(0, exitCode);
+            Assert.Equal("", stderr.ToString());
+            Assert.False(stdout.ToString().Contains("xmlns:xsi"));
+            Assert.True(stdout.ToString().Contains("<data>Boris!</data>"));
         }
 
         // TODO: fix this test, currently it fails intermittently, see DVPL-6010
@@ -670,19 +652,17 @@ namespace Splunk.ModularInputs.UnitTests
                        new XAttribute("name", "random_numbers://aaa"),
                        new XElement("param", new XAttribute("name", "min"), 1),
                        new XElement("param", new XAttribute("name", "max"), 12))));
-            using (StringReader stdin = new StringReader(doc.ToString()))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = {"--validate-arguments"};
-                TestInput testInput = new TestInput();
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader(doc.ToString());
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--validate-arguments" };
+            TestInput testInput = new TestInput();
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.NotEqual(0, exitCode);
-                var err = stderr.ToString();
-                Assert.Contains("FATAL Exception during validation: name=random_numbers://aaa | System.InvalidOperationException: Operation is not valid due to the current state of the object.", err);
-                Assert.Contains("<error><message>Operation is not valid due to the current state of the object.</message></error>", stdout.ToString());
-            }
+            Assert.NotEqual(0, exitCode);
+            var err = stderr.ToString();
+            Assert.Contains("FATAL Exception during validation: name=random_numbers://aaa | System.InvalidOperationException: Operation is not valid due to the current state of the object.", err);
+            Assert.Contains("<error><message>Operation is not valid due to the current state of the object.</message></error>", stdout.ToString());
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.ModularInput")]
@@ -699,71 +679,63 @@ namespace Splunk.ModularInputs.UnitTests
                       new XAttribute("name", "random_numbers://aaa"),
                       new XElement("param", new XAttribute("name", "min"), 0),
                       new XElement("param", new XAttribute("name", "max"), 12))));
-            using (StringReader stdin = new StringReader(doc.ToString()))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { "--validate-arguments" };
-                TestInput testInput = new TestInput();
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader(doc.ToString());
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--validate-arguments" };
+            TestInput testInput = new TestInput();
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                var err = stderr.ToString();
-                Assert.Contains("INFO <items> |   <server_host>tiny</server_host> |   <server_uri>https://127.0.0.1:8089</server_uri> |   <checkpoint_dir>/somewhere</checkpoint_dir> |   <session_key>abcd</session_key> |   <item name=\"random_numbers://aaa\"> |     <param name=\"min\">0</param> |     <param name=\"max\">12</param> |   </item> | </items>\r\n", err);
-            }           
+            var err = stderr.ToString();
+            Assert.Contains("INFO <items> |   <server_host>tiny</server_host> |   <server_uri>https://127.0.0.1:8089</server_uri> |   <checkpoint_dir>/somewhere</checkpoint_dir> |   <session_key>abcd</session_key> |   <item name=\"random_numbers://aaa\"> |     <param name=\"min\">0</param> |     <param name=\"max\">12</param> |   </item> | </items>\r\n", err);
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.ModularInput")]
         [Fact]
         public async Task SchemeLogsExceptions()
         {
-            using (StringReader stdin = new StringReader(""))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { "--scheme" };
-                TestInput testInput = new TestInput(true);
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader("");
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--scheme" };
+            TestInput testInput = new TestInput(true);
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.NotEqual(0, exitCode);
-                var err = stderr.ToString();
-                Assert.Contains("name=" + typeof(TestInput).FullName, err);
-            }
+            Assert.NotEqual(0, exitCode);
+            var err = stderr.ToString();
+            Assert.Contains("name=" + typeof(TestInput).FullName, err);
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.ModularInput")]
         [Fact]
         public async Task StreamingLogsSerializationException()
         {
-            using (StringReader stdin = new StringReader("{{}}"))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { };
-                TestInput testInput = new TestInput(true);
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader("{{}}");
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { };
+            TestInput testInput = new TestInput(true);
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.NotEqual(0, exitCode);
-                var err = stderr.ToString();
-                Assert.Contains("FATAL Exception during streaming: name=Splunk.ModularInputs.UnitTests.TestModularInputs+TestInput | System.InvalidOperationException: There is an error in XML document (1, 1)",err);
-            }
+            Assert.NotEqual(0, exitCode);
+            var err = stderr.ToString();
+            Assert.Contains("FATAL Exception during streaming: name=Splunk.ModularInputs.UnitTests.TestModularInputs+TestInput | System.InvalidOperationException: There is an error in XML document (1, 1)", err);
         }
 
         [Trait("unit-test", "Splunk.ModularInputs.ModularInput")]
         [Fact]
         public async Task ValidateLogsSerializationException()
         {
-            using (StringReader stdin = new StringReader("{{}}"))
-            using (StringWriter stdout = new StringWriter())
-            using (StringWriter stderr = new StringWriter())
-            {
-                string[] args = { "--validate-arguments" };
-                TestInput testInput = new TestInput(true);
-                int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
+            using StringReader stdin = new StringReader("{{}}");
+            using StringWriter stdout = new StringWriter();
+            using StringWriter stderr = new StringWriter();
+            string[] args = { "--validate-arguments" };
+            TestInput testInput = new TestInput(true);
+            int exitCode = await testInput.RunAsync(args, stdin, stdout, stderr);
 
-                Assert.NotEqual(0, exitCode);
-                var err = stderr.ToString();
-                Assert.Contains("FATAL Exception during validation: name=Splunk.ModularInputs.UnitTests.TestModularInputs+TestInput | System.InvalidOperationException: There is an error in XML document (1, 1)", err);
-            }
+            Assert.NotEqual(0, exitCode);
+            var err = stderr.ToString();
+            Assert.Contains("FATAL Exception during validation: name=Splunk.ModularInputs.UnitTests.TestModularInputs+TestInput | System.InvalidOperationException: There is an error in XML document (1, 1)", err);
         }
     }
 }

@@ -36,39 +36,35 @@ namespace Splunk.Client.UnitTests
         {
             var baseFileName = Path.Combine(TestAtomFeed.Directory, "TaggedSearchResults");
 
-            using (var expectedResults = new StreamReader(baseFileName + ".expected.text", encoding: Encoding.UTF8))
+            using var expectedResults = new StreamReader(baseFileName + ".expected.text", encoding: Encoding.UTF8);
+            var message = new HttpResponseMessage(HttpStatusCode.OK);
+
+            message.Content = new StreamContent(new FileStream(baseFileName + ".xml", FileMode.Open, FileAccess.Read));
+
+            using var stream = await SearchResultStream.CreateAsync(message);
+            int count = 0;
+
+            foreach (var observedResult in stream)
             {
-                var message = new HttpResponseMessage(HttpStatusCode.OK);
+                string expectedResult = null;
+                ++count;
 
-                message.Content = new StreamContent(new FileStream(baseFileName + ".xml", FileMode.Open, FileAccess.Read));
-
-                using (var stream = await SearchResultStream.CreateAsync(message))
+                try
                 {
-                    int count = 0;
-
-                    foreach (var observedResult in stream)
-                    {
-                        string expectedResult = null;
-                        ++count;
-
-                        try
-                        {
-                            expectedResult = await expectedResults.ReadLineAsync();
-                            continue;
-                        }
-                        catch (Exception e)
-                        {
-                            Assert.False(true, string.Format("Error while reading expected results: {0}", e.Message));
-                        }
-
-                        Assert.NotNull(expectedResult);
-                        Assert.Equal(expectedResult, observedResult.ToString());
-                    }
-
-                    Assert.Null(expectedResults.ReadLine());
-                    Assert.Equal(count, stream.ReadCount);
+                    expectedResult = await expectedResults.ReadLineAsync();
+                    continue;
                 }
+                catch (Exception e)
+                {
+                    Assert.False(true, string.Format("Error while reading expected results: {0}", e.Message));
+                }
+
+                Assert.NotNull(expectedResult);
+                Assert.Equal(expectedResult, observedResult.ToString());
             }
+
+            Assert.Null(expectedResults.ReadLine());
+            Assert.Equal(count, stream.ReadCount);
         }
 
         [Trait("unit-test", "Splunk.Client.SearchResultStream")]
@@ -76,12 +72,12 @@ namespace Splunk.Client.UnitTests
         async Task CanHandleBlankAndEmptyValues()
         {
             var builder = ImmutableSortedSet.CreateBuilder<string>();
-            builder.Add("");
+            _ = builder.Add("");
 
             var blankTaggedTextElement = new TaggedFieldValue("text", builder.ToImmutableSortedSet<string>());
 
             builder.Clear();
-            builder.Add("tag");
+            _ = builder.Add("tag");
 
             var taggedBlankTextElement = new TaggedFieldValue("", builder.ToImmutableSortedSet<string>());
 
@@ -90,27 +86,25 @@ namespace Splunk.Client.UnitTests
 
             message.Content = new StreamContent(new FileStream(path, FileMode.Open, FileAccess.Read));
 
-            using (var stream = await SearchResultStream.CreateAsync(message))
+            using var stream = await SearchResultStream.CreateAsync(message);
+            int count = 0;
+
+            foreach (dynamic observedResult in stream)
             {
-                int count = 0;
+                Assert.Equal(observedResult._raw, string.Empty);
+                Assert.Null(observedResult.SegmentedRaw);
 
-                foreach (dynamic observedResult in stream)
-                {
-                    Assert.Equal(observedResult._raw, string.Empty);
-                    Assert.Null(observedResult.SegmentedRaw);
+                Assert.Equal(observedResult.blank_tagged_text_element, blankTaggedTextElement);
+                Assert.Equal(observedResult.empty_tagged_text_element, blankTaggedTextElement);
 
-                    Assert.Equal(observedResult.blank_tagged_text_element, blankTaggedTextElement);
-                    Assert.Equal(observedResult.empty_tagged_text_element, blankTaggedTextElement);
+                Assert.Equal(observedResult.blank_text_element, string.Empty);
+                Assert.Equal(observedResult.blank_value_element, string.Empty);
+                Assert.Equal(observedResult.empty_text_element, string.Empty);
 
-                    Assert.Equal(observedResult.blank_text_element, string.Empty);
-                    Assert.Equal(observedResult.blank_value_element, string.Empty);
-                    Assert.Equal(observedResult.empty_text_element, string.Empty);
+                Assert.Equal(observedResult.tagged_blank_text_element, taggedBlankTextElement);
+                Assert.Equal(observedResult.tagged_empty_text_element, taggedBlankTextElement);
 
-                    Assert.Equal(observedResult.tagged_blank_text_element, taggedBlankTextElement);
-                    Assert.Equal(observedResult.tagged_empty_text_element, taggedBlankTextElement); 
-
-                    ++count;
-                }
+                ++count;
             }
         }
 
@@ -158,17 +152,15 @@ namespace Splunk.Client.UnitTests
 
             message.Content = new StreamContent(new FileStream(baseFileName + ".xml", FileMode.Open, FileAccess.Read));
 
-            using (var stream = await SearchResultStream.CreateAsync(message))
+            using var stream = await SearchResultStream.CreateAsync(message);
+            int count = 0;
+
+            foreach (var observedResult in stream)
             {
-                int count = 0;
-
-                foreach (var observedResult in stream)
-                {
-                    ++count;
-                }
-
-                Assert.Equal(count, stream.ReadCount);
+                ++count;
             }
+
+            Assert.Equal(count, stream.ReadCount);
         }
 		
         [Trait("unit-test", "Splunk.Client.SearchResultStream")]
@@ -180,17 +172,15 @@ namespace Splunk.Client.UnitTests
 
             message.Content = new StreamContent(new FileStream(baseFileName + ".xml", FileMode.Open, FileAccess.Read));
 
-            using (var stream = await SearchResultStream.CreateAsync(message))
+            using var stream = await SearchResultStream.CreateAsync(message);
+            int count = 0;
+
+            foreach (var observedResult in stream)
             {
-                int count = 0;
-
-                foreach (var observedResult in stream)
-                {
-                    ++count;
-                }
-
-                Assert.Equal(count, stream.ReadCount);
+                ++count;
             }
+
+            Assert.Equal(count, stream.ReadCount);
         }
     }
 }

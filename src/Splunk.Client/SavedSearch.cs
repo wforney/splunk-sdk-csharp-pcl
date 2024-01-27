@@ -254,11 +254,9 @@ namespace Splunk.Client
         /// <inheritdoc/>
         public virtual async Task GetAsync(Filter criteria)
         {
-            using (var response = await this.Context.GetAsync(this.Namespace, this.ResourceName, criteria).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-                await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
-            }
+            using var response = await this.Context.GetAsync(this.Namespace, this.ResourceName, criteria).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            await this.ReconstructSnapshotAsync(response).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -266,16 +264,14 @@ namespace Splunk.Client
         {
             var resourceName = new ResourceName(this.ResourceName, "history");
 
-            using (var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
+            using var response = await this.Context.GetAsync(this.Namespace, resourceName).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
 
-                var feed = new AtomFeed();
-                await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
-                var jobs = new JobCollection(this.Context, feed);
+            var feed = new AtomFeed();
+            await feed.ReadXmlAsync(response.XmlReader).ConfigureAwait(false);
+            var jobs = new JobCollection(this.Context, feed);
 
-                return jobs;
-            }
+            return jobs;
         }
 
         /// <inheritdoc/>
@@ -309,10 +305,8 @@ namespace Splunk.Client
                 new Argument("schedule_time", scheduleTime.Value.ToString("u")) //string.Format("{0:s}Z", scheduleTime.Value.ToUniversalTime()))
             };
 
-            using (var response = await this.Context.PostAsync(this.Namespace, resourceName, args).ConfigureAwait(false))
-            {
-                await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
-            }
+            using var response = await this.Context.PostAsync(this.Namespace, resourceName, args).ConfigureAwait(false);
+            await response.EnsureStatusCodeAsync(HttpStatusCode.OK).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

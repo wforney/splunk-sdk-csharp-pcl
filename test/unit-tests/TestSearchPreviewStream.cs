@@ -74,17 +74,15 @@ namespace Splunk.Client.UnitTests
 
             message.Content = new StreamContent(new FileStream(baseFileName + ".xml", FileMode.Open, FileAccess.Read));
 
-            using (var stream = await SearchPreviewStream.CreateAsync(message))
+            using var stream = await SearchPreviewStream.CreateAsync(message);
+            int count = 0;
+
+            foreach (var observedResult in stream)
             {
-                int count = 0;
-
-                foreach (var observedResult in stream)
-                {
-                    ++count;
-                }
-
-                Assert.Equal(count, stream.ReadCount);
+                ++count;
             }
+
+            Assert.Equal(count, stream.ReadCount);
         }
     }
 }

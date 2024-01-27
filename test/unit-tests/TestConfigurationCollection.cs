@@ -14,71 +14,56 @@
  * under the License.
  */
 
+using Xunit;
+
 namespace Splunk.Client.UnitTests
 {
-    using Microsoft.CSharp.RuntimeBinder;
-    using Splunk.Client;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml;
-
-    using Xunit;
-
     public class TestConfigurationCollection
     {
         [Trait("unit-test", "Splunk.Client.Configuration")]
         [Fact]
-        async Task CanConstructConfiguration()
+        public async Task CanConstructConfiguration()
         {
             var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "Configuration.GetAsync.xml"));
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
+            using var context = new Context(Scheme.Https, "localhost", 8089);
+            var expectedConfigurationStanzaNames = new string[]
             {
-                var expectedConfigurationStanzaNames = new string[] 
-                { 
                     "default",
                     "email",
                     "populate_lookup",
                     "rss",
                     "script",
                     "summary_index"
-                };
+            };
 
-                var configuration = new Configuration(context, feed);
-                
-                Assert.Equal(expectedConfigurationStanzaNames, from configurationStanza in configuration select configurationStanza.Title);
-                Assert.Equal(expectedConfigurationStanzaNames.Length, configuration.Count);
+            var configuration = new Configuration(context, feed);
 
-                for (int i = 0; i < configuration.Count; i++)
-                {
-                    Assert.Equal(expectedConfigurationStanzaNames[i], configuration[i].Title);
+            Assert.Equal(expectedConfigurationStanzaNames, from configurationStanza in configuration select configurationStanza.Title);
+            Assert.Equal(expectedConfigurationStanzaNames.Length, configuration.Count);
 
-                    Assert.DoesNotThrow(() => { var value = configuration[i].GeneratorVersion; });
-                    Assert.DoesNotThrow(() => { var value = configuration[i].Id; });
-                    Assert.DoesNotThrow(() => { var value = configuration[i].Updated; });
+            for (int i = 0; i < configuration.Count; i++)
+            {
+                Assert.Equal(expectedConfigurationStanzaNames[i], configuration[i].Title);
 
-                    Assert.Equal(0, configuration[i].Count);
-                    Assert.Throws<ArgumentOutOfRangeException>(() => { var value = configuration[i][0]; });
-                }
+                _ = configuration[i].GeneratorVersion;
+                _ = configuration[i].Id;
+                _ = configuration[i].Updated;
+
+                Assert.Empty(configuration[i]);
+                _ = Assert.Throws<ArgumentOutOfRangeException>(() => { var value = configuration[i][0]; });
             }
         }
 
         [Trait("unit-test", "Splunk.Client.ConfigurationCollection")]
         [Fact]
-        async Task CanConstructConfigurationCollection()
+        public async Task CanConstructConfigurationCollection()
         {
             var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ConfigurationCollection.GetAsync.xml"));
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
+            using var context = new Context(Scheme.Https, "localhost", 8089);
+            var expectedConfigurationNames = new string[]
             {
-                var expectedConfigurationNames = new string[] 
-                { 
                     "alert_actions",
                     "app",
                     "audit",
@@ -162,58 +147,55 @@ namespace Splunk.Client.UnitTests
                     "viewstates",
                     "web",
                     "workflow_actions"
-                };
+            };
 
-                var configurations = new ConfigurationCollection(context, feed);
+            var configurations = new ConfigurationCollection(context, feed);
 
-                Assert.Equal(expectedConfigurationNames, from configuration in configurations select configuration.Title);
-                Assert.Equal(expectedConfigurationNames.Length, configurations.Count);
+            Assert.Equal(expectedConfigurationNames, from configuration in configurations select configuration.Title);
+            Assert.Equal(expectedConfigurationNames.Length, configurations.Count);
 
-                for (int i = 0; i < configurations.Count; i++)
-                {
-                    Assert.Equal(expectedConfigurationNames[i], configurations[i].Title);
+            for (int i = 0; i < configurations.Count; i++)
+            {
+                Assert.Equal(expectedConfigurationNames[i], configurations[i].Title);
 
-                    Assert.DoesNotThrow(() => { var value = configurations[i].GeneratorVersion; });
-                    Assert.DoesNotThrow(() => { var value = configurations[i].Id; });
-                    Assert.DoesNotThrow(() => { var value = configurations[i].Updated; });
-                }
+                _ = configurations[i].GeneratorVersion;
+                _ = configurations[i].Id;
+                _ = configurations[i].Updated;
             }
         }
 
         [Trait("unit-test", "Splunk.Client.ConfigurationStanza")]
         [Fact]
-        async Task CanConstructConfigurationStanza()
+        public async Task CanConstructConfigurationStanza()
         {
             var feed = await TestAtomFeed.ReadFeed(Path.Combine(TestAtomFeed.Directory, "ConfigurationStanza.GetAsync.xml"));
 
-            using (var context = new Context(Scheme.Https, "localhost", 8089))
+            using var context = new Context(Scheme.Https, "localhost", 8089);
+            var expectedConfigurationSettingNames = new string[]
             {
-                var expectedConfigurationSettingNames = new string[] 
-                { 
-                    "_name", 
-                    "command", 
-                    "hostname", 
-                    "inline", 
-                    "maxresults", 
-                    "maxtime", 
-                    "track_alert", 
-                    "ttl" 
-                };
+                    "_name",
+                    "command",
+                    "hostname",
+                    "inline",
+                    "maxresults",
+                    "maxtime",
+                    "track_alert",
+                    "ttl"
+            };
 
-                var configurationStanza = new ConfigurationStanza(context, feed);
+            var configurationStanza = new ConfigurationStanza(context, feed);
 
-                Assert.Equal(expectedConfigurationSettingNames, from setting in configurationStanza select setting.Title);
-                Assert.Equal(expectedConfigurationSettingNames.Length, configurationStanza.Count);
+            Assert.Equal(expectedConfigurationSettingNames, from setting in configurationStanza select setting.Title);
+            Assert.Equal(expectedConfigurationSettingNames.Length, configurationStanza.Count);
 
-                for (int i = 0; i < configurationStanza.Count; i++)
-                {
-                    Assert.Equal(expectedConfigurationSettingNames[i], configurationStanza[i].Title);
+            for (int i = 0; i < configurationStanza.Count; i++)
+            {
+                Assert.Equal(expectedConfigurationSettingNames[i], configurationStanza[i].Title);
 
-                    Assert.DoesNotThrow(() => { var value = configurationStanza[i].Id; });
-                    Assert.DoesNotThrow(() => { var value = configurationStanza[i].Links; });
-                    Assert.DoesNotThrow(() => { var value = configurationStanza[i].Updated; });
-                    Assert.DoesNotThrow(() => { var value = configurationStanza[i].Value; });
-                }
+                _ = configurationStanza[i].Id;
+                _ = configurationStanza[i].Links;
+                _ = configurationStanza[i].Updated;
+                _ = configurationStanza[i].Value;
             }
         }
     }
