@@ -14,7 +14,7 @@
  * under the License.
  */
 
-namespace Splunk.Client
+namespace Splunk.Client.Alerts
 {
     using System.Runtime.Serialization;
 
@@ -35,12 +35,12 @@ namespace Splunk.Client
         /// Force tracking.
         /// </summary>
         [EnumMember(Value = "1")]
-        True, 
-        
+        True,
+
         /// <summary>
         /// Disable tracking.
         /// </summary>
         [EnumMember(Value = "0")]
-        False 
+        False
     }
 }

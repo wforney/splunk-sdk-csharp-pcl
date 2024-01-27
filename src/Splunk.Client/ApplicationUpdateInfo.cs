@@ -22,6 +22,7 @@ namespace Splunk.Client
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation for the update information available
@@ -67,10 +68,7 @@ namespace Splunk.Client
         /// <value>
         /// The extensible administration interface properties.
         /// </value>
-        public Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <summary>
         /// Gets the properties of the update.
@@ -81,10 +79,7 @@ namespace Splunk.Client
         /// <value>
         /// The update.
         /// </value>
-        public UpdateAdapter Update
-        {
-            get { return this.Content.GetValue("Update", UpdateAdapter.Converter.Instance); }
-        }
+        public UpdateAdapter Update => this.Content.GetValue("Update", UpdateAdapter.Converter.Instance);
 
         /// <summary>
         /// Gets a value indicating whether to to reload the objects contained in the
@@ -93,10 +88,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if refresh, <c>false</c> if not.
         /// </value>
-        public bool Refresh
-        {
-            get { return this.Content.GetValue("Refresh", BooleanConverter.Instance); }
-        }
+        public bool Refresh => this.Content.GetValue("Refresh", BooleanConverter.Instance);
 
         #endregion
 
@@ -117,10 +109,7 @@ namespace Splunk.Client
             /// <value>
             /// The name of the application.
             /// </value>
-            public string ApplicationName
-            {
-                get { return this.GetValue("Name", StringConverter.Instance); }
-            }
+            public string ApplicationName => this.GetValue("Name", StringConverter.Instance);
 
             /// <summary>
             /// Gets the download URI for the application update.
@@ -128,10 +117,7 @@ namespace Splunk.Client
             /// <value>
             /// The application URI.
             /// </value>
-            public Uri ApplicationUri
-            {
-                get { return this.GetValue("Appurl", UriConverter.Instance); }
-            }
+            public Uri ApplicationUri => this.GetValue("Appurl", UriConverter.Instance);
 
             /// <summary>
             /// Gets the checksum for the application update.
@@ -139,10 +125,7 @@ namespace Splunk.Client
             /// <value>
             /// The checksum.
             /// </value>
-            public string Checksum
-            {
-                get { return this.GetValue("Checksum", StringConverter.Instance); }
-            }
+            public string Checksum => this.GetValue("Checksum", StringConverter.Instance);
 
             /// <summary>
             /// Gets the name of the checksum type used to compute the application update
@@ -151,10 +134,7 @@ namespace Splunk.Client
             /// <value>
             /// The type of the checksum.
             /// </value>
-            public string ChecksumType
-            {
-                get { return this.GetValue("ChecksumType", StringConverter.Instance); }
-            }
+            public string ChecksumType => this.GetValue("ChecksumType", StringConverter.Instance);
 
             /// <summary>
             /// Get the URI to the Splunkbase page for the application.
@@ -162,10 +142,7 @@ namespace Splunk.Client
             /// <value>
             /// The homepage.
             /// </value>
-            public string Homepage
-            {
-                get { return this.GetValue("Homepage", StringConverter.Instance); }
-            }
+            public string Homepage => this.GetValue("Homepage", StringConverter.Instance);
 
             /// <summary>
             /// Gets a value that indicates if the application has an explicit ID in
@@ -177,10 +154,7 @@ namespace Splunk.Client
             /// <value>
             /// <c>true</c> if implicit identifier required, <c>false</c> if not.
             /// </value>
-            public bool ImplicitIdRequired
-            {
-                get { return this.GetValue("ImplicitIdRequired", BooleanConverter.Instance); }
-            }
+            public bool ImplicitIdRequired => this.GetValue("ImplicitIdRequired", BooleanConverter.Instance);
 
             /// <summary>
             /// Gets the size of the application update.
@@ -188,10 +162,7 @@ namespace Splunk.Client
             /// <value>
             /// Size of the application update.
             /// </value>
-            public long Size
-            {
-                get { return this.GetValue("Size", Int64Converter.Instance); }
-            }
+            public long Size => this.GetValue("Size", Int64Converter.Instance);
 
             /// <summary>
             /// Get the version of the application update.
@@ -199,10 +170,7 @@ namespace Splunk.Client
             /// <value>
             /// Version of the applicaiton update.
             /// </value>
-            public string Version
-            {
-                get { return this.GetValue("Version", StringConverter.Instance); }
-            }
+            public string Version => this.GetValue("Version", StringConverter.Instance);
         }
 
         #endregion

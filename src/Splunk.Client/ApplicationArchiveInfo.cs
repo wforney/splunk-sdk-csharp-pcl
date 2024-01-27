@@ -17,6 +17,7 @@
 namespace Splunk.Client
 {
     using System;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides information about an application archive produced by Splunk.
@@ -79,10 +80,7 @@ namespace Splunk.Client
         /// <value>
         /// Access control list for the application archive.
         /// </value>
-        public virtual Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public virtual Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <summary>
         /// Gets the name of the application contained by the application archive.
@@ -93,10 +91,7 @@ namespace Splunk.Client
         /// <value>
         /// Name of the application contained by the archive.
         /// </value>
-        public virtual string ApplicationName
-        {
-            get { return this.Content.GetValue("Name", StringConverter.Instance); }
-        }
+        public virtual string ApplicationName => this.Content.GetValue("Name", StringConverter.Instance);
 
         /// <summary>
         /// Gets the local path to the application archive.
@@ -104,10 +99,7 @@ namespace Splunk.Client
         /// <value>
         /// A local path to the application archive.
         /// </value>
-        public virtual string Path
-        {
-            get { return this.Content.GetValue("Path", StringConverter.Instance); }
-        }
+        public virtual string Path => this.Content.GetValue("Path", StringConverter.Instance);
 
         /// <summary>
         /// Gets a value indicating whether to reload the objects contained in the
@@ -118,10 +110,7 @@ namespace Splunk.Client
         /// application should be reloaded; <c>false</c>, if they need not be
         /// reloaded.
         /// </value>
-        public virtual bool Refresh
-        {
-            get { return this.Content.GetValue("Refresh", BooleanConverter.Instance); }
-        }
+        public virtual bool Refresh => this.Content.GetValue("Refresh", BooleanConverter.Instance);
 
         /// <summary>
         /// Gets the download URI for the application archive.
@@ -130,10 +119,7 @@ namespace Splunk.Client
         /// A download URI for the application archive or <c>null</c>, if there is no
         /// download URI.
         /// </value>
-        public virtual Uri Uri
-        {
-            get { return this.Content.GetValue("Url", UriConverter.Instance); }
-        }
+        public virtual Uri Uri => this.Content.GetValue("Url", UriConverter.Instance);
 
         #endregion
     }

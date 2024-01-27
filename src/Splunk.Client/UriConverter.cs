@@ -230,10 +230,7 @@ namespace Splunk.Client
             /// <value>
             /// The fragment.
             /// </value>
-            public string Fragment
-            {
-                get { return this.fragment; }
-            }
+            public string Fragment => this.fragment;
 
             /// <summary>
             /// Gets the full pathname of the file.
@@ -241,10 +238,7 @@ namespace Splunk.Client
             /// <value>
             /// The full pathname of the file.
             /// </value>
-            public string Path 
-            { 
-                get { return this.path; } 
-            }
+            public string Path => this.path;
 
             /// <summary>
             /// Gets the query.
@@ -252,10 +246,7 @@ namespace Splunk.Client
             /// <value>
             /// The query.
             /// </value>
-            public string Query
-            { 
-                get { return this.query; }
-            }
+            public string Query => this.query;
 
             /// <summary>
             /// Gets the source for the.
@@ -263,10 +254,7 @@ namespace Splunk.Client
             /// <value>
             /// The source.
             /// </value>
-            public string Source
-            { 
-                get { return this.source; }
-            }
+            public string Source => this.source;
 
             #endregion
 

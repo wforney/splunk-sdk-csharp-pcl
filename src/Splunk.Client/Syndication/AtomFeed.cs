@@ -18,7 +18,7 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Syndication
 {
     using System;
     using System.Collections.Generic;
@@ -27,6 +27,7 @@ namespace Splunk.Client
     using System.IO;
     using System.Threading.Tasks;
     using System.Xml;
+    using Splunk.Client;
 
     /// <summary>
     /// Provides an object representation of a Splunk Atom Feed response.
@@ -202,13 +203,13 @@ namespace Splunk.Client
             List<AtomEntry> entries = null;
             Dictionary<string, Uri> links = null;
             List<Message> messages = null;
-            
+
 
             await reader.ReadAsync().ConfigureAwait(false);
 
             while (reader.NodeType == XmlNodeType.Element)
             {
-                string name = reader.Name;
+                var name = reader.Name;
 
                 switch (name)
                 {
@@ -234,7 +235,7 @@ namespace Splunk.Client
                     case "generator":
 
                         // string build = reader.GetRequiredAttribute("build"); // TODO: Incorporate build number? Build number sometimes adds a fifth digit.
-                        string version = reader.GetRequiredAttribute("version");
+                        var version = reader.GetRequiredAttribute("version");
                         this.GeneratorVersion = VersionConverter.Instance.Convert(string.Join(".", version));
                         await reader.ReadAsync().ConfigureAwait(false);
                         break;
@@ -274,7 +275,7 @@ namespace Splunk.Client
 
                     case "s:messages":
 
-                        bool isEmptyElement = reader.IsEmptyElement;
+                        var isEmptyElement = reader.IsEmptyElement;
                         await reader.ReadAsync().ConfigureAwait(false);
 
                         if (messages == null)
@@ -292,7 +293,7 @@ namespace Splunk.Client
                             var value = reader.GetRequiredAttribute("type");
                             var type = EnumConverter<MessageType>.Instance.Convert(value);
                             var text = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                            
+
                             messages.Add(new Message(type, text));
                         }
 
@@ -306,19 +307,19 @@ namespace Splunk.Client
 
                     case "opensearch:itemsPerPage":
 
-                        int itemsPerPage = await reader.ReadElementContentAsync(Int32Converter.Instance).ConfigureAwait(false);
+                        var itemsPerPage = await reader.ReadElementContentAsync(Int32Converter.Instance).ConfigureAwait(false);
                         this.Pagination = new Pagination(itemsPerPage, this.Pagination.StartIndex, this.Pagination.TotalResults);
                         break;
 
                     case "opensearch:startIndex":
 
-                        int startIndex = await reader.ReadElementContentAsync(Int32Converter.Instance).ConfigureAwait(false);
+                        var startIndex = await reader.ReadElementContentAsync(Int32Converter.Instance).ConfigureAwait(false);
                         this.Pagination = new Pagination(this.Pagination.ItemsPerPage, startIndex, this.Pagination.TotalResults);
                         break;
 
                     case "opensearch:totalResults":
 
-                        int totalResults = await reader.ReadElementContentAsync(Int32Converter.Instance).ConfigureAwait(false);
+                        var totalResults = await reader.ReadElementContentAsync(Int32Converter.Instance).ConfigureAwait(false);
                         this.Pagination = new Pagination(this.Pagination.ItemsPerPage, this.Pagination.StartIndex, totalResults);
                         break;
 

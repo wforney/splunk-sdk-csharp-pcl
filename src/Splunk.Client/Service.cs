@@ -29,6 +29,7 @@ namespace Splunk.Client
     using System.Net;
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides access to the Splunk REST API offered on a Splunk management port.
@@ -143,16 +144,10 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual Context Context
-        {
-            get { return this.context; }
-        }
+        public virtual Context Context => this.context;
 
         /// <inheritdoc/>
-        public virtual Namespace Namespace
-        {
-            get { return this.ns; }
-        }
+        public virtual Namespace Namespace => this.ns;
 
         /// <inheritdoc/>
         public virtual string SessionKey
@@ -162,52 +157,28 @@ namespace Splunk.Client
         }
 
         /// <inheritdoc/>
-        public virtual ApplicationCollection Applications
-        {
-            get { return this.applications; }
-        }
+        public virtual ApplicationCollection Applications => this.applications;
 
         /// <inheritdoc/>
-        public virtual ConfigurationCollection Configurations
-        {
-            get { return this.configurations; }
-        }
+        public virtual ConfigurationCollection Configurations => this.configurations;
 
         /// <inheritdoc/>
-        public virtual IndexCollection Indexes
-        {
-            get { return this.indexes; }
-        }
+        public virtual IndexCollection Indexes => this.indexes;
 
         /// <inheritdoc/>
-        public virtual JobCollection Jobs
-        {
-            get { return this.jobs; }
-        }
+        public virtual JobCollection Jobs => this.jobs;
 
         /// <inheritdoc/>
-        public virtual SavedSearchCollection SavedSearches
-        {
-            get { return this.savedSearches; }
-        }
+        public virtual SavedSearchCollection SavedSearches => this.savedSearches;
 
         /// <inheritdoc/>
-        public virtual IServer Server
-        {
-            get { return this.server; }
-        }
+        public virtual IServer Server => this.server;
 
         /// <inheritdoc/>
-        public virtual StoragePasswordCollection StoragePasswords
-        {
-            get { return this.storagePasswords; }
-        }
+        public virtual StoragePasswordCollection StoragePasswords => this.storagePasswords;
 
         /// <inheritdoc/>
-        public virtual ITransmitter Transmitter
-        {
-            get { return this.transmitter; }
-        }
+        public virtual ITransmitter Transmitter => this.transmitter;
 
         #endregion
 

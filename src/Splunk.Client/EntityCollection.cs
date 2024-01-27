@@ -17,6 +17,7 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Net;
+using Splunk.Client.Syndication;
 
 //// TODO:
 //// [O] Contracts

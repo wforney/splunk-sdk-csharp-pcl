@@ -26,6 +26,7 @@ namespace Splunk.Client
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk storage password.
@@ -144,40 +145,22 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual string ClearPassword
-        {
-            get { return this.Content.GetValue("ClearPassword", StringConverter.Instance); }
-        }
+        public virtual string ClearPassword => this.Content.GetValue("ClearPassword", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public virtual Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string EncryptedPassword
-        {
-            get { return this.Content.GetValue("EncrPassword", StringConverter.Instance); }
-        }
+        public virtual string EncryptedPassword => this.Content.GetValue("EncrPassword", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Password
-        {
-            get { return this.Content.GetValue("Password", StringConverter.Instance); }
-        }
+        public virtual string Password => this.Content.GetValue("Password", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Realm
-        {
-            get { return this.Content.GetValue("Realm", StringConverter.Instance); }
-        }
+        public virtual string Realm => this.Content.GetValue("Realm", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Username
-        {
-            get { return this.Content.GetValue("Username", StringConverter.Instance); }
-        }
+        public virtual string Username => this.Content.GetValue("Username", StringConverter.Instance);
 
         #endregion
 

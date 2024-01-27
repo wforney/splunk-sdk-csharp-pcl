@@ -25,6 +25,7 @@ namespace Splunk.Client
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides a class for accessing and updating Splunk configuration files.

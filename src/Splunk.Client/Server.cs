@@ -25,6 +25,7 @@ namespace Splunk.Client
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk server.
@@ -76,10 +77,7 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual ServerMessageCollection Messages
-        {
-            get { return this.messages; }
-        }
+        public virtual ServerMessageCollection Messages => this.messages;
 
         /// <inheritdoc/>
         Context IServer.Context { get; set; }

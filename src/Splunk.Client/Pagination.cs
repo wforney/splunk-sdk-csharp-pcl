@@ -76,10 +76,7 @@ namespace Splunk.Client
         /// <value>
         /// The number of entries returned.
         /// </value>
-        public int ItemsPerPage
-        {
-            get { return this.itemsPerPage;  }
-        }
+        public int ItemsPerPage => this.itemsPerPage;
 
         /// <summary>
         /// Gets the offset of the first entry returned.
@@ -93,10 +90,7 @@ namespace Splunk.Client
         /// <value>
         /// Offset of the first entry returned.
         /// </value>
-        public int StartIndex
-        {
-            get { return this.startIndex; }
-        }
+        public int StartIndex => this.startIndex;
 
         /// <summary>
         /// Gets the total number of entries that can be returned for an operation.
@@ -104,10 +98,7 @@ namespace Splunk.Client
         /// <value>
         /// The total number of entries that can be returned.
         /// </value>
-        public int TotalResults
-        {
-            get { return this.totalResults; }
-        }
+        public int TotalResults => this.totalResults;
 
         #endregion
 

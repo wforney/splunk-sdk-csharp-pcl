@@ -24,6 +24,7 @@ namespace Splunk.Client
 {
     using System.ComponentModel;
     using System.Runtime.Serialization;
+    using Splunk.Client.Alerts;
 
     /// <summary>
     /// Provides the arguments for creating a <see cref="SavedSearch"/>.

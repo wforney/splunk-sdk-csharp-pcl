@@ -46,10 +46,7 @@ namespace Splunk.Client
         /// <value>
         /// The number of reads.
         /// </value>
-        public long ReadCount
-        {
-            get { return this.awaiter.ReadCount; }
-        }
+        public long ReadCount => this.awaiter.ReadCount;
 
         /// <summary>
         /// Returns the raw HTTP response message for the job.
@@ -57,10 +54,7 @@ namespace Splunk.Client
         /// <value>
         /// The HTTP response message.
         /// </value>
-        public HttpResponseMessage Response
-        {
-            get { return response.Message; }
-        }
+        public HttpResponseMessage Response => response.Message;
 
         #endregion
 
@@ -194,10 +188,7 @@ namespace Splunk.Client
             this.awaiter = new Awaiter(this);
         }
 
-        ReadState ReadState
-        {
-            get { return this.response.XmlReader.ReadState; }
-        }
+        ReadState ReadState => this.response.XmlReader.ReadState;
 
         void EnsureAwaiterSucceeded()
         {

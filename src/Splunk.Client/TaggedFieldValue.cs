@@ -46,18 +46,12 @@ namespace Splunk.Client
         /// <summary>
         /// Gets the value assigned to the current instance.
         /// </summary>
-        public string Value
-        {
-            get { return this.value; }
-        }
+        public string Value => this.value;
 
         /// <summary>
         /// Gets the set of tags assigned to the current instance.
         /// </summary>
-        public ImmutableSortedSet<string> Tags
-        {
-            get { return this.tags; }
-        }
+        public ImmutableSortedSet<string> Tags => this.tags;
 
         #endregion
 

@@ -29,6 +29,8 @@ namespace Splunk.Client
     using System.Net;
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
+    using Splunk.Client.Alerts;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk saved search.
@@ -104,129 +106,66 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual ActionsAdapter Actions
-        {
-            get { return this.Content.GetValue("Action", ActionsAdapter.Converter.Instance); }
-        }
+        public virtual ActionsAdapter Actions => this.Content.GetValue("Action", ActionsAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual AlertAdapter Alert
-        {
-            get { return this.Content.GetValue("Alert", AlertAdapter.Converter.Instance); }
-        }
+        public virtual AlertAdapter Alert => this.Content.GetValue("Alert", AlertAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual AutoSummarizeAdapter AutoSummarize
-        {
-            get { return this.Content.GetValue("AutoSummarize", AutoSummarizeAdapter.Converter.Instance); }
-        }
+        public virtual AutoSummarizeAdapter AutoSummarize => this.Content.GetValue("AutoSummarize", AutoSummarizeAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string CronSchedule
-        {
-            get { return this.Content.GetValue("CronSchedule", StringConverter.Instance); }
-        }
+        public virtual string CronSchedule => this.Content.GetValue("CronSchedule", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Description
-        {
-            get { return this.Content.GetValue("Description", StringConverter.Instance); }
-        }
+        public virtual string Description => this.Content.GetValue("Description", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual DispatchAdapter Dispatch
-        {
-            get { return this.Content.GetValue("Dispatch", DispatchAdapter.Converter.Instance); }
-        }
+        public virtual DispatchAdapter Dispatch => this.Content.GetValue("Dispatch", DispatchAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual DisplayAdapter Display
-        {
-            get { return this.Content.GetValue("Display", DisplayAdapter.Converter.Instance); }
-        }
+        public virtual DisplayAdapter Display => this.Content.GetValue("Display", DisplayAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public virtual Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsDisabled
-        {
-            get { return this.Content.GetValue("IsDisabled", BooleanConverter.Instance); }
-        }
+        public virtual bool IsDisabled => this.Content.GetValue("IsDisabled", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsScheduled
-        {
-            get { return this.Content.GetValue("IsScheduled", BooleanConverter.Instance); }
-        }
+        public virtual bool IsScheduled => this.Content.GetValue("IsScheduled", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsVisible
-        {
-            get { return this.Content.GetValue("IsVisible", BooleanConverter.Instance); }
-        }
+        public virtual bool IsVisible => this.Content.GetValue("IsVisible", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual int MaxConcurrent
-        {
-            get { return this.Content.GetValue("MaxConcurrent", Int32Converter.Instance); }
-        }
+        public virtual int MaxConcurrent => this.Content.GetValue("MaxConcurrent", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual DateTime NextScheduledTime
-        {
-            get { return this.Content.GetValue("NextScheduledTime", DateTimeConverter.Instance); }
-        }
+        public virtual DateTime NextScheduledTime => this.Content.GetValue("NextScheduledTime", DateTimeConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool RealTimeSchedule
-        {
-            get { return this.Content.GetValue("RealtimeSchedule", BooleanConverter.Instance); }
-        }
+        public virtual bool RealTimeSchedule => this.Content.GetValue("RealtimeSchedule", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual RequestAdapter Request
-        {
-            get { return this.Content.GetValue("Request", RequestAdapter.Converter.Instance); }
-        }
+        public virtual RequestAdapter Request => this.Content.GetValue("Request", RequestAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool RestartOnSearchPeerAdd
-        {
-            get { return this.Content.GetValue("RestartOnSearchpeerAdd", BooleanConverter.Instance); }
-        }
+        public virtual bool RestartOnSearchPeerAdd => this.Content.GetValue("RestartOnSearchpeerAdd", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string QualifiedSearch
-        {
-            get { return this.Content.GetValue("QualifiedSearch", StringConverter.Instance); }
-        }
+        public virtual string QualifiedSearch => this.Content.GetValue("QualifiedSearch", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool RunOnStartup
-        {
-            get { return this.Content.GetValue("RunOnStartup", BooleanConverter.Instance); }
-        }
+        public virtual bool RunOnStartup => this.Content.GetValue("RunOnStartup", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual ReadOnlyCollection<DateTime> ScheduledTimes
-        {
-            get
-            { 
-                return this.Content.GetValue(
+        public virtual ReadOnlyCollection<DateTime> ScheduledTimes => this.Content.GetValue(
                     "ScheduledTimes",
                     ReadOnlyCollectionConverter<List<DateTime>, UnixDateTimeConverter, DateTime>.Instance);
-            }
-        }
 
         /// <inheritdoc/>
-        public virtual string Search
-        {
-            get { return this.Content.GetValue("Search", StringConverter.Instance); }
-        }
+        public virtual string Search => this.Content.GetValue("Search", StringConverter.Instance);
 
         #endregion
 
@@ -426,10 +365,7 @@ namespace Splunk.Client
             /// <value>
             /// The e-mail.
             /// </value>
-            public EmailAdapter Email
-            {
-                get { return this.GetValue("Email", EmailAdapter.Converter.Instance); }
-            }
+            public EmailAdapter Email => this.GetValue("Email", EmailAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the populate lookup.
@@ -437,10 +373,7 @@ namespace Splunk.Client
             /// <value>
             /// The populate lookup.
             /// </value>
-            public PopulateLookupAdapter PopulateLookup
-            {
-                get { return this.GetValue("PopulateLookup", PopulateLookupAdapter.Converter.Instance); }
-            }
+            public PopulateLookupAdapter PopulateLookup => this.GetValue("PopulateLookup", PopulateLookupAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the RSS.
@@ -448,10 +381,7 @@ namespace Splunk.Client
             /// <value>
             /// The RSS.
             /// </value>
-            public RssAdapter Rss
-            {
-                get { return this.GetValue("Rss", RssAdapter.Converter.Instance); }
-            }
+            public RssAdapter Rss => this.GetValue("Rss", RssAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the script.
@@ -459,10 +389,7 @@ namespace Splunk.Client
             /// <value>
             /// The script.
             /// </value>
-            public ScriptAdapter Script
-            {
-                get { return this.GetValue("Script", ScriptAdapter.Converter.Instance); }
-            }
+            public ScriptAdapter Script => this.GetValue("Script", ScriptAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the zero-based index of the summary.
@@ -470,10 +397,7 @@ namespace Splunk.Client
             /// <value>
             /// The summary index.
             /// </value>
-            public SummaryIndexAdapter SummaryIndex
-            {
-                get { return this.GetValue("SummaryIndex", SummaryIndexAdapter.Converter.Instance); }
-            }
+            public SummaryIndexAdapter SummaryIndex => this.GetValue("SummaryIndex", SummaryIndexAdapter.Converter.Instance);
 
             #endregion
 
@@ -497,10 +421,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The command.
                 /// </value>
-                public string Command
-                {
-                    get { return this.GetValue("Command", StringConverter.Instance); }
-                }
+                public string Command => this.GetValue("Command", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether this object is enabled.
@@ -508,10 +429,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if this object is enabled, <c>false</c> if not.
                 /// </value>
-                public bool IsEnabled
-                {
-                    get { return this.GetValue("IsEnabled", BooleanConverter.Instance); }
-                }
+                public bool IsEnabled => this.GetValue("IsEnabled", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the maximum results.
@@ -519,10 +437,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The maximum results.
                 /// </value>
-                public int MaxResults
-                {
-                    get { return this.GetValue("Maxresults", Int32Converter.Instance); }
-                }
+                public int MaxResults => this.GetValue("Maxresults", Int32Converter.Instance);
 
                 /// <summary>
                 /// Gets the maximum time.
@@ -530,10 +445,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The maximum time.
                 /// </value>
-                public string MaxTime
-                {
-                    get { return this.GetValue("Maxtime", StringConverter.Instance); }
-                }
+                public string MaxTime => this.GetValue("Maxtime", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the track alert.
@@ -541,10 +453,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if track alert, <c>false</c> if not.
                 /// </value>
-                public bool TrackAlert
-                {
-                    get { return this.GetValue("TrackAlert", BooleanConverter.Instance); }
-                }
+                public bool TrackAlert => this.GetValue("TrackAlert", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the TTL.
@@ -552,10 +461,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The TTL.
                 /// </value>
-                public string Ttl
-                {
-                    get { return this.GetValue("Ttl", StringConverter.Instance); }
-                }
+                public string Ttl => this.GetValue("Ttl", StringConverter.Instance);
             }
 
             /// <summary>
@@ -573,10 +479,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The authentication password.
                 /// </value>
-                public string AuthPassword
-                {
-                    get { return this.GetValue("AuthPassword", StringConverter.Instance); }
-                }
+                public string AuthPassword => this.GetValue("AuthPassword", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the authentication username.
@@ -584,10 +487,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The authentication username.
                 /// </value>
-                public string AuthUsername
-                {
-                    get { return this.GetValue("AuthUsername", StringConverter.Instance); }
-                }
+                public string AuthUsername => this.GetValue("AuthUsername", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the Bcc.
@@ -595,10 +495,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The Bcc.
                 /// </value>
-                public string Bcc
-                {
-                    get { return this.GetValue("Bcc", StringConverter.Instance); }
-                }
+                public string Bcc => this.GetValue("Bcc", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the CC e-mail address list to use.
@@ -606,10 +503,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The CC e-mail address list to use.
                 /// </value>
-                public string CC
-                {
-                    get { return this.GetValue("Cc", StringConverter.Instance); }
-                }
+                public string CC => this.GetValue("Cc", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the format of text in the e-mail.
@@ -617,10 +511,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The format of text in the e-mail.
                 /// </value>
-                public EmailFormat Format
-                {
-                    get { return this.GetValue("Format", EnumConverter<EmailFormat>.Instance); }
-                }
+                public EmailFormat Format => this.GetValue("Format", EnumConverter<EmailFormat>.Instance);
 
                 /// <summary>
                 /// Gets the e-mail address from which the e-mail action originates.
@@ -628,10 +519,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The e-mail address from which the e-mail action originates.
                 /// </value>
-                public string From
-                {
-                    get { return this.GetValue("From", StringConverter.Instance); }
-                }
+                public string From => this.GetValue("From", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets a value that indicates whether the search results are 
@@ -640,10 +528,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if inline, <c>false</c> if not.
                 /// </value>
-                public bool Inline
-                {
-                    get { return this.GetValue("Inline", BooleanConverter.Instance); }
-                }
+                public bool Inline => this.GetValue("Inline", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the mail server.
@@ -651,10 +536,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The mail server.
                 /// </value>
-                public string MailServer
-                {
-                    get { return this.GetValue("Mailserver", StringConverter.Instance); }
-                }
+                public string MailServer => this.GetValue("Mailserver", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets a list of report CID fonts.
@@ -662,10 +544,7 @@ namespace Splunk.Client
                 /// <value>
                 /// A List of report cid fonts.
                 /// </value>
-                public string ReportCidFontList
-                {
-                    get { return this.GetValue("ReportCIDFontList", StringConverter.Instance); }
-                }
+                public string ReportCidFontList => this.GetValue("ReportCIDFontList", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the report include splunk logo.
@@ -673,10 +552,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if report include splunk logo, <c>false</c> if not.
                 /// </value>
-                public bool ReportIncludeSplunkLogo
-                {
-                    get { return this.GetValue("ReportIncludeSplunkLogo", BooleanConverter.Instance); }
-                }
+                public bool ReportIncludeSplunkLogo => this.GetValue("ReportIncludeSplunkLogo", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the report paper orientation.
@@ -684,10 +560,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The report paper orientation.
                 /// </value>
-                public PaperOrientation ReportPaperOrientation
-                {
-                    get { return this.GetValue("ReportPaperOrientation", EnumConverter<PaperOrientation>.Instance); }
-                }
+                public PaperOrientation ReportPaperOrientation => this.GetValue("ReportPaperOrientation", EnumConverter<PaperOrientation>.Instance);
 
                 /// <summary>
                 /// Gets the size of the report paper.
@@ -695,10 +568,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The size of the report paper.
                 /// </value>
-                public PaperSize ReportPaperSize
-                {
-                    get { return this.GetValue("ReportPaperSize", EnumConverter<PaperSize>.Instance); }
-                }
+                public PaperSize ReportPaperSize => this.GetValue("ReportPaperSize", EnumConverter<PaperSize>.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the report server is enabled.
@@ -706,10 +576,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if report server enabled, <c>false</c> if not.
                 /// </value>
-                public bool ReportServerEnabled
-                {
-                    get { return this.GetValue("ReportServerEnabled", BooleanConverter.Instance); }
-                }
+                public bool ReportServerEnabled => this.GetValue("ReportServerEnabled", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the send PDF.
@@ -717,10 +584,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if send PDF, <c>false</c> if not.
                 /// </value>
-                public bool SendPdf
-                {
-                    get { return this.GetValue("Sendpdf", BooleanConverter.Instance); }
-                }
+                public bool SendPdf => this.GetValue("Sendpdf", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the send results.
@@ -728,10 +592,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if send results, <c>false</c> if not.
                 /// </value>
-                public bool SendResults
-                {
-                    get { return this.GetValue("Sendresults", BooleanConverter.Instance); }
-                }
+                public bool SendResults => this.GetValue("Sendresults", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the subject.
@@ -739,10 +600,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The subject.
                 /// </value>
-                public string Subject
-                {
-                    get { return this.GetValue("Subject", StringConverter.Instance); }
-                }
+                public string Subject => this.GetValue("Subject", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the subject alert.
@@ -750,10 +608,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The subject alert.
                 /// </value>
-                public string SubjectAlert
-                {
-                    get { return this.GetValue("SubjectAlert", StringConverter.Instance); }
-                }
+                public string SubjectAlert => this.GetValue("SubjectAlert", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the subject report.
@@ -761,10 +616,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The subject report.
                 /// </value>
-                public string SubjectReport
-                {
-                    get { return this.GetValue("SubjectReport", StringConverter.Instance); }
-                }
+                public string SubjectReport => this.GetValue("SubjectReport", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the list of recipient e-mail addresses.
@@ -772,10 +624,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The list of recipient e-mail addresses.
                 /// </value>
-                public string To
-                {
-                    get { return this.GetValue("To", StringConverter.Instance); }
-                }
+                public string To => this.GetValue("To", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether this object use ssl.
@@ -783,10 +632,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if use ssl, <c>false</c> if not.
                 /// </value>
-                public bool UseSsl
-                {
-                    get { return this.GetValue("UseSsl", BooleanConverter.Instance); }
-                }
+                public bool UseSsl => this.GetValue("UseSsl", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether this object use TLS.
@@ -794,10 +640,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if use tls, <c>false</c> if not.
                 /// </value>
-                public bool UseTls
-                {
-                    get { return this.GetValue("UseTls", BooleanConverter.Instance); }
-                }
+                public bool UseTls => this.GetValue("UseTls", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the width sort columns.
@@ -805,10 +648,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if width sort columns, <c>false</c> if not.
                 /// </value>
-                public bool WidthSortColumns
-                {
-                    get { return this.GetValue("WidthSortColumns", BooleanConverter.Instance); }
-                }
+                public bool WidthSortColumns => this.GetValue("WidthSortColumns", BooleanConverter.Instance);
             }
 
             /// <summary>
@@ -826,10 +666,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The destination.
                 /// </value>
-                public string Destination
-                {
-                    get { return this.GetValue("Dest", StringConverter.Instance); }
-                }
+                public string Destination => this.GetValue("Dest", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the hostname.
@@ -837,10 +674,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The hostname.
                 /// </value>
-                public string Hostname
-                {
-                    get { return this.GetValue("Hostname", StringConverter.Instance); }
-                }
+                public string Hostname => this.GetValue("Hostname", StringConverter.Instance);
             }
 
             /// <summary>
@@ -868,10 +702,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The name of the file.
                 /// </value>
-                public string FileName
-                {
-                    get { return this.GetValue("Filename", StringConverter.Instance); }
-                }
+                public string FileName => this.GetValue("Filename", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the hostname.
@@ -879,10 +710,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The hostname.
                 /// </value>
-                public string Hostname
-                {
-                    get { return this.GetValue("Hostname", StringConverter.Instance); }
-                }
+                public string Hostname => this.GetValue("Hostname", StringConverter.Instance);
             }
 
             /// <summary>
@@ -900,10 +728,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if inline, <c>false</c> if not.
                 /// </value>
-                public bool Inline
-                {
-                    get { return this.GetValue("Inline", BooleanConverter.Instance); }
-                }
+                public bool Inline => this.GetValue("Inline", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the name.
@@ -911,10 +736,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The name.
                 /// </value>
-                public string Name
-                {
-                    get { return this.GetValue("Name", StringConverter.Instance); }
-                }
+                public string Name => this.GetValue("Name", StringConverter.Instance);
             }
 
             #endregion
@@ -937,10 +759,7 @@ namespace Splunk.Client
             /// <value>
             /// The type of the alert.
             /// </value>
-            public AlertType AlertType
-            {
-                get { return this.GetValue("Type", EnumConverter<AlertType>.Instance); }
-            }
+            public AlertType AlertType => this.GetValue("Type", EnumConverter<AlertType>.Instance);
 
             /// <summary>
             /// Gets the comparator.
@@ -948,10 +767,7 @@ namespace Splunk.Client
             /// <value>
             /// The comparator.
             /// </value>
-            public AlertComparator Comparator
-            {
-                get { return this.GetValue("Comparator", EnumConverter<AlertComparator>.Instance); }
-            }
+            public AlertComparator Comparator => this.GetValue("Comparator", EnumConverter<AlertComparator>.Instance);
 
             /// <summary>
             /// Gets the condition.
@@ -959,10 +775,7 @@ namespace Splunk.Client
             /// <value>
             /// The condition.
             /// </value>
-            public string Condition
-            {
-                get { return this.GetValue("Comparator", StringConverter.Instance); }
-            }
+            public string Condition => this.GetValue("Comparator", StringConverter.Instance);
 
             /// <summary>
             /// Gets a value indicating whether the digest mode.
@@ -970,10 +783,7 @@ namespace Splunk.Client
             /// <value>
             /// <c>true</c> if digest mode, <c>false</c> if not.
             /// </value>
-            public bool DigestMode
-            {
-                get { return this.GetValue("DigestMode", BooleanConverter.Instance); }
-            }
+            public bool DigestMode => this.GetValue("DigestMode", BooleanConverter.Instance);
 
             /// <summary>
             /// Gets the expires.
@@ -981,10 +791,7 @@ namespace Splunk.Client
             /// <value>
             /// The expires.
             /// </value>
-            public string Expires
-            {
-                get { return this.GetValue("Expires", StringConverter.Instance); }
-            }
+            public string Expires => this.GetValue("Expires", StringConverter.Instance);
 
             /// <summary>
             /// Gets the severity.
@@ -992,10 +799,7 @@ namespace Splunk.Client
             /// <value>
             /// The severity.
             /// </value>
-            public AlertSeverity Severity
-            {
-                get { return this.GetValue("Severity", EnumConverter<AlertSeverity>.Instance); }
-            }
+            public AlertSeverity Severity => this.GetValue("Severity", EnumConverter<AlertSeverity>.Instance);
 
             /// <summary>
             /// Gets the suppress.
@@ -1003,10 +807,7 @@ namespace Splunk.Client
             /// <value>
             /// The suppress.
             /// </value>
-            public SuppressAdapter Suppress
-            {
-                get { return this.GetValue("Suppress", SuppressAdapter.Converter.Instance); }
-            }
+            public SuppressAdapter Suppress => this.GetValue("Suppress", SuppressAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the threshold.
@@ -1014,10 +815,7 @@ namespace Splunk.Client
             /// <value>
             /// The threshold.
             /// </value>
-            public string Threshold
-            {
-                get { return this.GetValue("Threshold", StringConverter.Instance); }
-            }
+            public string Threshold => this.GetValue("Threshold", StringConverter.Instance);
 
             /// <summary>
             /// Gets the track.
@@ -1025,10 +823,7 @@ namespace Splunk.Client
             /// <value>
             /// The track.
             /// </value>
-            public AlertTrack Track
-            {
-                get { return this.GetValue("Track", EnumConverter<AlertTrack>.Instance); }
-            }
+            public AlertTrack Track => this.GetValue("Track", EnumConverter<AlertTrack>.Instance);
 
             #endregion
 
@@ -1049,10 +844,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if this object is enabled, <c>false</c> if not.
                 /// </value>
-                public bool IsEnabled
-                {
-                    get { return this.GetValue("IsEnabled", BooleanConverter.Instance); }
-                }
+                public bool IsEnabled => this.GetValue("IsEnabled", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the fields.
@@ -1060,10 +852,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The fields.
                 /// </value>
-                public string Fields
-                {
-                    get { return this.GetValue("Fields", StringConverter.Instance); }
-                }
+                public string Fields => this.GetValue("Fields", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the period.
@@ -1071,10 +860,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The period.
                 /// </value>
-                public string Period
-                {
-                    get { return this.GetValue("Period", StringConverter.Instance); }
-                }
+                public string Period => this.GetValue("Period", StringConverter.Instance);
             }
 
             #endregion
@@ -1097,10 +883,7 @@ namespace Splunk.Client
             /// <value>
             /// The command.
             /// </value>
-            public string Command
-            {
-                get { return this.GetValue("Command", StringConverter.Instance); }
-            }
+            public string Command => this.GetValue("Command", StringConverter.Instance);
 
             /// <summary>
             /// Gets a value indicating whether this object is enabled.
@@ -1108,10 +891,7 @@ namespace Splunk.Client
             /// <value>
             /// <c>true</c> if this object is enabled, <c>false</c> if not.
             /// </value>
-            public bool IsEnabled
-            {
-                get { return this.GetValue("IsEnabled", BooleanConverter.Instance); }
-            }
+            public bool IsEnabled => this.GetValue("IsEnabled", BooleanConverter.Instance);
 
             /// <summary>
             /// Gets the cron schedule.
@@ -1119,10 +899,7 @@ namespace Splunk.Client
             /// <value>
             /// The cron schedule.
             /// </value>
-            public string CronSchedule
-            {
-                get { return this.GetValue("CronSchedule", StringConverter.Instance); }
-            }
+            public string CronSchedule => this.GetValue("CronSchedule", StringConverter.Instance);
 
             /// <summary>
             /// Gets the dispatch.
@@ -1130,10 +907,7 @@ namespace Splunk.Client
             /// <value>
             /// The dispatch.
             /// </value>
-            public DispatchAdapter Dispatch
-            {
-                get { return this.GetValue("Dispatch", DispatchAdapter.Converter.Instance); }
-            }
+            public DispatchAdapter Dispatch => this.GetValue("Dispatch", DispatchAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the maximum disabled buckets.
@@ -1141,10 +915,7 @@ namespace Splunk.Client
             /// <value>
             /// The maximum disabled buckets.
             /// </value>
-            public int MaxDisabledBuckets
-            {
-                get { return this.GetValue("MaxDisabledBuckets", Int32Converter.Instance); }
-            }
+            public int MaxDisabledBuckets => this.GetValue("MaxDisabledBuckets", Int32Converter.Instance);
 
             /// <summary>
             /// Gets the maximum summary ratio.
@@ -1152,10 +923,7 @@ namespace Splunk.Client
             /// <value>
             /// The maximum summary ratio.
             /// </value>
-            public double MaxSummaryRatio
-            {
-                get { return this.GetValue("MaxSummaryRatio", DoubleConverter.Instance); }
-            }
+            public double MaxSummaryRatio => this.GetValue("MaxSummaryRatio", DoubleConverter.Instance);
 
             /// <summary>
             /// Gets the size of the maximum summary.
@@ -1163,10 +931,7 @@ namespace Splunk.Client
             /// <value>
             /// The size of the maximum summary.
             /// </value>
-            public int MaxSummarySize
-            {
-                get { return this.GetValue("MaxSummarySize", Int32Converter.Instance); }
-            }
+            public int MaxSummarySize => this.GetValue("MaxSummarySize", Int32Converter.Instance);
 
             /// <summary>
             /// Gets the maximum time.
@@ -1174,10 +939,7 @@ namespace Splunk.Client
             /// <value>
             /// The maximum time.
             /// </value>
-            public int MaxTime
-            {
-                get { return this.GetValue("MaxTime", Int32Converter.Instance); }
-            }
+            public int MaxTime => this.GetValue("MaxTime", Int32Converter.Instance);
 
             /// <summary>
             /// Gets the suspend period.
@@ -1185,10 +947,7 @@ namespace Splunk.Client
             /// <value>
             /// The suspend period.
             /// </value>
-            public string SuspendPeriod
-            {
-                get { return this.GetValue("SuspendPeriod", StringConverter.Instance); }
-            }
+            public string SuspendPeriod => this.GetValue("SuspendPeriod", StringConverter.Instance);
 
             #endregion
 
@@ -1209,10 +968,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The earliest time.
                 /// </value>
-                public string EarliestTime
-                {
-                    get { return this.GetValue("EarliestTime", StringConverter.Instance); }
-                }
+                public string EarliestTime => this.GetValue("EarliestTime", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the latest time.
@@ -1220,10 +976,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The latest time.
                 /// </value>
-                public string LatestTime
-                {
-                    get { return this.GetValue("LatestTime", StringConverter.Instance); }
-                }
+                public string LatestTime => this.GetValue("LatestTime", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the time format.
@@ -1231,10 +984,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The time format.
                 /// </value>
-                public string TimeFormat
-                {
-                    get { return this.GetValue("TimeFormat", StringConverter.Instance); }
-                }
+                public string TimeFormat => this.GetValue("TimeFormat", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the TTL.
@@ -1242,10 +992,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The TTL.
                 /// </value>
-                public string Ttl
-                {
-                    get { return this.GetValue("Ttl", StringConverter.Instance); }
-                }
+                public string Ttl => this.GetValue("Ttl", StringConverter.Instance);
             }
 
             #endregion
@@ -1266,10 +1013,7 @@ namespace Splunk.Client
             /// <value>
             /// The buckets.
             /// </value>
-            public int Buckets
-            {
-                get { return this.GetValue("Buckets", Int32Converter.Instance); }
-            }
+            public int Buckets => this.GetValue("Buckets", Int32Converter.Instance);
 
             /// <summary>
             /// Gets the earliest time.
@@ -1277,10 +1021,7 @@ namespace Splunk.Client
             /// <value>
             /// The earliest time.
             /// </value>
-            public string EarliestTime
-            {
-                get { return this.GetValue("EarliestTime", StringConverter.Instance); }
-            }
+            public string EarliestTime => this.GetValue("EarliestTime", StringConverter.Instance);
 
             /// <summary>
             /// Gets a value indicating whether the lookups.
@@ -1288,10 +1029,7 @@ namespace Splunk.Client
             /// <value>
             /// <c>true</c> if lookups, <c>false</c> if not.
             /// </value>
-            public bool Lookups
-            {
-                get { return this.GetValue("Lookups", BooleanConverter.Instance); }
-            }
+            public bool Lookups => this.GetValue("Lookups", BooleanConverter.Instance);
 
             /// <summary>
             /// Gets the number of maximums.
@@ -1299,10 +1037,7 @@ namespace Splunk.Client
             /// <value>
             /// The number of maximums.
             /// </value>
-            public int MaxCount
-            {
-                get { return this.GetValue("MaxCount", Int32Converter.Instance); }
-            }
+            public int MaxCount => this.GetValue("MaxCount", Int32Converter.Instance);
 
             /// <summary>
             /// Gets the maximum time.
@@ -1310,10 +1045,7 @@ namespace Splunk.Client
             /// <value>
             /// The maximum time.
             /// </value>
-            public int MaxTime
-            {
-                get { return this.GetValue("MaxTime", Int32Converter.Instance); }
-            }
+            public int MaxTime => this.GetValue("MaxTime", Int32Converter.Instance);
 
             /// <summary>
             /// Gets the reduce frequency.
@@ -1321,10 +1053,7 @@ namespace Splunk.Client
             /// <value>
             /// The reduce frequency.
             /// </value>
-            public int ReduceFreq
-            {
-                get { return this.GetValue("ReduceFreq", Int32Converter.Instance); }
-            }
+            public int ReduceFreq => this.GetValue("ReduceFreq", Int32Converter.Instance);
 
             /// <summary>
             /// Gets a value indicating whether the real time backfill.
@@ -1332,10 +1061,7 @@ namespace Splunk.Client
             /// <value>
             /// <c>true</c> if real time backfill, <c>false</c> if not.
             /// </value>
-            public bool RealTimeBackfill
-            {
-                get { return this.GetValue("RealtimeBackfill", BooleanConverter.Instance); }
-            }
+            public bool RealTimeBackfill => this.GetValue("RealtimeBackfill", BooleanConverter.Instance);
 
             /// <summary>
             /// Gets a value indicating whether the spawn process.
@@ -1343,10 +1069,7 @@ namespace Splunk.Client
             /// <value>
             /// <c>true</c> if spawn process, <c>false</c> if not.
             /// </value>
-            public bool SpawnProcess
-            {
-                get { return this.GetValue("SpawnProcess", BooleanConverter.Instance); }
-            }
+            public bool SpawnProcess => this.GetValue("SpawnProcess", BooleanConverter.Instance);
 
             /// <summary>
             /// Gets the time format.
@@ -1354,10 +1077,7 @@ namespace Splunk.Client
             /// <value>
             /// The time format.
             /// </value>
-            public string TimeFormat
-            {
-                get { return this.GetValue("TimeFormat", StringConverter.Instance); }
-            }
+            public string TimeFormat => this.GetValue("TimeFormat", StringConverter.Instance);
 
             /// <summary>
             /// Gets the TTL.
@@ -1365,10 +1085,7 @@ namespace Splunk.Client
             /// <value>
             /// The TTL.
             /// </value>
-            public string Ttl
-            {
-                get { return this.GetValue("Ttl", StringConverter.Instance); }
-            }
+            public string Ttl => this.GetValue("Ttl", StringConverter.Instance);
         }
 
         /// <summary>
@@ -1388,10 +1105,7 @@ namespace Splunk.Client
             /// <value>
             /// The events.
             /// </value>
-            public EventsAdapter Events
-            {
-                get { return this.GetValue("Events", EventsAdapter.Converter.Instance); }
-            }
+            public EventsAdapter Events => this.GetValue("Events", EventsAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the general.
@@ -1399,10 +1113,7 @@ namespace Splunk.Client
             /// <value>
             /// The general.
             /// </value>
-            public GeneralAdapter General
-            {
-                get { return this.GetValue("General", GeneralAdapter.Converter.Instance); }
-            }
+            public GeneralAdapter General => this.GetValue("General", GeneralAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the page.
@@ -1410,10 +1121,7 @@ namespace Splunk.Client
             /// <value>
             /// The page.
             /// </value>
-            public PageAdapter Page
-            {
-                get { return this.GetValue("Page", PageAdapter.Converter.Instance); }
-            }
+            public PageAdapter Page => this.GetValue("Page", PageAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the statistics.
@@ -1421,10 +1129,7 @@ namespace Splunk.Client
             /// <value>
             /// The statistics.
             /// </value>
-            public StatisticsAdapter Statistics
-            {
-                get { return this.GetValue("Statistics", StatisticsAdapter.Converter.Instance); }
-            }
+            public StatisticsAdapter Statistics => this.GetValue("Statistics", StatisticsAdapter.Converter.Instance);
 
             /// <summary>
             /// Gets the visualizations.
@@ -1432,10 +1137,7 @@ namespace Splunk.Client
             /// <value>
             /// The visualizations.
             /// </value>
-            public VisualizationsAdapter Visualizations
-            {
-                get { return this.GetValue("Visualizations", VisualizationsAdapter.Converter.Instance); }
-            }
+            public VisualizationsAdapter Visualizations => this.GetValue("Visualizations", VisualizationsAdapter.Converter.Instance);
 
             #endregion
 
@@ -1459,9 +1161,7 @@ namespace Splunk.Client
                 /// The fields.
                 /// </value>
                 public string Fields // TODO: Deal sensibily with this Pythonic string format: @"["host","source","sourcetype"]"
-                {
-                    get { return this.GetValue("Fields", StringConverter.Instance); }
-                }
+=> this.GetValue("Fields", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets the list.
@@ -1469,10 +1169,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The list.
                 /// </value>
-                public ListAdapter List
-                {
-                    get { return this.GetValue("List", ListAdapter.Converter.Instance); }
-                }
+                public ListAdapter List => this.GetValue("List", ListAdapter.Converter.Instance);
 
                 /// <summary>
                 /// Gets the maximum lines.
@@ -1481,9 +1178,7 @@ namespace Splunk.Client
                 /// The maximum lines.
                 /// </value>
                 public int MaxLines // TODO: Verify this property is a bool
-                {
-                    get { return this.GetValue("MaxLines", Int32Converter.Instance); }
-                }
+=> this.GetValue("MaxLines", Int32Converter.Instance);
 
                 /// <summary>
                 /// Gets the raw.
@@ -1491,10 +1186,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The raw.
                 /// </value>
-                public RawAdapter Raw
-                {
-                    get { return this.GetValue("Raw", RawAdapter.Converter.Instance); }
-                }
+                public RawAdapter Raw => this.GetValue("Raw", RawAdapter.Converter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the row numbers.
@@ -1503,9 +1195,7 @@ namespace Splunk.Client
                 /// <c>true</c> if row numbers, <c>false</c> if not.
                 /// </value>
                 public bool RowNumbers // TODO: Verify this property is a bool
-                {
-                    get { return this.GetValue("RowNumbers", BooleanConverter.Instance); }
-                }
+=> this.GetValue("RowNumbers", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the table.
@@ -1513,10 +1203,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The table.
                 /// </value>
-                public TableAdapter Table
-                {
-                    get { return this.GetValue("Table", TableAdapter.Converter.Instance); }
-                }
+                public TableAdapter Table => this.GetValue("Table", TableAdapter.Converter.Instance);
 
                 /// <summary>
                 /// Gets the type of the events.
@@ -1524,10 +1211,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The type of the events.
                 /// </value>
-                public string EventsType
-                {
-                    get { return this.GetValue("Type", StringConverter.Instance); }
-                }
+                public string EventsType => this.GetValue("Type", StringConverter.Instance);
 
                 #endregion
 
@@ -1549,9 +1233,7 @@ namespace Splunk.Client
                     /// The drilldown.
                     /// </value>
                     public string Drilldown // TODO: Encode this property as an enumeration
-                    {
-                        get { return this.GetValue("Drilldown", StringConverter.Instance); }
-                    }
+=> this.GetValue("Drilldown", StringConverter.Instance);
 
                     /// <summary>
                     /// Gets a value indicating whether the wrap.
@@ -1560,9 +1242,7 @@ namespace Splunk.Client
                     /// <c>true</c> if wrap, <c>false</c> if not.
                     /// </value>
                     public bool Wrap // TODO: Verify this property is a bool
-                    {
-                        get { return this.GetValue("Wrap", BooleanConverter.Instance); }
-                    }
+=> this.GetValue("Wrap", BooleanConverter.Instance);
                 }
 
                 /// <summary>
@@ -1580,10 +1260,7 @@ namespace Splunk.Client
                     /// <value>
                     /// The drilldown.
                     /// </value>
-                    public string Drilldown
-                    {
-                        get { return this.GetValue("Drilldown", StringConverter.Instance); }
-                    }
+                    public string Drilldown => this.GetValue("Drilldown", StringConverter.Instance);
                 }
 
                 /// <summary>
@@ -1602,9 +1279,7 @@ namespace Splunk.Client
                     /// <c>true</c> if drilldown, <c>false</c> if not.
                     /// </value>
                     public bool Drilldown // TODO: Verify this property is a bool
-                    {
-                        get { return this.GetValue("Drilldown", BooleanConverter.Instance); }
-                    }
+=> this.GetValue("Drilldown", BooleanConverter.Instance);
 
                     /// <summary>
                     /// Gets a value indicating whether the wrap.
@@ -1613,9 +1288,7 @@ namespace Splunk.Client
                     /// <c>true</c> if wrap, <c>false</c> if not.
                     /// </value>
                     public bool Wrap // TODO: Verify this property is a bool
-                    {
-                        get { return this.GetValue("Wrap", BooleanConverter.Instance); }
-                    }
+=> this.GetValue("Wrap", BooleanConverter.Instance);
                 }
 
                 #endregion
@@ -1638,10 +1311,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if enable preview, <c>false</c> if not.
                 /// </value>
-                public bool EnablePreview
-                {
-                    get { return this.GetValue("EnablePreview", BooleanConverter.Instance); }
-                }
+                public bool EnablePreview => this.GetValue("EnablePreview", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the migrated from view state.
@@ -1649,10 +1319,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if migrated from view state, <c>false</c> if not.
                 /// </value>
-                public bool MigratedFromViewState
-                {
-                    get { return this.GetValue("MigratedFromViewState", BooleanConverter.Instance); }
-                }
+                public bool MigratedFromViewState => this.GetValue("MigratedFromViewState", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the time range picker.
@@ -1660,10 +1327,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The time range picker.
                 /// </value>
-                public TimeRangePickerAdapter TimeRangePicker
-                {
-                    get { return this.GetValue("TimeRangePicker", TimeRangePickerAdapter.Converter.Instance); }
-                }
+                public TimeRangePickerAdapter TimeRangePicker => this.GetValue("TimeRangePicker", TimeRangePickerAdapter.Converter.Instance);
 
                 /// <summary>
                 /// Gets the type of the general.
@@ -1671,10 +1335,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The type of the general.
                 /// </value>
-                public string GeneralType
-                {
-                    get { return this.GetValue("Type", StringConverter.Instance); }
-                }
+                public string GeneralType => this.GetValue("Type", StringConverter.Instance);
 
                 #endregion
 
@@ -1695,10 +1356,7 @@ namespace Splunk.Client
                     /// <value>
                     /// <c>true</c> if show, <c>false</c> if not.
                     /// </value>
-                    public bool Show
-                    {
-                        get { return this.GetValue("Show", BooleanConverter.Instance); }
-                    }
+                    public bool Show => this.GetValue("Show", BooleanConverter.Instance);
                 }
 
                 #endregion
@@ -1721,10 +1379,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The pivot.
                 /// </value>
-                public PivotAdapter Pivot
-                {
-                    get { return this.GetValue("Pivot", PivotAdapter.Converter.Instance); }
-                }
+                public PivotAdapter Pivot => this.GetValue("Pivot", PivotAdapter.Converter.Instance);
 
                 /// <summary>
                 /// Gets the search.
@@ -1732,10 +1387,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The search.
                 /// </value>
-                public SearchAdapter Search
-                {
-                    get { return this.GetValue("Search", SearchAdapter.Converter.Instance); }
-                }
+                public SearchAdapter Search => this.GetValue("Search", SearchAdapter.Converter.Instance);
 
                 #endregion
 
@@ -1769,9 +1421,7 @@ namespace Splunk.Client
                     /// The mode.
                     /// </value>
                     public string Mode // TODO: Encode as enumeration
-                    {
-                        get { return this.GetValue("Mode", StringConverter.Instance); }
-                    }
+=> this.GetValue("Mode", StringConverter.Instance);
 
                     /// <summary>
                     /// Gets a value indicating whether the fields is shown.
@@ -1779,10 +1429,7 @@ namespace Splunk.Client
                     /// <value>
                     /// <c>true</c> if show fields, <c>false</c> if not.
                     /// </value>
-                    public bool ShowFields
-                    {
-                        get { return this.GetValue("ShowFields", BooleanConverter.Instance); }
-                    }
+                    public bool ShowFields => this.GetValue("ShowFields", BooleanConverter.Instance);
 
                     /// <summary>
                     /// Gets the search.
@@ -1790,10 +1437,7 @@ namespace Splunk.Client
                     /// <value>
                     /// The search.
                     /// </value>
-                    public TimelineAdapter Search
-                    {
-                        get { return this.GetValue("Search", TimelineAdapter.Converter.Instance); }
-                    }
+                    public TimelineAdapter Search => this.GetValue("Search", TimelineAdapter.Converter.Instance);
 
                     #endregion
 
@@ -1815,9 +1459,7 @@ namespace Splunk.Client
                         /// The format.
                         /// </value>
                         public string Format // TODO: Encode as enumeration
-                        {
-                            get { return this.GetValue("Format", StringConverter.Instance); }
-                        }
+=> this.GetValue("Format", StringConverter.Instance);
 
                         /// <summary>
                         /// Gets the scale.
@@ -1826,9 +1468,7 @@ namespace Splunk.Client
                         /// The scale.
                         /// </value>
                         public string Scale // TODO: Encode as enumeration
-                        {
-                            get { return this.GetValue("Scale", StringConverter.Instance); }
-                        }
+=> this.GetValue("Scale", StringConverter.Instance);
                     }
 
                     #endregion
@@ -1853,9 +1493,7 @@ namespace Splunk.Client
                 /// The drilldown.
                 /// </value>
                 public string Drilldown // TODO: Encode as enumeration
-                {
-                    get { return this.GetValue("Drilldown", StringConverter.Instance); }
-                }
+=> this.GetValue("Drilldown", StringConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the overlay.
@@ -1863,10 +1501,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if overlay, <c>false</c> if not.
                 /// </value>
-                public bool Overlay
-                {
-                    get { return this.GetValue("Overlay", BooleanConverter.Instance); }
-                }
+                public bool Overlay => this.GetValue("Overlay", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the row numbers.
@@ -1874,10 +1509,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if row numbers, <c>false</c> if not.
                 /// </value>
-                public bool RowNumbers
-                {
-                    get { return this.GetValue("RowNumbers", BooleanConverter.Instance); }
-                }
+                public bool RowNumbers => this.GetValue("RowNumbers", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether the wrap.
@@ -1885,10 +1517,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if wrap, <c>false</c> if not.
                 /// </value>
-                public bool Wrap
-                {
-                    get { return this.GetValue("Wrap", BooleanConverter.Instance); }
-                }
+                public bool Wrap => this.GetValue("Wrap", BooleanConverter.Instance);
             }
 
             /// <summary>
@@ -1908,10 +1537,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The height of the chart.
                 /// </value>
-                public int ChartHeight
-                {
-                    get { return this.GetValue("ChartHeight", Int32Converter.Instance); }
-                }
+                public int ChartHeight => this.GetValue("ChartHeight", Int32Converter.Instance);
 
                 /// <summary>
                 /// Gets the charting.
@@ -1919,10 +1545,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The charting.
                 /// </value>
-                public ChartingAdapter Charting
-                {
-                    get { return this.GetValue("Charting", ChartingAdapter.Converter.Instance); }
-                }
+                public ChartingAdapter Charting => this.GetValue("Charting", ChartingAdapter.Converter.Instance);
 
                 /// <summary>
                 /// Gets a value indicating whether this object is shown.
@@ -1930,10 +1553,7 @@ namespace Splunk.Client
                 /// <value>
                 /// <c>true</c> if show, <c>false</c> if not.
                 /// </value>
-                public bool Show
-                {
-                    get { return this.GetValue("Show", BooleanConverter.Instance); }
-                }
+                public bool Show => this.GetValue("Show", BooleanConverter.Instance);
 
                 /// <summary>
                 /// Gets the type of the visualizations.
@@ -1941,10 +1561,7 @@ namespace Splunk.Client
                 /// <value>
                 /// The type of the visualizations.
                 /// </value>
-                public string VisualizationsType
-                {
-                    get { return this.GetValue("Type", StringConverter.Instance); }
-                }
+                public string VisualizationsType => this.GetValue("Type", StringConverter.Instance);
 
                 #endregion
 
@@ -1965,10 +1582,7 @@ namespace Splunk.Client
                     /// <value>
                     /// The drilldown.
                     /// </value>
-                    public string Drilldown
-                    {
-                        get { return this.GetValue("Drilldown", StringConverter.Instance); }
-                    }
+                    public string Drilldown => this.GetValue("Drilldown", StringConverter.Instance);
                 }
 
                 #endregion
@@ -1992,10 +1606,7 @@ namespace Splunk.Client
             /// <value>
             /// The user interface dispatch application.
             /// </value>
-            public string UIDispatchApp
-            {
-                get { return this.GetValue("UiDispatchApp", StringConverter.Instance); }
-            }
+            public string UIDispatchApp => this.GetValue("UiDispatchApp", StringConverter.Instance);
 
             /// <summary>
             /// Gets the dispatch view.
@@ -2003,10 +1614,7 @@ namespace Splunk.Client
             /// <value>
             /// The user interface dispatch view.
             /// </value>
-            public string UIDispatchView
-            {
-                get { return this.GetValue("UiDispatchView", StringConverter.Instance); }
-            }
+            public string UIDispatchView => this.GetValue("UiDispatchView", StringConverter.Instance);
         }
 
         #endregion

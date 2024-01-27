@@ -95,10 +95,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if this object is specific, <c>false</c> if not.
         /// </value>
-        public bool IsSpecific
-        {
-            get { return !this.IsWildcard; }
-        }
+        public bool IsSpecific => !this.IsWildcard;
 
         /// <summary>
         /// Gets a value indicating whether this object is wildcard.
@@ -106,10 +103,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if this object is wildcard, <c>false</c> if not.
         /// </value>
-        public bool IsWildcard
-        {
-            get { return this.User == AllUsers || this.App == AllApps; }
-        }
+        public bool IsWildcard => this.User == AllUsers || this.App == AllApps;
 
         /// <summary>
         /// Gets the user of the current <see cref="Namespace"/>.

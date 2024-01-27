@@ -24,6 +24,7 @@ namespace Splunk.Client
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides a class that represents a Splunk data index.
@@ -120,406 +121,205 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public bool AssureUTF8
-        {
-            get { return this.Content.GetValue("AssureUTF8", BooleanConverter.Instance); }
-        }
+        public bool AssureUTF8 => this.Content.GetValue("AssureUTF8", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public int BloomFilterTotalSizeKB
-        {
-            get { return this.Content.GetValue("BloomfilterTotalSizeKB", Int32Converter.Instance); }
-        }
+        public int BloomFilterTotalSizeKB => this.Content.GetValue("BloomfilterTotalSizeKB", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public string BucketRebuildMemoryHint
-        {
-            get { return this.Content.GetValue("BucketRebuildMemoryHint", StringConverter.Instance); }
-        }
+        public string BucketRebuildMemoryHint => this.Content.GetValue("BucketRebuildMemoryHint", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public string ColdPath
-        {
-            get { return this.Content.GetValue("ColdPath", StringConverter.Instance); }
-        }
+        public string ColdPath => this.Content.GetValue("ColdPath", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public string ColdPathExpanded
-        {
-            get { return this.Content.GetValue("ColdPathExpanded", StringConverter.Instance); }
-        }
+        public string ColdPathExpanded => this.Content.GetValue("ColdPathExpanded", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public long ColdPathMaxDataSizeMB
-        {
-            get { return this.Content.GetValue("ColdPathMaxDataSizeMB", Int64Converter.Instance); }
-        }
+        public long ColdPathMaxDataSizeMB => this.Content.GetValue("ColdPathMaxDataSizeMB", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public string ColdToFrozenDir
-        {
-            get { return this.Content.GetValue("ColdToFrozenDir", StringConverter.Instance); }
-        }
+        public string ColdToFrozenDir => this.Content.GetValue("ColdToFrozenDir", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public string ColdToFrozenScript
-        {
-            get { return this.Content.GetValue("ColdToFrozenScript", StringConverter.Instance); }
-        }
+        public string ColdToFrozenScript => this.Content.GetValue("ColdToFrozenScript", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public bool CompressRawData
-        {
-            get { return this.Content.GetValue("CompressRawdata", BooleanConverter.Instance); }
-        }
+        public bool CompressRawData => this.Content.GetValue("CompressRawdata", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public long CurrentDBSizeMB
-        {
-            get { return this.Content.GetValue("CurrentDBSizeMB", Int32Converter.Instance); }
-        }
+        public long CurrentDBSizeMB => this.Content.GetValue("CurrentDBSizeMB", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public string DefaultDatabase
-        {
-            get { return this.Content.GetValue("DefaultDatabase", StringConverter.Instance); }
-        }
+        public string DefaultDatabase => this.Content.GetValue("DefaultDatabase", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public bool Disabled
-        {
-            get { return this.Content.GetValue("Disabled", BooleanConverter.Instance); }
-        }
+        public bool Disabled => this.Content.GetValue("Disabled", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <inheritdoc/>
-        public bool EnableOnlineBucketRepair
-        {
-            get { return this.Content.GetValue("EnableOnlineBucketRepair", BooleanConverter.Instance); }
-        }
+        public bool EnableOnlineBucketRepair => this.Content.GetValue("EnableOnlineBucketRepair", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public bool EnableRealTimeSearch
-        {
-            get { return this.Content.GetValue("EnableRealtimeSearch", BooleanConverter.Instance); }
-        }
+        public bool EnableRealTimeSearch => this.Content.GetValue("EnableRealtimeSearch", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public int FrozenTimePeriodInSecs
-        {
-            get { return this.Content.GetValue("FrozenTimePeriodInSecs", Int32Converter.Instance); }
-        }
+        public int FrozenTimePeriodInSecs => this.Content.GetValue("FrozenTimePeriodInSecs", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public string HomePath
-        {
-            get { return this.Content.GetValue("HomePath", StringConverter.Instance); }
-        }
+        public string HomePath => this.Content.GetValue("HomePath", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public string HomePathExpanded
-        {
-            get { return this.Content.GetValue("HomePathExpanded", StringConverter.Instance); }
-        }
+        public string HomePathExpanded => this.Content.GetValue("HomePathExpanded", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public long HomePathMaxDataSizeMB
-        {
-            get { return this.Content.GetValue("HomePathMaxDataSizeMB", Int64Converter.Instance); }
-        }
+        public long HomePathMaxDataSizeMB => this.Content.GetValue("HomePathMaxDataSizeMB", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public string IndexThreads
-        {
-            get { return this.Content.GetValue("IndexThreads", StringConverter.Instance); }
-        }
+        public string IndexThreads => this.Content.GetValue("IndexThreads", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public bool IsInternal
-        {
-            get { return this.Content.GetValue("IsInternal", BooleanConverter.Instance); }
-        }
+        public bool IsInternal => this.Content.GetValue("IsInternal", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public bool IsReady
-        {
-            get { return this.Content.GetValue("IsReady", BooleanConverter.Instance); }
-        }
+        public bool IsReady => this.Content.GetValue("IsReady", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public bool IsVirtual
-        {
-            get { return this.Content.GetValue("IsVirtual", BooleanConverter.Instance); }
-        }
+        public bool IsVirtual => this.Content.GetValue("IsVirtual", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public long LastInitSequenceNumber
-        {
-            get { return this.Content.GetValue("LastInitSequenceNumber", Int64Converter.Instance); }
-        }
+        public long LastInitSequenceNumber => this.Content.GetValue("LastInitSequenceNumber", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public long LastInitTime
-        {
-            get { return this.Content.GetValue("LastInitTime", Int64Converter.Instance); }
-        }
-        
+        public long LastInitTime => this.Content.GetValue("LastInitTime", Int64Converter.Instance);
+
         /// <inheritdoc/>
-        public string MaxBloomBackfillBucketAge
-        {
-            get { return this.Content.GetValue("MaxBloomBackfillBucketAge", StringConverter.Instance); }
-        }
+        public string MaxBloomBackfillBucketAge => this.Content.GetValue("MaxBloomBackfillBucketAge", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public int MaxBucketSizeCacheEntries
-        {
-            get { return this.Content.GetValue("MaxBucketSizeCacheEntries", Int32Converter.Instance); }
-        }
+        public int MaxBucketSizeCacheEntries => this.Content.GetValue("MaxBucketSizeCacheEntries", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxConcurrentOptimizes
-        {
-            get { return this.Content.GetValue("MaxConcurrentOptimizes", Int32Converter.Instance); }
-        }
+        public int MaxConcurrentOptimizes => this.Content.GetValue("MaxConcurrentOptimizes", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public string MaxDataSize
-        {
-            get { return this.Content.GetValue("MaxDataSize", StringConverter.Instance); }
-        }
+        public string MaxDataSize => this.Content.GetValue("MaxDataSize", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public int MaxHotBuckets
-        {
-            get { return this.Content.GetValue("MaxHotBuckets", Int32Converter.Instance); }
-        }
+        public int MaxHotBuckets => this.Content.GetValue("MaxHotBuckets", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxHotIdleSecs
-        {
-            get { return this.Content.GetValue("MaxHotIdleSecs", Int32Converter.Instance); }
-        }
+        public int MaxHotIdleSecs => this.Content.GetValue("MaxHotIdleSecs", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxHotSpanSecs
-        {
-            get { return this.Content.GetValue("MaxHotSpanSecs", Int32Converter.Instance); }
-        }
+        public int MaxHotSpanSecs => this.Content.GetValue("MaxHotSpanSecs", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxMemMB
-        {
-            get { return this.Content.GetValue("MaxMemMB", Int32Converter.Instance); }
-        }
+        public int MaxMemMB => this.Content.GetValue("MaxMemMB", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxMetaEntries
-        {
-            get { return this.Content.GetValue("MaxMetaEntries", Int32Converter.Instance); }
-        }
+        public int MaxMetaEntries => this.Content.GetValue("MaxMetaEntries", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxRunningProcessGroups
-        {
-            get { return this.Content.GetValue("MaxRunningProcessGroups", Int32Converter.Instance); }
-        }
+        public int MaxRunningProcessGroups => this.Content.GetValue("MaxRunningProcessGroups", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxRunningProcessGroupsLowPriority
-        {
-            get { return this.Content.GetValue("MaxRunningProcessGroupsLowPriority", Int32Converter.Instance); }
-        }
+        public int MaxRunningProcessGroupsLowPriority => this.Content.GetValue("MaxRunningProcessGroupsLowPriority", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public DateTime MaxTime
-        {
-            get { return this.Content.GetValue("MaxTime", DateTimeConverter.Instance); }
-        }
+        public DateTime MaxTime => this.Content.GetValue("MaxTime", DateTimeConverter.Instance);
 
         /// <inheritdoc/>
-        public int MaxTimeUnreplicatedNoAcks
-        {
-            get { return this.Content.GetValue("MaxTimeUnreplicatedNoAcks", Int32Converter.Instance); }
-        }
+        public int MaxTimeUnreplicatedNoAcks => this.Content.GetValue("MaxTimeUnreplicatedNoAcks", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxTimeUnreplicatedWithAcks
-        {
-            get { return this.Content.GetValue("MaxTimeUnreplicatedWithAcks", Int32Converter.Instance); }
-        }
+        public int MaxTimeUnreplicatedWithAcks => this.Content.GetValue("MaxTimeUnreplicatedWithAcks", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxTotalDataSizeMB
-        {
-            get { return this.Content.GetValue("MaxTotalDataSizeMB", Int32Converter.Instance); }
-        }
+        public int MaxTotalDataSizeMB => this.Content.GetValue("MaxTotalDataSizeMB", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int MaxWarmDBCount
-        {
-            get { return this.Content.GetValue("MaxWarmDBCount", Int32Converter.Instance); }
-        }
+        public int MaxWarmDBCount => this.Content.GetValue("MaxWarmDBCount", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public string MemPoolMB
-        {
-            get { return this.Content.GetValue("MemPoolMB", StringConverter.Instance); }
-        }
+        public string MemPoolMB => this.Content.GetValue("MemPoolMB", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public string MinRawFileSyncSecs
-        {
-            get { return this.Content.GetValue("MinRawFileSyncSecs", StringConverter.Instance); }
-        }
+        public string MinRawFileSyncSecs => this.Content.GetValue("MinRawFileSyncSecs", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public DateTime MinTime
-        {
-            get { return this.Content.GetValue("MinTime", DateTimeConverter.Instance); }
-        }
+        public DateTime MinTime => this.Content.GetValue("MinTime", DateTimeConverter.Instance);
 
         /// <inheritdoc/>
-        public int NumBloomFilters
-        {
-            get { return this.Content.GetValue("NumBloomfilters", Int32Converter.Instance); }
-        }
+        public int NumBloomFilters => this.Content.GetValue("NumBloomfilters", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int NumHotBuckets
-        {
-            get { return this.Content.GetValue("NumHotBuckets", Int32Converter.Instance); }
-        }
+        public int NumHotBuckets => this.Content.GetValue("NumHotBuckets", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int NumWarmBuckets
-        {
-            get { return this.Content.GetValue("NumWarmBuckets", Int32Converter.Instance); }
-        }
+        public int NumWarmBuckets => this.Content.GetValue("NumWarmBuckets", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int PartialServiceMetaPeriod
-        {
-            get { return this.Content.GetValue("PartialServiceMetaPeriod", Int32Converter.Instance); }
-        }
+        public int PartialServiceMetaPeriod => this.Content.GetValue("PartialServiceMetaPeriod", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int ProcessTrackerServiceInterval
-        {
-            get { return this.Content.GetValue("ProcessTrackerServiceInterval", Int32Converter.Instance); }
-        }
+        public int ProcessTrackerServiceInterval => this.Content.GetValue("ProcessTrackerServiceInterval", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int QuarantineFutureSecs
-        {
-            get { return this.Content.GetValue("QuarantineFutureSecs", Int32Converter.Instance); }
-        }
+        public int QuarantineFutureSecs => this.Content.GetValue("QuarantineFutureSecs", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int QuarantinePastSecs
-        {
-            get { return this.Content.GetValue("QuarantinePastSecs", Int32Converter.Instance); }
-        }
+        public int QuarantinePastSecs => this.Content.GetValue("QuarantinePastSecs", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int RawChunkSizeBytes
-        {
-            get { return this.Content.GetValue("RawChunkSizeBytes", Int32Converter.Instance); }
-        }
+        public int RawChunkSizeBytes => this.Content.GetValue("RawChunkSizeBytes", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int RepFactor
-        {
-            get { return this.Content.GetValue("RepFactor", Int32Converter.Instance); }
-        }
+        public int RepFactor => this.Content.GetValue("RepFactor", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int RotatePeriodInSecs
-        {
-            get { return this.Content.GetValue("RotatePeriodInSecs", Int32Converter.Instance); }
-        }
+        public int RotatePeriodInSecs => this.Content.GetValue("RotatePeriodInSecs", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public int ServiceMetaPeriod
-        {
-            get { return this.Content.GetValue("ServiceMetaPeriod", Int32Converter.Instance); }
-        }
+        public int ServiceMetaPeriod => this.Content.GetValue("ServiceMetaPeriod", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public bool ServiceOnlyAsNeeded
-        {
-            get { return this.Content.GetValue("ServiceOnlyAsNeeded", BooleanConverter.Instance); }
-        }
+        public bool ServiceOnlyAsNeeded => this.Content.GetValue("ServiceOnlyAsNeeded", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public int ServiceSubtaskTimingPeriod
-        {
-            get { return this.Content.GetValue("ServiceSubtaskTimingPeriod", Int32Converter.Instance); }
-        }
+        public int ServiceSubtaskTimingPeriod => this.Content.GetValue("ServiceSubtaskTimingPeriod", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public string SummaryHomePathExpanded
-        {
-            get { return this.Content.GetValue("SummaryHomePathExpanded", StringConverter.Instance); }
-        }
+        public string SummaryHomePathExpanded => this.Content.GetValue("SummaryHomePathExpanded", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public string SuppressBannerList
-        {
-            get { return this.Content.GetValue("SuppressBannerList", StringConverter.Instance); }
-        }
+        public string SuppressBannerList => this.Content.GetValue("SuppressBannerList", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public bool Sync
-        {
-            get { return this.Content.GetValue("Sync", BooleanConverter.Instance); }
-        }
+        public bool Sync => this.Content.GetValue("Sync", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public bool SyncMeta
-        {
-            get { return this.Content.GetValue("SyncMeta", BooleanConverter.Instance); }
-        }
+        public bool SyncMeta => this.Content.GetValue("SyncMeta", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public string ThawedPath
-        {
-            get { return this.Content.GetValue("ThawedPath", StringConverter.Instance); }
-        }
+        public string ThawedPath => this.Content.GetValue("ThawedPath", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public string ThawedPathExpanded
-        {
-            get { return this.Content.GetValue("ThawedPathExpanded", StringConverter.Instance); }
-        }
+        public string ThawedPathExpanded => this.Content.GetValue("ThawedPathExpanded", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public int ThrottleCheckPeriod
-        {
-            get { return this.Content.GetValue("ThrottleCheckPeriod", Int32Converter.Instance); }
-        }
+        public int ThrottleCheckPeriod => this.Content.GetValue("ThrottleCheckPeriod", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public long TotalEventCount
-        {
-            get { return this.Content.GetValue("TotalEventCount", Int64Converter.Instance); }
-        }
+        public long TotalEventCount => this.Content.GetValue("TotalEventCount", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public string TStatsHomePath
-        {
-            get { return this.Content.GetValue("TstatsHomePath", StringConverter.Instance); }
-        }
+        public string TStatsHomePath => this.Content.GetValue("TstatsHomePath", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public string TStatsHomePathExpanded
-        {
-            get { return this.Content.GetValue("TstatsHomePathExpanded", StringConverter.Instance); }
-        }
+        public string TStatsHomePathExpanded => this.Content.GetValue("TstatsHomePathExpanded", StringConverter.Instance);
 
         #endregion
 

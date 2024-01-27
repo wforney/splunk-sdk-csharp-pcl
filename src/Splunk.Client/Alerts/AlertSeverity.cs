@@ -17,7 +17,7 @@
 //// TODO:
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Alerts
 {
     using System.Runtime.Serialization;
 
@@ -36,14 +36,14 @@ namespace Splunk.Client
         /// 
         /// </summary>
         [EnumMember(Value = "2")]
-        Information = 2, 
-        
+        Information = 2,
+
         /// <summary>
         /// 
         /// </summary>
         [EnumMember(Value = "3")]
-        Warning = 3, 
-        
+        Warning = 3,
+
         /// <summary>
         /// 
         /// </summary>

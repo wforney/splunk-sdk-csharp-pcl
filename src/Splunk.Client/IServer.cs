@@ -155,10 +155,7 @@ namespace Splunk.Client
         /// The messages.
         /// </value>
         /// <seealso cref="P:Splunk.Client.IServer.Messages"/>
-        public ServerMessageCollection Messages
-        {
-            get { return null; }
-        }
+        public ServerMessageCollection Messages => null;
 
         /// <summary>
         /// Asynchronously retrieves information about the current

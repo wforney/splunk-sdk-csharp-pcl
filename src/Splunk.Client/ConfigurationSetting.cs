@@ -22,6 +22,7 @@ namespace Splunk.Client
 {
     using System;
     using System.Collections.Generic;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk configuration setting.
@@ -64,16 +65,10 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public IReadOnlyDictionary<string, Uri> Links
-        {
-            get { return this.GetValue("Links"); }
-        }
+        public IReadOnlyDictionary<string, Uri> Links => this.GetValue("Links");
 
         /// <inheritdoc/>
-        public string Value 
-        {
-            get { return this.GetValue("Value", StringConverter.Instance); }
-        }
+        public string Value => this.GetValue("Value", StringConverter.Instance);
 
         #endregion
 

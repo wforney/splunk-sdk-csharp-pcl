@@ -120,10 +120,7 @@ namespace Splunk.Client
         /// <value>
         /// Name of the current <see cref="Endpoint"/>.
         /// </value>
-        public string Name
-        {
-            get { return this.ResourceName.Title; }
-        }
+        public string Name => this.ResourceName.Title;
 
         /// <summary>
         /// Gets the namespace containing the current <see cref="Endpoint"/>.

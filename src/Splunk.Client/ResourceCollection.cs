@@ -24,6 +24,7 @@ namespace Splunk.Client
 {
     using System;
     using System.Dynamic;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides a base class that represents a Splunk resource as an object.

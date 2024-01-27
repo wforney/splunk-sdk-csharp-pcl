@@ -87,10 +87,7 @@ namespace Splunk.Client
         /// <value>
         /// The argument prefix.
         /// </value>
-        public string ArgumentPrefix
-        {
-            get { return this.argumentPrefix; }
-        }
+        public string ArgumentPrefix => this.argumentPrefix;
 
         /// <summary>
         /// Gets the number of. 
@@ -98,10 +95,7 @@ namespace Splunk.Client
         /// <value>
         /// The count.
         /// </value>
-        public int Count
-        { 
-            get { return this.set.Count; } 
-        }
+        public int Count => this.set.Count;
 
         /// <summary>
         /// Gets a value indicating whether this object is read only.
@@ -109,10 +103,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if this object is read only, <c>false</c> if not.
         /// </value>
-        public bool IsReadOnly
-        { 
-            get { return false; } 
-        }
+        public bool IsReadOnly => false;
 
         #endregion
 

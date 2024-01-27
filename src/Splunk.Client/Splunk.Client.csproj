@@ -10,6 +10,7 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<IncludeSymbols>True</IncludeSymbols>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<Nullable>enable</Nullable>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -18,6 +19,7 @@
 		<Product>splunk-sdk-csharp-pcl</Product>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/splunk/splunk-sdk-csharp-pcl.git</RepositoryUrl>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<TargetFramework>net6.0</TargetFramework>
 		<Title>Splunk.Client</Title>
 		<Version>2.2.9</Version>

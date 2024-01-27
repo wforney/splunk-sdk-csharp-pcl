@@ -25,6 +25,7 @@ namespace Splunk.Client
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a collection of Splunk configuration

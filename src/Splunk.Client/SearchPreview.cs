@@ -41,10 +41,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if this object is final, <c>false</c> if not.
         /// </value>
-        public bool IsFinal
-        {
-            get { return this.metadata.IsFinal; }
-        }
+        public bool IsFinal => this.metadata.IsFinal;
 
         /// <summary>
         /// Gets the read-only list of field names that may appear in a
@@ -56,10 +53,7 @@ namespace Splunk.Client
         /// <value>
         /// A list of names of the fields.
         /// </value>
-        public ReadOnlyCollection<string> FieldNames
-        {
-            get { return this.metadata.FieldNames; }
-        }
+        public ReadOnlyCollection<string> FieldNames => this.metadata.FieldNames;
 
         /// <summary>
         /// Gets the read-only list of field names that may appear in a search event

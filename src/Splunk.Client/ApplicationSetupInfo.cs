@@ -14,84 +14,65 @@
  * under the License.
  */
 
+using Splunk.Client.Syndication;
+
 //// TODO:
 //// [O] Contracts
 //// [O] Documentation
 //// [ ] Represent ApplicationSetupInfo.Setup as a static type
+namespace Splunk.Client;
 
-namespace Splunk.Client
+/// <summary>
+/// Represents the setup information for an <see cref="Application"/>.
+/// </summary>
+/// <seealso cref="T:Splunk.Client.Resource"/>
+/// <seealso cref="T:Splunk.Client.IApplicationSetupInfo"/>
+public class ApplicationSetupInfo : Resource, IApplicationSetupInfo
 {
     /// <summary>
-    /// Represents the setup information for an <see cref="Application"/>.
+    /// Initializes a new instance of the <see cref="ApplicationSetupInfo"/>
+    /// class.
     /// </summary>
-    /// <seealso cref="T:Splunk.Client.Resource"/>
-    /// <seealso cref="T:Splunk.Client.IApplicationSetupInfo"/>
-    public class ApplicationSetupInfo : Resource, IApplicationSetupInfo
+    /// <param name="feed">
+    /// An object representing a Splunk atom feed response.
+    /// </param>
+    internal ApplicationSetupInfo(AtomFeed feed) => this.Initialize(feed);
+
+    /// <summary>
+    /// Infrastructure. Initializes a new instance of the
+    /// <see cref= "ApplicationSetupInfo"/> class.
+    /// </summary>
+    /// <remarks>
+    /// This API supports the Splunk client infrastructure and is not intended to
+    /// be used directly from your code.
+    /// </remarks>
+    public ApplicationSetupInfo()
     {
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationSetupInfo"/>
-        /// class.
-        /// </summary>
-        /// <param name="feed">
-        /// An object representing a Splunk atom feed response.
-        /// </param>
-        internal ApplicationSetupInfo(AtomFeed feed)
-        {
-            this.Initialize(feed);
-        }
-
-        /// <summary>
-        /// Infrastructure. Initializes a new instance of the
-        /// <see cref= "ApplicationSetupInfo"/> class.
-        /// </summary>
-        /// <remarks>
-        /// This API supports the Splunk client infrastructure and is not intended to
-        /// be used directly from your code.
-        /// </remarks>
-        public ApplicationSetupInfo()
-        { }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets The extensible administration interface properties for the current
-        /// <see cref="ApplicationSetupInfo"/>.
-        /// </summary>
-        /// <value>
-        /// The extensible administration interface properties.
-        /// </value>
-        public Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether to to reload the objects contained in the
-        /// locally installed application.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if refresh, <c>false</c> if not.
-        /// </value>
-        public bool Refresh
-        {
-            get { return this.Content.GetValue("Refresh", BooleanConverter.Instance); }
-        }
-
-        /// <summary>
-        /// Gets a listing of the setup script for the application.
-        /// </summary>
-        /// <value>
-        /// The setup.
-        /// </value>
-        public dynamic Setup
-        {
-            get { return this.Eai.GetValue("Setup"); }
-        }
-
-        #endregion
     }
+
+    /// <summary>
+    /// Gets The extensible administration interface properties for the current
+    /// <see cref="ApplicationSetupInfo"/>.
+    /// </summary>
+    /// <value>
+    /// The extensible administration interface properties.
+    /// </value>
+    public Eai Eai => this.Content.GetValue(nameof(Eai), Eai.Converter.Instance);
+
+    /// <summary>
+    /// Gets a value indicating whether to to reload the objects contained in the
+    /// locally installed application.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if refresh, <c>false</c> if not.
+    /// </value>
+    public bool Refresh => this.Content.GetValue(nameof(Refresh), BooleanConverter.Instance);
+
+    /// <summary>
+    /// Gets a listing of the setup script for the application.
+    /// </summary>
+    /// <value>
+    /// The setup.
+    /// </value>
+    public dynamic Setup => this.Eai.GetValue(nameof(Setup));
 }

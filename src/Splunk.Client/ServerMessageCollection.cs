@@ -27,6 +27,7 @@ namespace Splunk.Client
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Collection of server messages.
@@ -110,16 +111,10 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual ReadOnlyCollection<Message> Messages
-        {
-            get { return this.Snapshot.GetValue("Messages") ?? NoMessages; }
-        }
+        public virtual ReadOnlyCollection<Message> Messages => this.Snapshot.GetValue("Messages") ?? NoMessages;
 
         /// <inheritdoc/>
-        public virtual Pagination Pagination
-        {
-            get { return this.Snapshot.GetValue("Pagination") ?? Pagination.None; }
-        }
+        public virtual Pagination Pagination => this.Snapshot.GetValue("Pagination") ?? Pagination.None;
 
         #endregion
 

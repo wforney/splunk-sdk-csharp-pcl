@@ -45,10 +45,7 @@ namespace Splunk.Client
         /// <value>
         /// The access control list properties.
         /// </value>
-        public EaiAcl Acl
-        {
-            get { return this.GetValue("Acl", EaiAcl.Converter.Instance); }
-        }
+        public EaiAcl Acl => this.GetValue("Acl", EaiAcl.Converter.Instance);
 
         /// <summary>
         /// Gets the attributes.
@@ -56,10 +53,7 @@ namespace Splunk.Client
         /// <value>
         /// The attributes.
         /// </value>
-        public EaiAttributes Attributes
-        {
-            get { return this.GetValue("Attributes", EaiAttributes.Converter.Instance); }
-        }
+        public EaiAttributes Attributes => this.GetValue("Attributes", EaiAttributes.Converter.Instance);
 
         #endregion
     }

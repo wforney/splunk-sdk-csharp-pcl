@@ -21,6 +21,7 @@
 namespace Splunk.Client
 {
     using System;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of the settings of a Splunk server.
@@ -93,82 +94,43 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public virtual Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string SplunkDB
-        {
-            get { return this.Content.GetValue("SPLUNKDB", StringConverter.Instance); }
-        }
+        public virtual string SplunkDB => this.Content.GetValue("SPLUNKDB", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string SplunkHome
-        {
-            get { return this.Content.GetValue("SPLUNKHOME", StringConverter.Instance); }
-        }
+        public virtual string SplunkHome => this.Content.GetValue("SPLUNKHOME", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool EnableSplunkWebSsl
-        {
-            get { return this.Content.GetValue("EnableSplunkWebSSL", BooleanConverter.Instance); }
-        }
+        public virtual bool EnableSplunkWebSsl => this.Content.GetValue("EnableSplunkWebSSL", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Host
-        {
-            get { return this.Content.GetValue("Host", StringConverter.Instance); }
-        }
+        public virtual string Host => this.Content.GetValue("Host", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual int HttpPort
-        {
-            get { return this.Content.GetValue("Httpport", Int32Converter.Instance); }
-        }
+        public virtual int HttpPort => this.Content.GetValue("Httpport", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual int ManagementHostPort
-        {
-            get { return this.Content.GetValue("MgmtHostPort", Int32Converter.Instance); }
-        }
+        public virtual int ManagementHostPort => this.Content.GetValue("MgmtHostPort", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual int MinFreeSpace
-        {
-            get { return this.Content.GetValue("MinFreeSpace", Int32Converter.Instance); }
-        }
+        public virtual int MinFreeSpace => this.Content.GetValue("MinFreeSpace", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Pass4SymmetricKey
-        {
-            get { return this.Content.GetValue("Pass4SymmKey", StringConverter.Instance); }
-        }
+        public virtual string Pass4SymmetricKey => this.Content.GetValue("Pass4SymmKey", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string ServerName
-        {
-            get { return this.Content.GetValue("ServerName", StringConverter.Instance); }
-        }
+        public virtual string ServerName => this.Content.GetValue("ServerName", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string SessionTimeout
-        {
-            get { return this.Content.GetValue("SessionTimeout", StringConverter.Instance); }
-        }
+        public virtual string SessionTimeout => this.Content.GetValue("SessionTimeout", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool StartWebServer
-        {
-            get { return this.Content.GetValue("Startwebserver", BooleanConverter.Instance); }
-        }
+        public virtual bool StartWebServer => this.Content.GetValue("Startwebserver", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string TrustedIP
-        {
-            get { return this.Content.GetValue("TrustedIP", StringConverter.Instance); }
-        }
+        public virtual string TrustedIP => this.Content.GetValue("TrustedIP", StringConverter.Instance);
 
         #endregion
     }

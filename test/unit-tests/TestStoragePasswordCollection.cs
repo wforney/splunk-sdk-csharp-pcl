@@ -14,6 +14,7 @@
  * under the License.
  */
 
+using Splunk.Client.Syndication;
 using Xunit;
 
 namespace Splunk.Client.UnitTests;

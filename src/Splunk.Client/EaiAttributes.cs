@@ -47,14 +47,8 @@ namespace Splunk.Client
         /// <value>
         /// The optional fields.
         /// </value>
-		public ReadOnlyCollection<string> OptionalFields
-        {
-            get
-            {
-                return this.GetValue(
+		public ReadOnlyCollection<string> OptionalFields => this.GetValue(
                     "OptionalFields", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance);
-            }
-        }
 
         /// <summary>
         /// Gets the required fields.
@@ -62,14 +56,8 @@ namespace Splunk.Client
         /// <value>
         /// The required fields.
         /// </value>
-		public ReadOnlyCollection<string> RequiredFields
-        {
-            get
-            {
-                return this.GetValue(
+		public ReadOnlyCollection<string> RequiredFields => this.GetValue(
                     "RequiredFields", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance);
-            }
-        }
 
         /// <summary>
         /// Gets the wildcard fields.
@@ -77,14 +65,8 @@ namespace Splunk.Client
         /// <value>
         /// The wildcard fields.
         /// </value>
-		public ReadOnlyCollection<string> WildcardFields
-        {
-            get
-            {
-                return this.GetValue(
+		public ReadOnlyCollection<string> WildcardFields => this.GetValue(
                     "WildcardFields", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance);
-            }
-        }
 
         #endregion
     }

@@ -17,6 +17,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using Splunk.Client.Syndication;
 
 [assembly: InternalsVisibleTo("Splunk.Client.UnitTests")]
 

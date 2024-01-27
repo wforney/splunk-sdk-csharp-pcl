@@ -17,7 +17,7 @@
 namespace Splunk.Client.UnitTests
 {
     using Splunk.Client;
-
+    using Splunk.Client.Alerts;
     using System;
     using System.Collections.Generic;
     using System.Linq;

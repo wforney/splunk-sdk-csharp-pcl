@@ -45,10 +45,7 @@ namespace Splunk.Client
         /// <value>
         /// The message.
         /// </value>
-        public HttpResponseMessage Message
-        {
-            get { return this.message; }
-        }
+        public HttpResponseMessage Message => this.message;
 
         /// <summary>
         /// Gets the <see cref="Stream"/> associated with the current <see cref="Response.Message"/>.

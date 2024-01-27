@@ -28,6 +28,7 @@ namespace Splunk.Client
     using System.Runtime.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk search job.
@@ -118,328 +119,166 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual bool CanSummarize
-        {
-            get { return this.Content.GetValue("CanSummarize", BooleanConverter.Instance); }
-        }
+        public virtual bool CanSummarize => this.Content.GetValue("CanSummarize", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual DateTime CursorTime
-        {
-            get { return this.Content.GetValue("CursorTime", DateTimeConverter.Instance); }
-        }
+        public virtual DateTime CursorTime => this.Content.GetValue("CursorTime", DateTimeConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual int DefaultSaveTtl
-        {
-            get { return this.Content.GetValue("DefaultSaveTTL", Int32Converter.Instance); }
-        }
+        public virtual int DefaultSaveTtl => this.Content.GetValue("DefaultSaveTTL", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual int DefaultTtl
-        {
-            get { return this.Content.GetValue("DefaultTTL", Int32Converter.Instance); }
-        }
+        public virtual int DefaultTtl => this.Content.GetValue("DefaultTTL", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual long DiskUsage
-        {
-            get { return this.Content.GetValue("DiskUsage", Int64Converter.Instance); } // sample value: "86016"
-        }
+        public virtual long DiskUsage => this.Content.GetValue("DiskUsage", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual DispatchState DispatchState
-        {
-            get { return this.Content.GetValue("DispatchState", EnumConverter<DispatchState>.Instance); }
-        }
+        public virtual DispatchState DispatchState => this.Content.GetValue("DispatchState", EnumConverter<DispatchState>.Instance);
 
         /// <inheritdoc/>
-        public virtual double DoneProgress
-        {
-            get { return this.Content.GetValue("DoneProgress", DoubleConverter.Instance); }
-        }
+        public virtual double DoneProgress => this.Content.GetValue("DoneProgress", DoubleConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual long DropCount
-        {
-            get { return this.Content.GetValue("DropCount", Int64Converter.Instance); }
-        }
+        public virtual long DropCount => this.Content.GetValue("DropCount", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public virtual Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual DateTime EarliestTime
-        {
-            get { return this.Content.GetValue("EarliestTime", DateTimeConverter.Instance); }
-        }
+        public virtual DateTime EarliestTime => this.Content.GetValue("EarliestTime", DateTimeConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual long EventAvailableCount
-        {
-            get { return this.Content.GetValue("EventAvailableCount", Int64Converter.Instance); }
-        }
+        public virtual long EventAvailableCount => this.Content.GetValue("EventAvailableCount", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual long EventCount
-        {
-            get { return this.Content.GetValue("EventCount", Int64Converter.Instance); }
-        }
+        public virtual long EventCount => this.Content.GetValue("EventCount", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual int EventFieldCount
-        {
-            get { return this.Content.GetValue("EventFieldCount", Int32Converter.Instance); }
-        }
+        public virtual int EventFieldCount => this.Content.GetValue("EventFieldCount", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool EventIsStreaming
-        {
-            get { return this.Content.GetValue("EventIsStreaming", BooleanConverter.Instance); }
-        }
+        public virtual bool EventIsStreaming => this.Content.GetValue("EventIsStreaming", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool EventIsTruncated
-        {
-            get { return this.Content.GetValue("EventIsTruncated", BooleanConverter.Instance); }
-        }
+        public virtual bool EventIsTruncated => this.Content.GetValue("EventIsTruncated", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string EventSearch
-        {
-            get { return this.Content.GetValue("EventSearch", StringConverter.Instance); }
-        }
+        public virtual string EventSearch => this.Content.GetValue("EventSearch", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual SortDirection EventSorting
-        {
-            get { return this.Content.GetValue("EventSorting", EnumConverter<SortDirection>.Instance); }
-        }
+        public virtual SortDirection EventSorting => this.Content.GetValue("EventSorting", EnumConverter<SortDirection>.Instance);
 
         /// <inheritdoc/>
-        public virtual long IndexEarliestTime
-        {
-            get { return this.Content.GetValue("IndexEarliestTime", Int64Converter.Instance); }
-        }
+        public virtual long IndexEarliestTime => this.Content.GetValue("IndexEarliestTime", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual long IndexLatestTime
-        {
-            get { return this.Content.GetValue("IndexLatestTime", Int64Converter.Instance); }
-        }
+        public virtual long IndexLatestTime => this.Content.GetValue("IndexLatestTime", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsBatchModeSearch
-        {
-            get { return this.Content.GetValue("IsBatchModeSearch", BooleanConverter.Instance); }
-        }
+        public virtual bool IsBatchModeSearch => this.Content.GetValue("IsBatchModeSearch", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsDone
-        {
-            get { return this.Content.GetValue("IsDone", BooleanConverter.Instance); }
-        }
+        public virtual bool IsDone => this.Content.GetValue("IsDone", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsFailed
-        {
-            get { return this.Content.GetValue("IsFailed", BooleanConverter.Instance); }
-        }
+        public virtual bool IsFailed => this.Content.GetValue("IsFailed", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsFinalized
-        {
-            get { return this.Content.GetValue("IsFinalized", BooleanConverter.Instance); }
-        }
+        public virtual bool IsFinalized => this.Content.GetValue("IsFinalized", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsPaused
-        {
-            get { return this.Content.GetValue("IsPaused", BooleanConverter.Instance); }
-        }
+        public virtual bool IsPaused => this.Content.GetValue("IsPaused", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsPreviewEnabled
-        {
-            get { return this.Content.GetValue("IsPreviewEnabled", BooleanConverter.Instance); }
-        }
+        public virtual bool IsPreviewEnabled => this.Content.GetValue("IsPreviewEnabled", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsRealTimeSearch
-        {
-            get { return this.Content.GetValue("IsRealTimeSearch", BooleanConverter.Instance); }
-        }
+        public virtual bool IsRealTimeSearch => this.Content.GetValue("IsRealTimeSearch", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsRemoteTimeline
-        {
-            get { return this.Content.GetValue("IsRemoteTimeline", BooleanConverter.Instance); }
-        }
+        public virtual bool IsRemoteTimeline => this.Content.GetValue("IsRemoteTimeline", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsSaved
-        {
-            get { return this.Content.GetValue("IsSaved", BooleanConverter.Instance); }
-        }
+        public virtual bool IsSaved => this.Content.GetValue("IsSaved", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsSavedSearch
-        {
-            get { return this.Content.GetValue("IsSavedSearch", BooleanConverter.Instance); }
-        }
+        public virtual bool IsSavedSearch => this.Content.GetValue("IsSavedSearch", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsZombie
-        {
-            get { return this.Content.GetValue("IsZombie", BooleanConverter.Instance); }
-        }
+        public virtual bool IsZombie => this.Content.GetValue("IsZombie", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Keywords
-        {
-            get { return this.Content.GetValue("Keywords", StringConverter.Instance); }
-        }
+        public virtual string Keywords => this.Content.GetValue("Keywords", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual DateTime LatestTime
-        {
-            get { return this.Content.GetValue("LatestTime", DateTimeConverter.Instance); }
-        }
+        public virtual DateTime LatestTime => this.Content.GetValue("LatestTime", DateTimeConverter.Instance);
 
         //// TODO: Messages	{System.Dynamic.ExpandoObject}	System.Dynamic.ExpandoObject
 
         /// <inheritdoc/>
-        public virtual string NormalizedSearch
-        {
-            get { return this.Content.GetValue("NormalizedSearch", StringConverter.Instance); } 
-        }
+        public virtual string NormalizedSearch => this.Content.GetValue("NormalizedSearch", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual int NumPreviews
-        {
-            get { return this.Content.GetValue("NumPreviews", Int32Converter.Instance); }
-        }
+        public virtual int NumPreviews => this.Content.GetValue("NumPreviews", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual dynamic Performance
-        {
-            get { return this.Content.GetValue("Performance", ExpandoAdapter.Converter.Instance); }
-        }
+        public virtual dynamic Performance => this.Content.GetValue("Performance", ExpandoAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual int Pid
-        {
-            get { return this.Content.GetValue("Pid", Int32Converter.Instance); }
-        }
+        public virtual int Pid => this.Content.GetValue("Pid", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual int Priority
-        {
-            get { return this.Content.GetValue("Priority", Int32Converter.Instance); }
-        }
+        public virtual int Priority => this.Content.GetValue("Priority", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string RemoteSearch
-        {
-            get { return this.Content.GetValue("RemoteSearch", StringConverter.Instance); }
-        }
+        public virtual string RemoteSearch => this.Content.GetValue("RemoteSearch", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string ReportSearch
-        {
-            get { return this.Content.GetValue("ReportSearch", StringConverter.Instance); }
-        }
+        public virtual string ReportSearch => this.Content.GetValue("ReportSearch", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual dynamic Request
-        {
-            get { return this.Content.GetValue("Request"); }
-        }
+        public virtual dynamic Request => this.Content.GetValue("Request");
 
         /// <inheritdoc/>
-        public virtual long ResultCount
-        {
-            get { return this.Content.GetValue("ResultCount", Int64Converter.Instance); }
-        }
+        public virtual long ResultCount => this.Content.GetValue("ResultCount", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool ResultIsStreaming
-        {
-            get { return this.Content.GetValue("ResultIsStreaming", BooleanConverter.Instance); }
-        }
+        public virtual bool ResultIsStreaming => this.Content.GetValue("ResultIsStreaming", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual long ResultPreviewCount
-        {
-            get { return this.Content.GetValue("ResultPreviewCount", Int64Converter.Instance); }
-        }
+        public virtual long ResultPreviewCount => this.Content.GetValue("ResultPreviewCount", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual double RunDuration
-        {
-            get { return this.Content.GetValue("RunDuration", DoubleConverter.Instance); }
-        }
+        public virtual double RunDuration => this.Content.GetValue("RunDuration", DoubleConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual RuntimeAdapter Runtime
-        {
-            get { return this.Content.GetValue("Runtime", RuntimeAdapter.Converter.Instance); }
-        }
+        public virtual RuntimeAdapter Runtime => this.Content.GetValue("Runtime", RuntimeAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual long ScanCount
-        {
-            get { return this.Content.GetValue("ScanCount", Int64Converter.Instance); }
-        }
+        public virtual long ScanCount => this.Content.GetValue("ScanCount", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Search
-        {
-            get { return this.Snapshot.Title; }
-        }
+        public virtual string Search => this.Snapshot.Title;
 
         /// <inheritdoc/>
-        public virtual DateTime SearchEarliestTime
-        {
-            get { return this.Content.GetValue("SearchEarliestTime", UnixDateTimeConverter.Instance); }
-        }
+        public virtual DateTime SearchEarliestTime => this.Content.GetValue("SearchEarliestTime", UnixDateTimeConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual DateTime SearchLatestTime
-        {
-            get { return this.Content.GetValue("SearchLatestTime", UnixDateTimeConverter.Instance); }
-        }
+        public virtual DateTime SearchLatestTime => this.Content.GetValue("SearchLatestTime", UnixDateTimeConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual ReadOnlyCollection<string> SearchProviders
-        {
-            get
-            {
-                return this.Content.GetValue(
+        public virtual ReadOnlyCollection<string> SearchProviders => this.Content.GetValue(
                     "SearchProviders", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance);
-            }
-        }
 
         /// <inheritdoc/>
-        public virtual string Sid
-        {
-            get { return this.Name; }
-        }
+        public virtual string Sid => this.Name;
 
         /// <inheritdoc/>
-        public virtual int StatusBuckets
-        {
-            get { return this.Content.GetValue("StatusBuckets", Int32Converter.Instance); }
-        }
+        public virtual int StatusBuckets => this.Content.GetValue("StatusBuckets", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual long Ttl
-        {
-            get { return this.Content.GetValue("Ttl", Int64Converter.Instance); }
-        }
+        public virtual long Ttl => this.Content.GetValue("Ttl", Int64Converter.Instance);
 
         #endregion
 
@@ -789,16 +628,10 @@ namespace Splunk.Client
         public class RuntimeAdapter : ExpandoAdapter<RuntimeAdapter>
         {
             /// <inheritdoc/>
-            public bool AutoCancel
-            {
-                get { return this.GetValue("AutoCancel", BooleanConverter.Instance); }
-            }
+            public bool AutoCancel => this.GetValue("AutoCancel", BooleanConverter.Instance);
 
             /// <inheritdoc/>
-            public bool AutoPause
-            {
-                get { return this.GetValue("AutoPause", BooleanConverter.Instance); }
-            }
+            public bool AutoPause => this.GetValue("AutoPause", BooleanConverter.Instance);
         }
      
         #endregion

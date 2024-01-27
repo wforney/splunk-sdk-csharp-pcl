@@ -45,10 +45,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if this object is final, <c>false</c> if not.
         /// </value>
-        public bool IsFinal
-        {
-            get { return this.metadata.IsFinal; }
-        }
+        public bool IsFinal => this.metadata.IsFinal;
 
         /// <summary>
         /// Gets the read-only list of field names that may appear in a
@@ -60,10 +57,7 @@ namespace Splunk.Client
         /// <value>
         /// A list of names of the fields.
         /// </value>
-        public ReadOnlyCollection<string> FieldNames
-        {
-            get { return this.metadata.FieldNames; }
-        }
+        public ReadOnlyCollection<string> FieldNames => this.metadata.FieldNames;
 
         /// <summary>
         /// Gets the <see cref="SearchResult"/> read count for the current
@@ -72,10 +66,7 @@ namespace Splunk.Client
         /// <value>
         /// The number of reads.
         /// </value>
-        public long ReadCount
-        {
-            get { return this.awaiter.ReadCount; }
-        }
+        public long ReadCount => this.awaiter.ReadCount;
 
 
         /// <summary>
@@ -84,10 +75,7 @@ namespace Splunk.Client
         /// <value>
         /// The HTTP response message.
         /// </value>
-        public HttpResponseMessage Response
-        {
-            get { return response.Message; }
-        }
+        public HttpResponseMessage Response => response.Message;
 
         #endregion
 
@@ -225,10 +213,7 @@ namespace Splunk.Client
             this.awaiter = new Awaiter(this);
         }
 
-        ReadState ReadState
-        {
-            get { return this.response.XmlReader.ReadState; }
-        }
+        ReadState ReadState => this.response.XmlReader.ReadState;
 
         void EnsureAwaiterSucceeded()
         {

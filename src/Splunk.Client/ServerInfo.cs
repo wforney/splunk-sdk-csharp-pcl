@@ -19,6 +19,7 @@ namespace Splunk.Client
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides information about a Splunk server instance.
@@ -70,156 +71,78 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public virtual string ActiveLicenseGroup
-        {
-            get { return this.Content.GetValue("ActiveLicenseGroup", StringConverter.Instance); }
-        }
+        public virtual string ActiveLicenseGroup => this.Content.GetValue("ActiveLicenseGroup", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual dynamic AddOns
-        {
-            get { return this.Content.GetValue("AddOns", ExpandoAdapter.Converter.Instance); }
-        }
+        public virtual dynamic AddOns => this.Content.GetValue("AddOns", ExpandoAdapter.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string Build
-        {
-            get { return this.Content.GetValue("Build", StringConverter.Instance); }
-        }
+        public virtual string Build => this.Content.GetValue("Build", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string CpuArchitecture
-        {
-            get { return this.Content.GetValue("CpuArch", StringConverter.Instance); }
-        }
+        public virtual string CpuArchitecture => this.Content.GetValue("CpuArch", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public virtual Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual Guid Guid
-        {
-            get { return this.Content.GetValue("Guid", GuidConverter.Instance); }
-        }
+        public virtual Guid Guid => this.Content.GetValue("Guid", GuidConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsFree
-        {
-            get { return this.Content.GetValue("IsFree", BooleanConverter.Instance); }
-        }
+        public virtual bool IsFree => this.Content.GetValue("IsFree", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsRealTimeSearchEnabled
-        {
-            get { return this.Content.GetValue("RtsearchEnabled", BooleanConverter.Instance); }
-        }
+        public virtual bool IsRealTimeSearchEnabled => this.Content.GetValue("RtsearchEnabled", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool IsTrial
-        {
-            get { return this.Content.GetValue("IsTrial", BooleanConverter.Instance); }
-        }
+        public virtual bool IsTrial => this.Content.GetValue("IsTrial", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual ReadOnlyCollection<string> LicenseKeys
-        {
-            get 
-            {
-                return this.Content.GetValue(
-                    "LicenseKeys", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance); 
-            }
-        }
+        public virtual ReadOnlyCollection<string> LicenseKeys => this.Content.GetValue(
+                    "LicenseKeys", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance);
 
         /// <inheritdoc/>
-        public virtual ReadOnlyCollection<string> LicenseLabels
-        {
-            get 
-            {
-                return this.Content.GetValue(
+        public virtual ReadOnlyCollection<string> LicenseLabels => this.Content.GetValue(
                     "LicenseLabels", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance);
-            }
-        }
 
         /// <inheritdoc/>
-        public virtual string LicenseSignature
-        {
-            get { return this.Content.GetValue("LicenseSignature", StringConverter.Instance); }
-        }
+        public virtual string LicenseSignature => this.Content.GetValue("LicenseSignature", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual LicenseState LicenseState
-        {
-            get { return this.Content.GetValue("LicenseState", EnumConverter<LicenseState>.Instance); }
-        }
+        public virtual LicenseState LicenseState => this.Content.GetValue("LicenseState", EnumConverter<LicenseState>.Instance);
 
         /// <inheritdoc/>
-        public virtual Guid MasterGuid
-        {
-            get { return this.Content.GetValue("MasterGuid", GuidConverter.Instance); }
-        }
+        public virtual Guid MasterGuid => this.Content.GetValue("MasterGuid", GuidConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual ServerMode Mode
-        {
-            get { return this.Content.GetValue("Mode", EnumConverter<ServerMode>.Instance); }
-        }
+        public virtual ServerMode Mode => this.Content.GetValue("Mode", EnumConverter<ServerMode>.Instance);
 
         /// <inheritdoc/>
-        public virtual int NumberOfCores
-        {
-            get { return this.Content.GetValue("NumberOfCores", Int32Converter.Instance); }
-        }
+        public virtual int NumberOfCores => this.Content.GetValue("NumberOfCores", Int32Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual string OSBuild
-        {
-            get { return this.Content.GetValue("OsBuild", StringConverter.Instance); }
-        }
+        public virtual string OSBuild => this.Content.GetValue("OsBuild", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string OSName
-        {
-            get { return this.Content.GetValue("OsName", StringConverter.Instance); }
-        }
+        public virtual string OSName => this.Content.GetValue("OsName", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string OSVersion
-        {
-            get { return this.Content.GetValue("OsVersion", StringConverter.Instance); }
-        }
+        public virtual string OSVersion => this.Content.GetValue("OsVersion", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual long PhysicalMemoryMB
-        {
-            get { return this.Content.GetValue("PhysicalMemoryMB", Int64Converter.Instance); }
-        }
+        public virtual long PhysicalMemoryMB => this.Content.GetValue("PhysicalMemoryMB", Int64Converter.Instance);
 
         /// <inheritdoc/>
-        public virtual bool RealTimeSearchEnabled
-        {
-            get { return this.Content.GetValue("RtsearchEnabled", BooleanConverter.Instance); }
-        }
+        public virtual bool RealTimeSearchEnabled => this.Content.GetValue("RtsearchEnabled", BooleanConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual string ServerName
-        {
-            get { return this.Content.GetValue("ServerName", StringConverter.Instance); }
-        }
+        public virtual string ServerName => this.Content.GetValue("ServerName", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual DateTime StartupTime
-        {
-            get { return this.Content.GetValue("StartupTime", UnixDateTimeConverter.Instance); }
-        }
+        public virtual DateTime StartupTime => this.Content.GetValue("StartupTime", UnixDateTimeConverter.Instance);
 
         /// <inheritdoc/>
-        public virtual Version Version
-        {
-            get { return this.Content.GetValue("Version", VersionConverter.Instance); }
-        }
+        public virtual Version Version => this.Content.GetValue("Version", VersionConverter.Instance);
 
         #endregion
     }

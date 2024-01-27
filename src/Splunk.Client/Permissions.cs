@@ -37,14 +37,8 @@ namespace Splunk.Client
         /// <value>
         /// The set of Splunk user account names with read permissions.
         /// </value>
-        public ReadOnlyCollection<string> Read
-        {
-            get
-            { 
-                return this.GetValue(
-                    "Read", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance); 
-            }
-        }
+        public ReadOnlyCollection<string> Read => this.GetValue(
+                    "Read", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance);
 
         /// <summary>
         /// Gets the set of Splunk user account names with write permissions.
@@ -52,13 +46,7 @@ namespace Splunk.Client
         /// <value>
         /// The set of Splunk user account names with write permissions.
         /// </value>
-        public ReadOnlyCollection<string> Write
-        {
-            get
-            {
-                return this.GetValue(
+        public ReadOnlyCollection<string> Write => this.GetValue(
                     "Write", ReadOnlyCollectionConverter<List<string>, StringConverter, string>.Instance);
-            }
-        }
     }
 }

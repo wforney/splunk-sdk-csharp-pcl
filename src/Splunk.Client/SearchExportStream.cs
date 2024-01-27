@@ -52,10 +52,7 @@ namespace Splunk.Client
         /// <value>
         /// The HTTP response message.
         /// </value>
-        public HttpResponseMessage Response
-        {
-            get { return response.Message; }
-        }
+        public HttpResponseMessage Response => response.Message;
 
         #endregion
 

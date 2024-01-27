@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2014 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -21,7 +21,7 @@
 ////     be called more than once. (In practice these methods are never called
 ////     move than once.)
 
-namespace Splunk.Client
+namespace Splunk.Client.Syndication
 {
     using System;
     using System.Collections.Generic;
@@ -31,7 +31,8 @@ namespace Splunk.Client
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml;
-   
+    using Splunk.Client;
+
     /// <summary>
     /// Provides an object representation of an individual entry in a Splunk Atom
     /// Feed response.
@@ -183,7 +184,7 @@ namespace Splunk.Client
 
             while (reader.NodeType == XmlNodeType.Element)
             {
-                string name = reader.Name;
+                var name = reader.Name;
 
                 switch (name)
                 {
@@ -256,7 +257,7 @@ namespace Splunk.Client
         /// <seealso cref="M:System.Object.ToString()"/>
         public override string ToString()
         {
-            var text= string.Format(CultureInfo.CurrentCulture, "AtomEntry(Title={0}, Author={1}, Id={2}, Published={3}, Updated={4})", 
+            var text = string.Format(CultureInfo.CurrentCulture, "AtomEntry(Title={0}, Author={1}, Id={2}, Published={3}, Updated={4})",
                 this.Title, this.Author, this.Id, this.Published, this.Updated);
             return text;
         }
@@ -269,7 +270,7 @@ namespace Splunk.Client
         {
             Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(name));
             var builder = new StringBuilder(name.Length);
-            int index = 0;
+            var index = 0;
 
             // Leading underscores distinguish some names
 
@@ -328,7 +329,7 @@ namespace Splunk.Client
 
                 while (reader.NodeType == XmlNodeType.Element && reader.Name == "s:key")
                 {
-                    string name = reader.GetAttribute("name");
+                    var name = reader.GetAttribute("name");
 
                     // TODO: Include a domain-specific name translation capability (?)
 
@@ -389,7 +390,7 @@ namespace Splunk.Client
                         }
                     }
 
-                    string[] names = name.Split(':', '.');
+                    var names = name.Split(':', '.');
                     var dictionary = value;
                     string propertyName;
                     dynamic propertyValue;
@@ -409,7 +410,7 @@ namespace Splunk.Client
                         names[names.Length - 1] = "empty";
                     }
 
-                    for (int i = 0; i < names.Length - 1; i++)
+                    for (var i = 0; i < names.Length - 1; i++)
                     {
                         propertyName = NormalizePropertyName(names[i]);
 
@@ -444,7 +445,7 @@ namespace Splunk.Client
 
         static async Task<ReadOnlyCollection<dynamic>> ParseListAsync(XmlReader reader, int level)
         {
-            List<dynamic> value = new List<dynamic>();
+            var value = new List<dynamic>();
 
             if (!reader.IsEmptyElement)
             {
@@ -454,7 +455,7 @@ namespace Splunk.Client
                 {
                     value.Add(await ParsePropertyValueAsync(reader, level + 1).ConfigureAwait(false));
                 }
-                
+
                 reader.EnsureMarkup(XmlNodeType.EndElement, "s:list");
             }
 
@@ -470,7 +471,7 @@ namespace Splunk.Client
                 return null;
             }
 
-            string name = reader.Name;
+            var name = reader.Name;
             dynamic value;
 
             await reader.ReadAsync().ConfigureAwait(false);

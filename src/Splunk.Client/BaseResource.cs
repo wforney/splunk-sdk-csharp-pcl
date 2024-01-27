@@ -26,6 +26,7 @@ namespace Splunk.Client
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides a base class that represents a Splunk resource as an object.
@@ -90,40 +91,22 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public Version GeneratorVersion
-        {
-            get { return this.GetValue("GeneratorVersion"); }
-        }
+        public Version GeneratorVersion => this.GetValue("GeneratorVersion");
 
         /// <inheritdoc/>
-        public Uri Id
-        {
-            get { return this.GetValue("Id"); }
-        }
+        public Uri Id => this.GetValue("Id");
 
         /// <inheritdoc/>
-        public string Title
-        {
-            get { return this.GetValue("Title"); }
-        }
+        public string Title => this.GetValue("Title");
 
         /// <inheritdoc/>
-        public DateTime Updated
-        {
-            get { return this.GetValue("Updated"); }
-        }
+        public DateTime Updated => this.GetValue("Updated");
 
         /// <inheritdoc/>
-        protected ExpandoAdapter Content
-        {
-            get { return this.GetValue("Content", ExpandoAdapter.Converter.Instance) ?? ExpandoAdapter.Empty; }
-        }
+        protected ExpandoAdapter Content => this.GetValue("Content", ExpandoAdapter.Converter.Instance) ?? ExpandoAdapter.Empty;
 
         /// <inheritdoc/>
-        protected internal IReadOnlyList<BaseResource> Resources
-        {
-            get { return this.GetValue("Resources") ?? NoResources; }
-        }
+        protected internal IReadOnlyList<BaseResource> Resources => this.GetValue("Resources") ?? NoResources;
 
         #endregion
 

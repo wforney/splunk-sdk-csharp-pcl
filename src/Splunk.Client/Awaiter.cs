@@ -75,10 +75,7 @@ namespace Splunk.Client
         /// <value>
         /// The last error.
         /// </value>
-        public Exception LastError
-        {
-            get { return this.lastError; }
-        }
+        public Exception LastError => this.lastError;
 
         /// <summary>
         /// Gets the number of reads.
@@ -86,10 +83,7 @@ namespace Splunk.Client
         /// <value>
         /// The number of reads.
         /// </value>
-        public long ReadCount
-        {
-            get { return Interlocked.Read(ref this.readCount); }
-        }
+        public long ReadCount => Interlocked.Read(ref this.readCount);
 
         /// <summary>
         /// Gets the stream.
@@ -97,11 +91,8 @@ namespace Splunk.Client
         /// <value>
         /// The stream.
         /// </value>
-        protected TStream Stream
-        {
-            get { return this.stream; }
-        }
-    
+        protected TStream Stream => this.stream;
+
         #endregion
 
         #region Protected methods
@@ -239,10 +230,7 @@ namespace Splunk.Client
         long readCount;
         int readState;
 
-        bool IsReading
-        {
-            get { return this.readState < 2; }
-        }
+        bool IsReading => this.readState < 2;
 
         async Task<TEvent> AwaitEventAsync()
         {

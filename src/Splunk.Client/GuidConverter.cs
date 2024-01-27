@@ -14,57 +14,39 @@
  * under the License.
  */
 
-//// TODO:
-//// [O] Contracts
-//// [O] Documentation
+namespace Splunk.Client;
 
-namespace Splunk.Client
+/// <summary>
+/// Provides a converter to convert strings to <see cref="Guid"/> values.
+/// </summary>
+/// <seealso cref="T:Splunk.Client.ValueConverter{System.Guid}"/>
+sealed class GuidConverter : ValueConverter<Guid>
 {
-    using System;
-    using System.IO;
+    /// <summary>
+    /// The default <see cref="GuidConverter"/> instance.
+    /// </summary>
+    public static readonly GuidConverter Instance = new();
 
     /// <summary>
-    /// Provides a converter to convert strings to <see cref="Guid"/> values.
+    /// Converts the string representation of the <paramref name="input"/>
+    /// object to a <see cref="Guid"/>.
     /// </summary>
-    /// <seealso cref="T:Splunk.Client.ValueConverter{System.Guid}"/>
-    sealed class GuidConverter : ValueConverter<Guid>
+    /// <param name="input">
+    /// The object to convert.
+    /// </param>
+    /// <returns>
+    /// Result of the conversion.
+    /// </returns>
+    /// <exception cref="InvalidDataException">
+    /// The <paramref name="input"/> does not represent a <see cref="Guid"/>
+    /// value.
+    /// </exception>
+    public override Guid Convert(object input)
     {
-        /// <summary>
-        /// The default <see cref="GuidConverter"/> instance.
-        /// </summary>
-        public static readonly GuidConverter Instance = new GuidConverter();
+        var x = input as Guid?;
 
-        /// <summary>
-        /// Converts the string representation of the <paramref name="input"/>
-        /// object to a <see cref="Guid"/>.
-        /// </summary>
-        /// <param name="input">
-        /// The object to convert.
-        /// </param>
-        /// <returns>
-        /// Result of the conversion.
-        /// </returns>
-        /// <exception cref="InvalidDataException">
-        /// The <paramref name="input"/> does not represent a <see cref="Guid"/>
-        /// value.
-        /// </exception>
-        public override Guid Convert(object input)
-        {
-            var x = input as Guid?;
-
-            if (x != null)
-            {
-                return x.Value;
-            }
-
-            Guid value;
-
-            if (Guid.TryParse(input.ToString(), result: out value))
-            {
-                return value;
-            }
-
-            throw NewInvalidDataException(input);
-        }
+        return x is null
+            ? Guid.TryParse(input.ToString(), out var value) ? value : throw NewInvalidDataException(input)
+            : x.Value;
     }
 }

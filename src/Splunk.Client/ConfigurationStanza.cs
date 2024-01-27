@@ -26,6 +26,7 @@ namespace Splunk.Client
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk configuration stanza.
@@ -134,16 +135,10 @@ namespace Splunk.Client
         }
 
         /// <inheritdoc/>
-        public int Count
-        {
-            get { return this.Snapshot.Resources.Count; }
-        }
+        public int Count => this.Snapshot.Resources.Count;
 
         /// <inheritdoc/>
-        public virtual string Author
-        {
-            get { return this.GetValue("Author", StringConverter.Instance); }
-        }
+        public virtual string Author => this.GetValue("Author", StringConverter.Instance);
 
         #endregion
 

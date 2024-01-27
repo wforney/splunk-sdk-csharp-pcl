@@ -25,6 +25,7 @@ namespace Splunk.Client
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk server message entity.
@@ -118,28 +119,16 @@ namespace Splunk.Client
         #region Properties
 
         /// <inheritdoc/>
-        public Eai Eai
-        {
-            get { return this.Content.GetValue("Eai", Eai.Converter.Instance); }
-        }
+        public Eai Eai => this.Content.GetValue("Eai", Eai.Converter.Instance);
 
         /// <inheritdoc/>
-        public ServerMessageSeverity Severity
-        {
-            get { return this.Content.GetValue("Severity", EnumConverter<ServerMessageSeverity>.Instance); }
-        }
+        public ServerMessageSeverity Severity => this.Content.GetValue("Severity", EnumConverter<ServerMessageSeverity>.Instance);
 
         /// <inheritdoc/>
-        public string Text
-        {
-            get { return this.Content.GetValue("Message", StringConverter.Instance); }
-        }
+        public string Text => this.Content.GetValue("Message", StringConverter.Instance);
 
         /// <inheritdoc/>
-        public DateTime TimeCreated
-        {
-            get { return this.Content.GetValue("TimeCreatedEpochSecs", UnixDateTimeConverter.Instance); }
-        }
+        public DateTime TimeCreated => this.Content.GetValue("TimeCreatedEpochSecs", UnixDateTimeConverter.Instance);
 
         #endregion
 

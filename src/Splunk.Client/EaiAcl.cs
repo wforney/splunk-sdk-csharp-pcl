@@ -44,10 +44,7 @@ namespace Splunk.Client
         /// <value>
         /// The application.
         /// </value>
-        public string App
-        {
-            get { return this.GetValue("App", StringConverter.Instance); }
-        }
+        public string App => this.GetValue("App", StringConverter.Instance);
 
         /// <summary>
         /// Gets a value indicating whether we can list.
@@ -55,10 +52,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if we can list, <c>false</c> if not.
         /// </value>
-        public bool CanList
-        {
-            get { return this.GetValue("CanList", BooleanConverter.Instance); }
-        }
+        public bool CanList => this.GetValue("CanList", BooleanConverter.Instance);
 
         /// <summary>
         /// Gets a value indicating whether we can write.
@@ -66,10 +60,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if we can write, <c>false</c> if not.
         /// </value>
-        public bool CanWrite
-        {
-            get { return this.GetValue("CanWrite", BooleanConverter.Instance); }
-        }
+        public bool CanWrite => this.GetValue("CanWrite", BooleanConverter.Instance);
 
         /// <summary>
         /// Gets a value indicating whether this object is modifiable.
@@ -77,10 +68,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if modifiable, <c>false</c> if not.
         /// </value>
-        public bool Modifiable
-        {
-            get { return this.GetValue("Modifiable", BooleanConverter.Instance); }
-        }
+        public bool Modifiable => this.GetValue("Modifiable", BooleanConverter.Instance);
 
         /// <summary>
         /// Gets the owner.
@@ -88,10 +76,7 @@ namespace Splunk.Client
         /// <value>
         /// The owner.
         /// </value>
-        public string Owner
-        {
-            get { return this.GetValue("Owner", StringConverter.Instance); }
-        }
+        public string Owner => this.GetValue("Owner", StringConverter.Instance);
 
         /// <summary>
         /// Gets the permissions.
@@ -99,10 +84,7 @@ namespace Splunk.Client
         /// <value>
         /// The permissions.
         /// </value>
-        public Permissions Permissions
-        {
-            get { return this.GetValue("Perms", Permissions.Converter.Instance); }
-        }
+        public Permissions Permissions => this.GetValue("Perms", Permissions.Converter.Instance);
 
         /// <summary>
         /// Gets a value indicating whether this object is removable.
@@ -110,10 +92,7 @@ namespace Splunk.Client
         /// <value>
         /// <c>true</c> if removable, <c>false</c> if not.
         /// </value>
-        public bool Removable
-        {
-            get { return this.GetValue("Removable", BooleanConverter.Instance); }
-        }
+        public bool Removable => this.GetValue("Removable", BooleanConverter.Instance);
 
         /// <summary>
         /// Gets the sharing.
@@ -121,10 +100,7 @@ namespace Splunk.Client
         /// <value>
         /// The sharing.
         /// </value>
-		public SharingMode Sharing
-        {
-            get { return this.GetValue("Sharing", EnumConverter<SharingMode>.Instance); }
-        }
+        public SharingMode Sharing => this.GetValue("Sharing", EnumConverter<SharingMode>.Instance);
 
         #endregion
     }

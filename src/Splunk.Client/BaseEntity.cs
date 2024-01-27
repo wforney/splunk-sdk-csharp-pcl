@@ -22,6 +22,7 @@ namespace Splunk.Client
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk entity.
@@ -150,34 +151,19 @@ namespace Splunk.Client
         /// <value>
         /// The dynamic.
         /// </value>
-        public dynamic Dynamic
-        {
-            get { return this.Snapshot; }
-        }
-        
-        /// <inheritdoc/>
-        public Version GeneratorVersion
-        {
-            get { return this.Snapshot.GeneratorVersion; }
-        }
+        public dynamic Dynamic => this.Snapshot;
 
         /// <inheritdoc/>
-        public Uri Id
-        {
-            get { return this.Snapshot.Id; }
-        }
+        public Version GeneratorVersion => this.Snapshot.GeneratorVersion;
 
         /// <inheritdoc/>
-        public string Title
-        {
-            get { return this.Snapshot.GetValue("Title"); }
-        }
+        public Uri Id => this.Snapshot.Id;
 
         /// <inheritdoc/>
-        public DateTime Updated
-        {
-            get { return this.Snapshot.Updated; }
-        }
+        public string Title => this.Snapshot.GetValue("Title");
+
+        /// <inheritdoc/>
+        public DateTime Updated => this.Snapshot.Updated;
 
         #endregion
 

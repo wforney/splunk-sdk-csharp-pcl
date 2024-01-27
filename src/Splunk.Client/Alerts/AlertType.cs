@@ -14,7 +14,7 @@
  * under the License.
  */
 
-namespace Splunk.Client
+namespace Splunk.Client.Alerts
 {
     using System.Runtime.Serialization;
 
@@ -33,7 +33,7 @@ namespace Splunk.Client
         /// </remarks>
         [EnumMember(Value = "always")]
         Always,
-        
+
         /// <summary>
         /// Specifies that alert actions are triggered based on a custom 
         /// condition on the results produced by a <see cref="SavedSearch"/>.

@@ -25,6 +25,7 @@ namespace Splunk.Client.UnitTests
     using System.Threading.Tasks;
 
     using Xunit;
+    using Splunk.Client.Syndication;
 
     public class TestAtomFeed
     {

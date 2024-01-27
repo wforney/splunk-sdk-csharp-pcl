@@ -52,10 +52,7 @@ namespace Splunk.Client
         /// <value>
         /// The default value.
         /// </value>
-        public virtual TValue DefaultValue
-        { 
-            get { return default(TValue); } 
-        }
+        public virtual TValue DefaultValue => default(TValue);
 
         #endregion
 

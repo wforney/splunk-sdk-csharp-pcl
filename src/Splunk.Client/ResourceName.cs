@@ -97,10 +97,7 @@ namespace Splunk.Client
         /// <value>
         /// The collection.
         /// </value>
-        public string Collection
-        {
-            get { return this.Items.Count > 1 ? this.Items[this.Items.Count - 2] : null; }
-        }
+        public string Collection => this.Items.Count > 1 ? this.Items[this.Items.Count - 2] : null;
 
         /// <summary>
         /// Gets the title.
@@ -108,10 +105,7 @@ namespace Splunk.Client
         /// <value>
         /// The title.
         /// </value>
-        public string Title
-        {
-            get { return this.Items[this.Items.Count - 1]; }
-        }
+        public string Title => this.Items[this.Items.Count - 1];
 
         #endregion
 

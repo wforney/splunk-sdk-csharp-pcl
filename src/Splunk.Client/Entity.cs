@@ -24,6 +24,7 @@ namespace Splunk.Client
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Splunk.Client.Syndication;
 
     /// <summary>
     /// Provides an object representation of a Splunk entity.
@@ -147,10 +148,7 @@ namespace Splunk.Client
         /// <value>
         /// The content.
         /// </value>
-        public virtual ExpandoAdapter Content
-        {
-            get { return this.GetValue("Content", ExpandoAdapter.Converter.Instance) ?? ExpandoAdapter.Empty; }
-        }
+        public virtual ExpandoAdapter Content => this.GetValue("Content", ExpandoAdapter.Converter.Instance) ?? ExpandoAdapter.Empty;
 
         #endregion
 
