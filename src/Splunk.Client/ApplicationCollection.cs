@@ -16,6 +16,7 @@
 
 using System.Collections.ObjectModel;
 using System.Net;
+using Splunk.Client.Entities;
 using Splunk.Client.Syndication;
 
 namespace Splunk.Client;

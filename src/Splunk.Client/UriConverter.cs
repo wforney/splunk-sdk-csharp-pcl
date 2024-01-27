@@ -61,10 +61,7 @@ namespace Splunk.Client
 
             if (Uri.TryCreate(input.ToString(), UriKind.RelativeOrAbsolute, out value))
             {
-                if (Purifier != null)
-                {
-                    Purifier.Purify(value);
-                }
+                Purifier?.Purify(value);
 
                 return value;
             }

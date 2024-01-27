@@ -17,6 +17,7 @@
 
 using System.Globalization;
 using System.Text;
+using Splunk.Client.Arguments;
 
 namespace Splunk.Client
 {

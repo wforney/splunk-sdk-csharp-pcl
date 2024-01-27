@@ -21,6 +21,7 @@
 namespace Splunk.Client
 {
     using System.Threading.Tasks;
+    using Splunk.Client.Entities;
 
     /// <summary>
     /// Provides an operational interface to the Splunk application collection.

@@ -18,6 +18,8 @@
 //// [O] Contracts
 //// [O] Documentation
 
+using Splunk.Client.Converters;
+
 namespace Splunk.Client
 {
     /// <summary>

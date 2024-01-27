@@ -18,7 +18,7 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Settings
 {
     using System;
     using System.Collections.Generic;

@@ -14,79 +14,78 @@
  * under the License.
  */
 
-namespace Splunk.Client
+namespace Splunk.Client;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+
+using Xunit;
+
+public class TestResourceName
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
-
-    using Xunit;
-
-    public class TestResourceName
+    [Trait("unit-test", "Splunk.Client.ResourceName")]
+    [Fact]
+    void CanConstructResourceName()
     {
-        [Trait("unit-test", "Splunk.Client.ResourceName")]
-        [Fact]
-        void CanConstructResourceName()
+        ResourceName resourceName;
+
+        resourceName = new ResourceName("fu", "man", "chu");
+        Assert.Equal("fu/man/chu", resourceName.ToString());
+
+        resourceName = new ResourceName(resourceName, "too");
+        Assert.Equal("fu/man/chu/too", resourceName.ToString());
+
+        _ = Assert.Throws(typeof(ArgumentException), () => new ResourceName("fu", null));
+        _ = Assert.Throws(typeof(ArgumentNullException), () => new ResourceName((string[])null));
+        _ = Assert.Throws(typeof(ArgumentException), () => new ResourceName(resourceName, "fu", null, "chu"));
+        _ = Assert.Throws(typeof(ArgumentNullException), () => new ResourceName((ResourceName)null, "fu", "man", "chu"));
+    }
+
+    [Trait("unit-test", "Splunk.Client.ResourceName")]
+    [Fact]
+    void CanCompareResourceName()
+    {
+        var resourceNames = new ResourceName[] 
         {
-            ResourceName resourceName;
+            new ResourceName("1", "2", "3"),
+            new ResourceName("1", "2", "4"),
+            new ResourceName("1", "3", "3"),
+            new ResourceName("2", "2", "3"),
+            new ResourceName("4", "5", "6"),
+            new ResourceName("1", "2", "3", "4"),
+            new ResourceName("1", "2")
+        };
 
-            resourceName = new ResourceName("fu", "man", "chu");
-            Assert.Equal("fu/man/chu", resourceName.ToString());
+        Assert.True(resourceNames[0].Equals((object)resourceNames[0]));
+        Assert.True(resourceNames[0].Equals(resourceNames[0]));
+        Assert.False(resourceNames[0].Equals(resourceNames[1]));
+        Assert.False(resourceNames[0].Equals(resourceNames[2]));
+        Assert.False(resourceNames[0].Equals(resourceNames[3]));
+        Assert.False(resourceNames[0].Equals(resourceNames[4]));
+        Assert.False(resourceNames[0].Equals(resourceNames[5]));
+        Assert.False(resourceNames[0].Equals(resourceNames[6]));
 
-            resourceName = new ResourceName(resourceName, "too");
-            Assert.Equal("fu/man/chu/too", resourceName.ToString());
+        Assert.True(resourceNames[0].CompareTo((object)resourceNames[0]) == 0);
+        Assert.True(resourceNames[0].CompareTo(resourceNames[0]) == 0);
+        
+        Assert.True(resourceNames[0].CompareTo(resourceNames[1]) < 0);
+        Assert.True(resourceNames[0].CompareTo(resourceNames[2]) < 0);
+        Assert.True(resourceNames[0].CompareTo(resourceNames[3]) < 0);
+        Assert.True(resourceNames[0].CompareTo(resourceNames[4]) < 0);
+        Assert.True(resourceNames[0].CompareTo(resourceNames[5]) < 0);
+        Assert.True(resourceNames[6].CompareTo(resourceNames[0]) < 0);
+        
+        Assert.True(resourceNames[1].CompareTo(resourceNames[0]) > 0);
+        Assert.True(resourceNames[2].CompareTo(resourceNames[0]) > 0);
+        Assert.True(resourceNames[3].CompareTo(resourceNames[0]) > 0);
+        Assert.True(resourceNames[4].CompareTo(resourceNames[0]) > 0);
+        Assert.True(resourceNames[5].CompareTo(resourceNames[0]) > 0);
+        Assert.True(resourceNames[0].CompareTo(resourceNames[6]) > 0);
 
-            _ = Assert.Throws(typeof(ArgumentException), () => new ResourceName("fu", null));
-            _ = Assert.Throws(typeof(ArgumentNullException), () => new ResourceName((string[])null));
-            _ = Assert.Throws(typeof(ArgumentException), () => new ResourceName(resourceName, "fu", null, "chu"));
-            _ = Assert.Throws(typeof(ArgumentNullException), () => new ResourceName((ResourceName)null, "fu", "man", "chu"));
-        }
-
-        [Trait("unit-test", "Splunk.Client.ResourceName")]
-        [Fact]
-        void CanCompareResourceName()
-        {
-            var resourceNames = new ResourceName[] 
-            {
-                new ResourceName("1", "2", "3"),
-                new ResourceName("1", "2", "4"),
-                new ResourceName("1", "3", "3"),
-                new ResourceName("2", "2", "3"),
-                new ResourceName("4", "5", "6"),
-                new ResourceName("1", "2", "3", "4"),
-                new ResourceName("1", "2")
-            };
-
-            Assert.True(resourceNames[0].Equals((object)resourceNames[0]));
-            Assert.True(resourceNames[0].Equals(resourceNames[0]));
-            Assert.False(resourceNames[0].Equals(resourceNames[1]));
-            Assert.False(resourceNames[0].Equals(resourceNames[2]));
-            Assert.False(resourceNames[0].Equals(resourceNames[3]));
-            Assert.False(resourceNames[0].Equals(resourceNames[4]));
-            Assert.False(resourceNames[0].Equals(resourceNames[5]));
-            Assert.False(resourceNames[0].Equals(resourceNames[6]));
-
-            Assert.True(resourceNames[0].CompareTo((object)resourceNames[0]) == 0);
-            Assert.True(resourceNames[0].CompareTo(resourceNames[0]) == 0);
-            
-            Assert.True(resourceNames[0].CompareTo(resourceNames[1]) < 0);
-            Assert.True(resourceNames[0].CompareTo(resourceNames[2]) < 0);
-            Assert.True(resourceNames[0].CompareTo(resourceNames[3]) < 0);
-            Assert.True(resourceNames[0].CompareTo(resourceNames[4]) < 0);
-            Assert.True(resourceNames[0].CompareTo(resourceNames[5]) < 0);
-            Assert.True(resourceNames[6].CompareTo(resourceNames[0]) < 0);
-            
-            Assert.True(resourceNames[1].CompareTo(resourceNames[0]) > 0);
-            Assert.True(resourceNames[2].CompareTo(resourceNames[0]) > 0);
-            Assert.True(resourceNames[3].CompareTo(resourceNames[0]) > 0);
-            Assert.True(resourceNames[4].CompareTo(resourceNames[0]) > 0);
-            Assert.True(resourceNames[5].CompareTo(resourceNames[0]) > 0);
-            Assert.True(resourceNames[0].CompareTo(resourceNames[6]) > 0);
-
-            Assert.True(resourceNames[0].CompareTo((ResourceName)null) > 0);
-            Assert.True(resourceNames[0].CompareTo(new object()) > 0);
-            Assert.True(resourceNames[0].CompareTo(null) > 0);
-        }
+        Assert.True(resourceNames[0].CompareTo((ResourceName)null) > 0);
+        Assert.True(resourceNames[0].CompareTo(new object()) > 0);
+        Assert.True(resourceNames[0].CompareTo(null) > 0);
     }
 }

@@ -22,6 +22,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Splunk.Client;
+using Splunk.Client.Arguments;
+using Splunk.Client.Settings;
 using Xunit;
 
 public class TestIndexCollection

@@ -24,6 +24,8 @@ namespace Splunk.Client
     using System.Net;
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Entities;
     using Splunk.Client.Syndication;
 
     /// <summary>

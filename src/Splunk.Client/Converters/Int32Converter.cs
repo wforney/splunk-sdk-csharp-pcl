@@ -18,16 +18,17 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Converters
 {
     using System;
     using System.IO;
+    using Splunk.Client;
 
     /// <summary>
-    /// Provides a converter to convert strings to <see cref="Int32"/> values.
+    /// Provides a converter to convert strings to <see cref="int"/> values.
     /// </summary>
     /// <seealso cref="T:Splunk.Client.ValueConverter{System.Int32}"/>
-    sealed class Int32Converter : ValueConverter<Int32>
+    sealed class Int32Converter : ValueConverter<int>
     {
         /// <summary>
         /// The default <see cref="EnumConverter&lt;TEnum&gt;"/> instance.
@@ -36,7 +37,7 @@ namespace Splunk.Client
 
         /// <summary>
         /// Converts the string representation of the <paramref name="input"/>
-        /// object to a <see cref="Int32"/> value.
+        /// object to a <see cref="int"/> value.
         /// </summary>
         /// <param name="input">
         /// The object to convert.
@@ -45,21 +46,21 @@ namespace Splunk.Client
         /// Result of the conversion.
         /// </returns>
         /// <exception cref="InvalidDataException">
-        /// The <paramref name="input"/> does not represent a <see cref="Int32"/>
+        /// The <paramref name="input"/> does not represent a <see cref="int"/>
         /// value.
         /// </exception>
-        public override Int32 Convert(object input)
+        public override int Convert(object input)
         {
-            var x = input as Int32?;
+            var x = input as int?;
 
             if (x != null)
             {
                 return x.Value;
             }
 
-            Int32 value;
+            int value;
 
-            if (Int32.TryParse(input.ToString(), result: out value))
+            if (int.TryParse(input.ToString(), result: out value))
             {
                 return value;
             }

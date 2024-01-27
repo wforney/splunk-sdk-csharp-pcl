@@ -18,12 +18,13 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Arguments
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Splunk.Client;
 
     /// <summary>
     /// Provides custom arguments.
@@ -72,7 +73,7 @@ namespace Splunk.Client
         public ArgumentSet(string argumentPrefix, IEnumerable<Argument> arguments)
         {
             Contract.Requires<ArgumentNullException>(arguments != null);
-            
+
             this.argumentPrefix = string.IsNullOrEmpty(argumentPrefix) ? null : argumentPrefix;
             this.set = new HashSet<Argument>(arguments);
         }

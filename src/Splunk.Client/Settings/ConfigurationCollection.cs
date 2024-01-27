@@ -18,13 +18,16 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Settings
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Entities;
     using Splunk.Client.Syndication;
 
     /// <summary>
@@ -33,7 +36,7 @@ namespace Splunk.Client
     /// </summary>
     /// <seealso cref="T:Splunk.Client.EntityCollection{Splunk.Client.Configuration,Splunk.Client.ResourceCollection}"/>
     /// <seealso cref="T:Splunk.Client.IConfigurationCollection{Splunk.Client.Configuration,Splunk.Client.ConfigurationStanza}"/>
-    public class ConfigurationCollection : EntityCollection<Configuration, ResourceCollection>, 
+    public class ConfigurationCollection : EntityCollection<Configuration, ResourceCollection>,
         IConfigurationCollection<Configuration, ConfigurationStanza>
     {
         #region Constructors
@@ -65,7 +68,7 @@ namespace Splunk.Client
         /// <exception cref="ArgumentNullException">
         /// <paramref name="context"/> or <paramref name="feed"/> are <c>null</c>.
         /// </exception>
-        /// <exception cref="System.IO.InvalidDataException">
+        /// <exception cref="InvalidDataException">
         /// <paramref name="feed"/> is in an invalid format.
         /// </exception>
         protected internal ConfigurationCollection(Context context, AtomFeed feed)

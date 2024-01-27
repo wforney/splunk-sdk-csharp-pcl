@@ -343,10 +343,7 @@ namespace Splunk.ModularInputs
             }
             finally
             {
-                if (writer != null)
-                {
-                    writer.CompleteAsync().Wait();
-                }
+                writer?.CompleteAsync().Wait();
             }
             await writer.LogAsync(Severity.Error, string.Format("Exception during execution: Invalid arguments: name={0}", name));
             return -1;

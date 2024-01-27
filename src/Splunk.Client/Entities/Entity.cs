@@ -14,7 +14,7 @@
  * under the License.
  */
 
-namespace Splunk.Client
+namespace Splunk.Client.Entities
 {
     using System;
     using System.Collections.Generic;
@@ -24,6 +24,8 @@ namespace Splunk.Client
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Splunk.Client;
+    using Splunk.Client.Arguments;
     using Splunk.Client.Syndication;
 
     /// <summary>
@@ -262,7 +264,7 @@ namespace Splunk.Client
                 return;
             }
 
-            int count = feed.Entries.Count;
+            var count = feed.Entries.Count;
 
             if (count > 1)
             {

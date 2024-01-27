@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
- 
+
 //// TODO:
 //// [ ] Consider schema validation from schemas stored as resources.
 ////     See [XmlReaderSettings.Schemas Property](http://goo.gl/Syvj4V)
@@ -29,6 +29,9 @@ namespace Splunk.Client
     using System.Net;
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Entities;
+    using Splunk.Client.Settings;
     using Splunk.Client.Syndication;
 
     /// <summary>

@@ -18,7 +18,7 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Settings
 {
     using System;
     using System.Collections;
@@ -26,6 +26,9 @@ namespace Splunk.Client
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Entities;
     using Splunk.Client.Syndication;
 
     /// <summary>
@@ -230,13 +233,13 @@ namespace Splunk.Client
         protected override void CreateSnapshot(AtomFeed feed)
         {
             var snapshot = new Resource();
-            
+
             BaseResource.Initialize<Resource, ConfigurationSetting>(snapshot, feed);
-            this.Snapshot = (Resource)snapshot;
+            this.Snapshot = snapshot;
         }
 
         #endregion
-        
+
         #endregion
     }
 }

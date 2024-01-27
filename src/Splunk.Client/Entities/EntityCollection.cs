@@ -17,13 +17,14 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Net;
+using Splunk.Client.Arguments;
 using Splunk.Client.Syndication;
 
 //// TODO:
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Entities
 {
     /// <summary>
     /// Provides a base class for representing a collection of Splunk resources.

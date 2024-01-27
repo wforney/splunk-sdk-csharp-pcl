@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using Splunk.Client.Arguments;
 
 //// TODO: Ensure this code is solid
 //// [ ] Support more than one level of inheritance => move away from generic implementation.

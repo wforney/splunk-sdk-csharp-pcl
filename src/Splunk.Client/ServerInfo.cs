@@ -19,6 +19,7 @@ namespace Splunk.Client
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using Splunk.Client.Converters;
     using Splunk.Client.Syndication;
 
     /// <summary>

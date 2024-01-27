@@ -14,75 +14,64 @@
  * under the License.
  */
 
-namespace Splunk.Client.UnitTests
+using System.Net;
+using Xunit;
+
+namespace Splunk.Client.UnitTests;
+
+public class TestSearchPreviewStream
 {
-    using Splunk.Client;
-
-    using System;
-    using System.Collections.Immutable;
-    using System.IO;
-    using System.Net;
-    using System.Net.Http;
-    using System.Text;
-    using System.Threading.Tasks;
-
-    using Xunit;
-
-    public class TestSearchPreviewStream
+    [Trait("unit-test", "Splunk.Client.SearchPreviewStream")]
+    [Fact]
+    public async Task CanHandleInFlightErrorsReportedBySplunk()
     {
-        [Trait("unit-test", "Splunk.Client.SearchPreviewStream")]
-        [Fact]
-        async Task CanHandleInFlightErrorsReportedBySplunk()
+        var path = Path.Combine(TestAtomFeed.Directory, "Service.ExportSearchPreviews-failure.xml");
+        var message = new HttpResponseMessage(HttpStatusCode.OK)
         {
-            var path = Path.Combine(TestAtomFeed.Directory, "Service.ExportSearchPreviews-failure.xml");
-            var message = new HttpResponseMessage(HttpStatusCode.OK);
+            Content = new StreamContent(new FileStream(path, FileMode.Open, FileAccess.Read))
+        };
+        SearchPreviewStream? stream = null;
 
-            message.Content = new StreamContent(new FileStream(path, FileMode.Open, FileAccess.Read));
-            SearchPreviewStream stream = null;
-
-            try
-            {
-                stream = await SearchPreviewStream.CreateAsync(message);
-                int count = 0;
-
-                foreach (var preview in stream)
-                {
-                    ++count;
-                }
-
-                Assert.False(true, "Expected RequestException");
-            }
-            catch (RequestException e)
-            {
-                Assert.Equal(e.Message, "Fatal: JournalSliceDirectory: Cannot seek to 0");
-            }
-            finally
-            {
-                if (stream != null)
-                {
-                    stream.Dispose();
-                }
-            }
-        }
-
-        [Trait("unit-test", "Splunk.Client.SearchPreviewStream")]
-        [Fact]
-        async Task CanSkipEmptyPreviews()
+        try
         {
-            var baseFileName = Path.Combine(TestAtomFeed.Directory, "DVPL-5873");
-            var message = new HttpResponseMessage(HttpStatusCode.OK);
-
-            message.Content = new StreamContent(new FileStream(baseFileName + ".xml", FileMode.Open, FileAccess.Read));
-
-            using var stream = await SearchPreviewStream.CreateAsync(message);
+            stream = await SearchPreviewStream.CreateAsync(message);
             int count = 0;
 
-            foreach (var observedResult in stream)
+            foreach (var preview in stream)
             {
                 ++count;
             }
 
-            Assert.Equal(count, stream.ReadCount);
+            Assert.Fail("Expected RequestException");
         }
+        catch (RequestException e)
+        {
+            Assert.Equal("Fatal: JournalSliceDirectory: Cannot seek to 0", e.Message);
+        }
+        finally
+        {
+            stream?.Dispose();
+        }
+    }
+
+    [Trait("unit-test", "Splunk.Client.SearchPreviewStream")]
+    [Fact]
+    public async Task CanSkipEmptyPreviews()
+    {
+        var baseFileName = Path.Combine(TestAtomFeed.Directory, "DVPL-5873");
+        var message = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StreamContent(new FileStream($"{baseFileName}.xml", FileMode.Open, FileAccess.Read))
+        };
+
+        using var stream = await SearchPreviewStream.CreateAsync(message);
+        int count = 0;
+
+        foreach (var observedResult in stream)
+        {
+            ++count;
+        }
+
+        Assert.Equal(count, stream.ReadCount);
     }
 }

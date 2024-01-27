@@ -14,17 +14,18 @@
  * under the License.
  */
 
-namespace Splunk.Client
+namespace Splunk.Client.Converters
 {
     using System;
     using System.Globalization;
     using System.IO;
+    using Splunk.Client;
 
     /// <summary>
-    /// Provides a converter to convert strings to <see cref="Int64"/> values.
+    /// Provides a converter to convert strings to <see cref="long"/> values.
     /// </summary>
     /// <seealso cref="T:Splunk.Client.ValueConverter{System.Int32}"/>
-    sealed class BuildNumberConverter : ValueConverter<Int64>
+    sealed class BuildNumberConverter : ValueConverter<long>
     {
         /// <summary>
         /// The default <see cref="EnumConverter&lt;TEnum&gt;"/> instance.
@@ -32,7 +33,7 @@ namespace Splunk.Client
         public static readonly BuildNumberConverter Instance = new BuildNumberConverter();
 
         /// <summary>
-        /// Converts the string representation of the <paramref name="input"/> object to an <see cref="Int64"/> build
+        /// Converts the string representation of the <paramref name="input"/> object to an <see cref="long"/> build
         /// number.
         /// </summary>
         /// <param name="input">
@@ -42,15 +43,15 @@ namespace Splunk.Client
         /// Result of the conversion.
         /// </returns>
         /// <exception cref="InvalidDataException">
-        /// The <paramref name="input"/> does not represent an <see cref="Int64"/> value.
+        /// The <paramref name="input"/> does not represent an <see cref="long"/> value.
         /// </exception>
         /// <remarks>
         /// If the string representation <paramref name="input"/> is exactly 12 bytes long, it is assumed to be a 
         /// hexadecimal Git commit number; otherwise, it is assumed to be an unsigned 32-bit decimal value.
         /// </remarks>
-        public override Int64 Convert(object input)
+        public override long Convert(object input)
         {
-            var x = input as Int64?;
+            var x = input as long?;
 
             if (x != null)
             {
@@ -61,18 +62,18 @@ namespace Splunk.Client
 
             if (value.Length == 12)  // Assume hexadecimal Git commit number
             {
-                Int64 result;
+                long result;
 
-                if (Int64.TryParse(value, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out result))
+                if (long.TryParse(value, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out result))
                 {
                     return result;
                 }
             }
             else  // Assume unsigned 32-bit decimal value
             {
-                Int32 result;
+                int result;
 
-                if (Int32.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, result: out result))
+                if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, result: out result))
                 {
                     return result;
                 }

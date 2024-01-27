@@ -14,7 +14,7 @@
  * under the License.
  */
 
-namespace Splunk.Client;
+namespace Splunk.Client.Converters;
 
 /// <summary>
 /// Provides a converter to convert strings to <see cref="Guid"/> values.

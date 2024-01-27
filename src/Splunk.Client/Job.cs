@@ -28,7 +28,14 @@ namespace Splunk.Client
     using System.Runtime.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Converters;
+    using Splunk.Client.Entities;
     using Splunk.Client.Syndication;
+    using BooleanConverter = Converters.BooleanConverter;
+    using DateTimeConverter = Converters.DateTimeConverter;
+    using Int32Converter = Converters.Int32Converter;
+    using Int64Converter = Converters.Int64Converter;
 
     /// <summary>
     /// Provides an object representation of a Splunk search job.

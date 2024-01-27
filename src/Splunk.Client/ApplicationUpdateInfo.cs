@@ -22,6 +22,7 @@ namespace Splunk.Client
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Splunk.Client.Converters;
     using Splunk.Client.Syndication;
 
     /// <summary>

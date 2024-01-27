@@ -30,7 +30,13 @@ namespace Splunk.Client
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
     using Splunk.Client.Alerts;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Converters;
+    using Splunk.Client.Entities;
     using Splunk.Client.Syndication;
+    using BooleanConverter = Converters.BooleanConverter;
+    using DateTimeConverter = Converters.DateTimeConverter;
+    using Int32Converter = Converters.Int32Converter;
 
     /// <summary>
     /// Provides an object representation of a Splunk saved search.

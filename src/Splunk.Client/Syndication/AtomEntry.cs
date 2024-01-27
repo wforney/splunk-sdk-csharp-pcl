@@ -32,6 +32,7 @@ namespace Splunk.Client.Syndication
     using System.Threading.Tasks;
     using System.Xml;
     using Splunk.Client;
+    using Splunk.Client.Converters;
 
     /// <summary>
     /// Provides an object representation of an individual entry in a Splunk Atom

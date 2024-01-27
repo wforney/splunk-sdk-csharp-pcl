@@ -14,10 +14,11 @@
  * under the License.
  */
 
-namespace Splunk.Client
+namespace Splunk.Client.Arguments
 {
     using System;
     using System.Globalization;
+    using Splunk.Client;
 
     /// <summary>
     /// Represents the value of a parameter to a Splunk REST API endpoint.
@@ -51,7 +52,7 @@ namespace Splunk.Client
         /// <param name="value">
         /// Argument value.
         /// </param>
-        public Argument(string name, SByte value)
+        public Argument(string name, sbyte value)
             : this(name, value.ToString(CultureInfo.InvariantCulture.NumberFormat))
         { }
 
@@ -169,7 +170,7 @@ namespace Splunk.Client
         /// Argument value.
         /// </param>
         public Argument(string name, object value)
-            : this(name, value == null ? null : value.ToString())
+            : this(name, value?.ToString())
         { }
 
         /// <summary>
@@ -328,12 +329,12 @@ namespace Splunk.Client
                 return 1;
             }
 
-            if (object.ReferenceEquals(this, other))
+            if (ReferenceEquals(this, other))
             {
                 return 0;
             }
 
-            int result = string.Compare(this.Name, other.Name, StringComparison.Ordinal);
+            var result = string.Compare(this.Name, other.Name, StringComparison.Ordinal);
             return result != 0 ? result : string.Compare(this.Value, other.Value, StringComparison.Ordinal);
         }
 
@@ -386,10 +387,10 @@ namespace Splunk.Client
         public override int GetHashCode()
         {
             // TODO: Check this against the algorithm presented in Effective Java
-            int hash = 17;
+            var hash = 17;
 
-            hash = (hash * 23) + this.Name.GetHashCode();
-            hash = (hash * 23) + this.Value.GetHashCode();
+            hash = hash * 23 + this.Name.GetHashCode();
+            hash = hash * 23 + this.Value.GetHashCode();
 
             return hash;
         }

@@ -18,10 +18,11 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Converters
 {
     using System;
     using System.IO;
+    using Splunk.Client;
 
     /// <summary>
     /// Provides a converter to convert strings to <see cref="DateTime"/>

@@ -22,6 +22,7 @@ namespace Splunk.Client
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Splunk.Client.Arguments;
 
     /// <summary>
     /// Provides custom arguments to a <see cref="SavedSearch"/>.

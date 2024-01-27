@@ -90,10 +90,10 @@ namespace Splunk.Client.Helper
             }
             catch (Exception unexpectedException)
             {
-                Assert.True(false, string.Format("Expected {0}; found exception {1}: {2}", typeof(T).FullName, unexpectedException.GetType().FullName, unexpectedException.Message));
+                Assert.Fail(string.Format("Expected {0}; found exception {1}: {2}", typeof(T).FullName, unexpectedException.GetType().FullName, unexpectedException.Message));
             }
 
-            Assert.True(false, string.Format("Expected exception {0}, but not exception raised.", typeof(T)));
+            Assert.Fail(string.Format("Expected exception {0}, but not exception raised.", typeof(T)));
         }
 
         /// <summary>

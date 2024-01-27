@@ -17,7 +17,9 @@ using System.ComponentModel;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using Splunk.Client.Entities;
 using Splunk.Client.Syndication;
+using BooleanConverter = Splunk.Client.Converters.BooleanConverter;
 
 [assembly: InternalsVisibleTo("Splunk.Client.UnitTests")]
 

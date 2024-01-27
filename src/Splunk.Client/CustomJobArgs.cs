@@ -21,6 +21,7 @@
 namespace Splunk.Client
 {
     using System.Collections.Generic;
+    using Splunk.Client.Arguments;
 
     /// <summary>
     /// Provides custom arguments to a <see cref="Job"/>.

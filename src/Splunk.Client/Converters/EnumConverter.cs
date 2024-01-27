@@ -18,7 +18,7 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Converters
 {
     using System;
     using System.Collections.Generic;
@@ -27,6 +27,7 @@ namespace Splunk.Client
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
+    using Splunk.Client;
 
     /// <summary>
     /// Provides a converter to convert strings to <see cref="Enum"/> values.

@@ -22,6 +22,7 @@ namespace Splunk.Client
 {
     using System;
     using System.Threading.Tasks;
+    using Splunk.Client.Entities;
 
     /// <summary>
     /// Provides an operational interface to Splunk index entities.

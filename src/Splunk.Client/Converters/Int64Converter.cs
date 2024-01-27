@@ -18,31 +18,26 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Converters
 {
     using System;
     using System.IO;
+    using Splunk.Client;
 
     /// <summary>
-    /// Provides a converter to convert strings to <see cref="Boolean"/> values.
+    /// Provides a converter to convert strings to <see cref="long"/> values.
     /// </summary>
-    /// <seealso cref="T:Splunk.Client.ValueConverter{System.Boolean}"/>
-    sealed class BooleanConverter : ValueConverter<Boolean>
+    /// <seealso cref="T:Splunk.Client.ValueConverter{System.Int64}"/>
+    sealed class Int64Converter : ValueConverter<long>
     {
-        #region Fields
-
         /// <summary>
-        /// The default <see cref="BooleanConverter"/> instance.
+        /// The default <see cref="Int64Converter"/> instance.
         /// </summary>
-        public static readonly BooleanConverter Instance = new BooleanConverter();
-
-        #endregion
-
-        #region Methods
+        public static readonly Int64Converter Instance = new Int64Converter();
 
         /// <summary>
-        /// Converts the string representation of an object to a
-        /// <see cref= "Boolean"/> value.
+        /// Converts the string representation of the <paramref name="input"/>
+        /// object to a <see cref="long"/> value.
         /// </summary>
         /// <param name="input">
         /// The object to convert.
@@ -51,38 +46,26 @@ namespace Splunk.Client
         /// Result of the conversion.
         /// </returns>
         /// <exception cref="InvalidDataException">
-        /// The <paramref name="input"/> does not represent a <see cref="Boolean"/>
+        /// The <paramref name="input"/> does not represent a <see cref="long"/>
         /// value.
         /// </exception>
-        public override Boolean Convert(object input)
+        public override long Convert(object input)
         {
-            var x = input as Boolean?;
+            var x = input as long?;
 
             if (x != null)
             {
                 return x.Value;
             }
 
-            string value = input.ToString();
+            long value;
 
-            switch (value)
+            if (long.TryParse(input.ToString(), result: out value))
             {
-                case "t": return true;
-                case "f": return false;
-                case "true": return true;
-                case "false": return false;
-            }
-
-            Int32 result;
-
-            if (Int32.TryParse(input.ToString(), result: out result))
-            {
-                return result != 0;
+                return value;
             }
 
             throw NewInvalidDataException(input);
         }
-
-        #endregion
     }
 }

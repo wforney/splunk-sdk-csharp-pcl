@@ -23,6 +23,8 @@ namespace Splunk.Client
     using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Entities;
 
     /// <summary>
     /// Provids an operational interface to Splunk saved search entities.

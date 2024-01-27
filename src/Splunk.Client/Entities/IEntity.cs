@@ -14,13 +14,15 @@
  * under the License.
  */
 
-namespace Splunk.Client
+namespace Splunk.Client.Entities
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Splunk.Client;
+    using Splunk.Client.Arguments;
 
     /// <summary>
     /// Provides an operational interface common to all Splunk entities.
@@ -176,24 +178,24 @@ namespace Splunk.Client
 
         public Task<bool> SendAsync(HttpMethod method, string action, params Argument[] arguments)
         {
-            Contract.Requires<ArgumentException>(method == HttpMethod.Post || method == HttpMethod.Get || method == HttpMethod.Delete);
-            Contract.Requires<ArgumentNullException>(action != null);
-            Contract.Requires<ArgumentException>(action.Length != 0);
-            return default(Task<bool>);
+            System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(method == HttpMethod.Post || method == HttpMethod.Get || method == HttpMethod.Delete);
+            System.Diagnostics.Contracts.Contract.Requires<ArgumentNullException>(action != null);
+            System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(action?.Length != 0);
+            return default!;
         }
 
         public abstract Task RemoveAsync();
 
         public Task<bool> UpdateAsync(params Argument[] arguments)
         {
-            Contract.Requires<ArgumentNullException>(arguments != null);
-            return default(Task<bool>);
+            System.Diagnostics.Contracts.Contract.Requires<ArgumentNullException>(arguments != null);
+            return default!;
         }
 
         public Task<bool> UpdateAsync(IEnumerable<Argument> arguments)
         {
-            Contract.Requires<ArgumentNullException>(arguments != null);
-            return default(Task<bool>);
+            System.Diagnostics.Contracts.Contract.Requires<ArgumentNullException>(arguments != null);
+            return default!;
         }
     }
 }

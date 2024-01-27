@@ -20,6 +20,7 @@ namespace Splunk.Client
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
     using System.Xml;
+    using Splunk.Client.Converters;
 
     /// <summary>
     /// A search result metadata.

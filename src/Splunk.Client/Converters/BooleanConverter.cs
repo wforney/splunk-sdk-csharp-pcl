@@ -18,25 +18,32 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Converters
 {
     using System;
     using System.IO;
+    using Splunk.Client;
 
     /// <summary>
-    /// Provides a converter to convert strings to <see cref="Int64"/> values.
+    /// Provides a converter to convert strings to <see cref="bool"/> values.
     /// </summary>
-    /// <seealso cref="T:Splunk.Client.ValueConverter{System.Int64}"/>
-    sealed class Int64Converter : ValueConverter<Int64>
+    /// <seealso cref="T:Splunk.Client.ValueConverter{System.Boolean}"/>
+    sealed class BooleanConverter : ValueConverter<bool>
     {
-        /// <summary>
-        /// The default <see cref="Int64Converter"/> instance.
-        /// </summary>
-        public static readonly Int64Converter Instance = new Int64Converter();
+        #region Fields
 
         /// <summary>
-        /// Converts the string representation of the <paramref name="input"/>
-        /// object to a <see cref="Int64"/> value.
+        /// The default <see cref="BooleanConverter"/> instance.
+        /// </summary>
+        public static readonly BooleanConverter Instance = new BooleanConverter();
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Converts the string representation of an object to a
+        /// <see cref= "bool"/> value.
         /// </summary>
         /// <param name="input">
         /// The object to convert.
@@ -45,26 +52,38 @@ namespace Splunk.Client
         /// Result of the conversion.
         /// </returns>
         /// <exception cref="InvalidDataException">
-        /// The <paramref name="input"/> does not represent a <see cref="Int64"/>
+        /// The <paramref name="input"/> does not represent a <see cref="bool"/>
         /// value.
         /// </exception>
-        public override Int64 Convert(object input)
+        public override bool Convert(object input)
         {
-            var x = input as Int64?;
+            var x = input as bool?;
 
             if (x != null)
             {
                 return x.Value;
             }
 
-            Int64 value;
+            var value = input.ToString();
 
-            if (Int64.TryParse(input.ToString(), result: out value))
+            switch (value)
             {
-                return value;
+                case "t": return true;
+                case "f": return false;
+                case "true": return true;
+                case "false": return false;
+            }
+
+            int result;
+
+            if (int.TryParse(input.ToString(), result: out result))
+            {
+                return result != 0;
             }
 
             throw NewInvalidDataException(input);
         }
+
+        #endregion
     }
 }

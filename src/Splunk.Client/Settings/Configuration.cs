@@ -18,13 +18,16 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Settings
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Entities;
     using Splunk.Client.Syndication;
 
     /// <summary>

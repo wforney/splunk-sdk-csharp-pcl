@@ -18,9 +18,10 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Settings
 {
     using System.Threading.Tasks;
+    using Splunk.Client.Entities;
 
     /// <summary>
     /// Provides an operational interface over a collection of Splunk

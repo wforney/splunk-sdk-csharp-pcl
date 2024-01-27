@@ -26,6 +26,7 @@ namespace Splunk.Client
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Splunk.Client.Arguments;
 
     /// <summary>
     /// Provides a class for sending events to Splunk.

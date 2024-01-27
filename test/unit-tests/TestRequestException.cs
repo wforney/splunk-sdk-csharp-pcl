@@ -14,64 +14,63 @@
  * under the License.
  */
 
-namespace Splunk.Client.UnitTests
+namespace Splunk.Client.UnitTests;
+
+using Splunk.Client;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using Xunit;
+
+public class TestRequestException
 {
-    using Splunk.Client;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Text;
-    using Xunit;
-
-    public class TestRequestException
+    [Trait("unit-test", "Splunk.Client.RequestException")]
+    [Fact]
+    void CanConstructRequestException()
     {
-        [Trait("unit-test", "Splunk.Client.RequestException")]
-        [Fact]
-        void CanConstructRequestException()
+        RequestException requestException;
+
+        foreach (var type in new MessageType[] { MessageType.Debug, MessageType.Error, MessageType.Fatal, MessageType.Information, MessageType.Warning })
         {
-            RequestException requestException;
-
-            foreach (var type in new MessageType[] { MessageType.Debug, MessageType.Error, MessageType.Fatal, MessageType.Information, MessageType.Warning })
+            var details = new ReadOnlyCollection<Message>(new Message[] 
             {
-                var details = new ReadOnlyCollection<Message>(new Message[] 
-                {
-                    new Message(type, "Information on the cause of the RequestException")
-                });
-                
-                requestException = new RequestException(new HttpResponseMessage(HttpStatusCode.InternalServerError), details);
+                new Message(type, "Information on the cause of the RequestException")
+            });
+            
+            requestException = new RequestException(new HttpResponseMessage(HttpStatusCode.InternalServerError), details);
 
-                Assert.Equal(string.Format("500: Internal Server Error\n  {0}: Information on the cause of the RequestException", type), requestException.Message);
-                Assert.Equal(HttpStatusCode.InternalServerError, requestException.StatusCode);
-                Assert.Equal(1, requestException.Details.Count);
-                Assert.Equal(details, requestException.Details.AsEnumerable());
-            }
-
-            requestException = new RequestException(new HttpResponseMessage(HttpStatusCode.NotFound), null);
-            Assert.Equal("404: Not Found", requestException.Message);
-            Assert.Empty(requestException.Details);
-            Assert.Equal(HttpStatusCode.NotFound, requestException.StatusCode);
-
-            for (int i = 2; i < 10; ++i)
-            {
-                var message = new StringBuilder("404: Not Found");
-                var details = new Message[i];
-
-                for (int j = 0; j < i; ++j)
-                {
-                    details[j] = new Message(MessageType.Warning, "Information on the cause of the RequestException");
-                    _ = message.Append("\n  ");
-                    _ = message.Append(details[j]);
-                }
-
-                requestException = new RequestException(
-                    new HttpResponseMessage(HttpStatusCode.NotFound), new ReadOnlyCollection<Message>(details));
-
-                Assert.Equal(HttpStatusCode.NotFound, requestException.StatusCode);
-                Assert.Equal(message.ToString(), requestException.Message);
-                Assert.Equal(i, requestException.Details.Count);
-                Assert.Equal(details, requestException.Details.AsEnumerable());
-            }
+            Assert.Equal(string.Format("500: Internal Server Error\n  {0}: Information on the cause of the RequestException", type), requestException.Message);
+            Assert.Equal(HttpStatusCode.InternalServerError, requestException.StatusCode);
+            Assert.Equal(1, requestException.Details.Count);
+            Assert.Equal(details, requestException.Details.AsEnumerable());
         }
-   }
+
+        requestException = new RequestException(new HttpResponseMessage(HttpStatusCode.NotFound), null);
+        Assert.Equal("404: Not Found", requestException.Message);
+        Assert.Empty(requestException.Details);
+        Assert.Equal(HttpStatusCode.NotFound, requestException.StatusCode);
+
+        for (int i = 2; i < 10; ++i)
+        {
+            var message = new StringBuilder("404: Not Found");
+            var details = new Message[i];
+
+            for (int j = 0; j < i; ++j)
+            {
+                details[j] = new Message(MessageType.Warning, "Information on the cause of the RequestException");
+                _ = message.Append("\n  ");
+                _ = message.Append(details[j]);
+            }
+
+            requestException = new RequestException(
+                new HttpResponseMessage(HttpStatusCode.NotFound), new ReadOnlyCollection<Message>(details));
+
+            Assert.Equal(HttpStatusCode.NotFound, requestException.StatusCode);
+            Assert.Equal(message.ToString(), requestException.Message);
+            Assert.Equal(i, requestException.Details.Count);
+            Assert.Equal(details, requestException.Details.AsEnumerable());
+        }
+    }
 }

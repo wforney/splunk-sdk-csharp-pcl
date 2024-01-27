@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Splunk.Client;
+using Splunk.Client.Entities;
 using Splunk.Client.Syndication;
 using Xunit;
 

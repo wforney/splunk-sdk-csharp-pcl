@@ -21,6 +21,7 @@
 namespace Splunk.Client
 {
     using System;
+    using Splunk.Client.Entities;
 
     /// <summary>
     /// Provides an object representation of a Splunk server message entity.

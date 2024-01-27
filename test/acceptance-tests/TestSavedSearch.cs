@@ -19,6 +19,7 @@ namespace Splunk.Client.AcceptanceTests;
 using System.Linq;
 using System.Threading.Tasks;
 using Splunk.Client;
+using Splunk.Client.Arguments;
 using Splunk.Client.Helper;
 using Xunit;
 

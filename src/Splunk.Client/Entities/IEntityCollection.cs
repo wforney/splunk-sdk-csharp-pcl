@@ -18,13 +18,16 @@
 //// [O] Contracts
 //// [O] Documentation
 
-namespace Splunk.Client
+namespace Splunk.Client.Entities
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
+    using Splunk.Client;
+    using Splunk.Client.Arguments;
+    using Contract = System.Diagnostics.Contracts.Contract;
 
     /// <summary>
     /// Provides an operational interface common to all Splunk entity collections.
@@ -49,7 +52,7 @@ namespace Splunk.Client
     /// </typeparam>
     /// <seealso cref="T:IReadOnlyList{TEntity}"/>
     [ContractClass(typeof(IEntityCollectionContract<,>))]
-    public interface IEntityCollection<TEntity, TResource> : IReadOnlyList<TEntity> 
+    public interface IEntityCollection<TEntity, TResource> : IReadOnlyList<TEntity>
         where TEntity : BaseEntity<TResource>, new()
         where TResource : BaseResource, new()
     {
@@ -147,14 +150,14 @@ namespace Splunk.Client
         public Task<TEntity> GetAsync(string name)
         {
             Contract.Requires<ArgumentNullException>(name != null);
-            return default(Task<TEntity>);
+            return default;
         }
 
         public abstract IEnumerator<TEntity> GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-        { 
-            return default(IEnumerator); 
+        {
+            return default;
         }
 
         public abstract Task GetAllAsync();
@@ -162,13 +165,13 @@ namespace Splunk.Client
         public Task GetSliceAsync(params Argument[] arguments)
         {
             Contract.Requires<ArgumentNullException>(arguments != null);
-            return default(Task);
+            return default;
         }
 
         public Task GetSliceAsync(IEnumerable<Argument> arguments)
         {
             Contract.Requires<ArgumentNullException>(arguments != null);
-            return default(Task);
+            return default;
         }
 
         public abstract Task ReloadAsync();

@@ -14,74 +14,75 @@
  * under the License.
  */
 
-namespace Splunk.Examples.Authenticate
+namespace Splunk.Examples.Authenticate;
+
+using System;
+using System.Net;
+using System.Threading.Tasks;
+using Splunk.Client;
+using Splunk.Client.Exceptions;
+using Splunk.Client.Helper;
+using Splunk.Client.Settings;
+
+/// <summary>
+/// An example program to authenticate to the server and print the received
+/// token.
+/// </summary>
+public class Program
 {
-    using System;
-    using System.Net;
-    using System.Threading.Tasks;
-    using Splunk.Client;
-    using Splunk.Client.Helper;
+    static Program()
+    {
+        // TODO: Use WebRequestHandler.ServerCertificateValidationCallback instead
+        // 1. Instantiate a WebRequestHandler
+        // 2. Set its ServerCertificateValidationCallback
+        // 3. Instantiate a Splunk.Client.Context with the WebRequestHandler
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+    }
 
     /// <summary>
-    /// An example program to authenticate to the server and print the received
-    /// token.
+    /// Mains function
     /// </summary>
-    public class Program
+    /// <param name="args">The arguments.</param>
+    private static void Main(string[] args)
     {
-        static Program()
+        using (var service = new Service(SdkHelper.Splunk.Scheme, SdkHelper.Splunk.Host, SdkHelper.Splunk.Port))
         {
-            // TODO: Use WebRequestHandler.ServerCertificateValidationCallback instead
-            // 1. Instantiate a WebRequestHandler
-            // 2. Set its ServerCertificateValidationCallback
-            // 3. Instantiate a Splunk.Client.Context with the WebRequestHandler
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            Console.WriteLine("Connected to {0}:{1} ", service.Context.Host, service.Context.Port);
+            Run(service).Wait();
         }
 
-        /// <summary>
-        /// Mains function
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        private static void Main(string[] args)
+        Console.Write("Press return to exit: ");
+        _ = Console.ReadLine();
+    }
+
+    /// <summary>
+    /// Runs the specified service.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <returns>a task</returns>
+    private static async Task Run(Service service)
+    {
+        try
         {
-            using (var service = new Service(SdkHelper.Splunk.Scheme, SdkHelper.Splunk.Host, SdkHelper.Splunk.Port))
-            {
-                Console.WriteLine("Connected to {0}:{1} ", service.Context.Host, service.Context.Port);
-                Run(service).Wait();
-            }
-
-            Console.Write("Press return to exit: ");
-            _ = Console.ReadLine();
-        }
-
-        /// <summary>
-        /// Runs the specified service.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <returns>a task</returns>
-        private static async Task Run(Service service)
-        {
-            try
-            {
-                await service.Configurations.GetAllAsync();
-            }
-            catch (AuthenticationFailureException)
-            {
-                Console.WriteLine("Can't get service configuration without logging in.");
-            }
-
-            await service.LogOnAsync(SdkHelper.Splunk.Username, SdkHelper.Splunk.Password);
-
-            Console.WriteLine("List all configurations of the Splunk service:");
             await service.Configurations.GetAllAsync();
-
-            foreach (Configuration config in service.Configurations)
-            {
-                Console.WriteLine(config.Id);
-            }
-
-            Console.WriteLine("Log off");
-            await service.LogOffAsync();
         }
+        catch (AuthenticationFailureException)
+        {
+            Console.WriteLine("Can't get service configuration without logging in.");
+        }
+
+        await service.LogOnAsync(SdkHelper.Splunk.Username, SdkHelper.Splunk.Password);
+
+        Console.WriteLine("List all configurations of the Splunk service:");
+        await service.Configurations.GetAllAsync();
+
+        foreach (Configuration config in service.Configurations)
+        {
+            Console.WriteLine(config.Id);
+        }
+
+        Console.WriteLine("Log off");
+        await service.LogOffAsync();
     }
 }

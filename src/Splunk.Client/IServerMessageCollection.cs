@@ -26,6 +26,8 @@ namespace Splunk.Client
     using System.Collections.ObjectModel;
     using System.Diagnostics.Contracts;
     using System.Threading.Tasks;
+    using Splunk.Client.Arguments;
+    using Splunk.Client.Entities;
 
     /// <summary>
     /// Provides a class for accessing Splunk server messages.

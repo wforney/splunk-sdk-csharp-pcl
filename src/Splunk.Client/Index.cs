@@ -24,6 +24,8 @@ namespace Splunk.Client
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using Splunk.Client.Converters;
+    using Splunk.Client.Entities;
     using Splunk.Client.Syndication;
 
     /// <summary>

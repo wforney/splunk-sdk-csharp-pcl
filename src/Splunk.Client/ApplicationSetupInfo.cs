@@ -14,6 +14,7 @@
  * under the License.
  */
 
+using Splunk.Client.Converters;
 using Splunk.Client.Syndication;
 
 //// TODO:

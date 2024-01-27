@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.VisualBasic.FileIO;
 using Splunk.Client;
+using Splunk.Client.Exceptions;
 using Splunk.Client.Helper;
 using Xunit;
 
@@ -59,10 +60,10 @@ public class SearchTest
         }
         catch (Exception e)
         {
-            Assert.True(false, string.Format("Unexpected exception: {0}\n{1}", e.Message, e.StackTrace));
+            Assert.Fail(string.Format("Unexpected exception: {0}\n{1}", e.Message, e.StackTrace));
         }
 
-        Assert.True(false, string.Format("Expected BadRequestException but no exception was thrown."));
+        Assert.Fail(string.Format("Expected BadRequestException but no exception was thrown."));
     }
 
     /// <summary>

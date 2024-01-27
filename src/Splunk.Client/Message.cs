@@ -16,6 +16,7 @@
 
 using System.Collections.ObjectModel;
 using System.Xml;
+using Splunk.Client.Converters;
 
 //// TODO:
 //// [O] Contracts

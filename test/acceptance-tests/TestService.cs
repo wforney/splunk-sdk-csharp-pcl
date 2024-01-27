@@ -27,7 +27,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Splunk.Client;
+using Splunk.Client.Arguments;
+using Splunk.Client.Exceptions;
 using Splunk.Client.Helper;
+using Splunk.Client.Settings;
 using Xunit;
 
 /// <summary>
@@ -363,7 +366,7 @@ public class TestService
         }
         catch (Exception e)
         {
-            Assert.True(false, string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
+            Assert.Fail(string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
         }
 
         await service.LogOffAsync();
@@ -374,7 +377,7 @@ public class TestService
         try
         {
             await service.Applications.GetAllAsync();
-            Assert.True(false, "Expected AuthenticationFailureException");
+            Assert.Fail("Expected AuthenticationFailureException");
         }
         catch (AuthenticationFailureException e)
         {
@@ -384,7 +387,7 @@ public class TestService
         try
         {
             await service.LogOnAsync("admin", "bad-password");
-            Assert.False(true, string.Format("Expected: {0}, Actual: {1}", typeof(AuthenticationFailureException).FullName, "no exception"));
+            Assert.Fail(string.Format("Expected: {0}, Actual: {1}", typeof(AuthenticationFailureException).FullName, "no exception"));
         }
         catch (AuthenticationFailureException e)
         {
@@ -394,7 +397,7 @@ public class TestService
         }
         catch (Exception e)
         {
-            Assert.True(false, string.Format("Expected: {0}, Actual: {1}", typeof(AuthenticationFailureException).FullName, e.GetType().FullName));
+            Assert.Fail(string.Format("Expected: {0}, Actual: {1}", typeof(AuthenticationFailureException).FullName, e.GetType().FullName));
         }
     }
 
@@ -429,7 +432,7 @@ public class TestService
             }
             catch (Exception e)
             {
-                Assert.True(false, string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
+                Assert.Fail(string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
             }
         }
     }
@@ -460,7 +463,7 @@ public class TestService
             }
             catch (Exception e)
             {
-                Assert.True(false, string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
+                Assert.Fail(string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
             }
         }
     }
@@ -479,7 +482,7 @@ public class TestService
             try
             {
                 await service.Applications.GetAllAsync();
-                Assert.True(false, "Expected AuthenticationFailureException");
+                Assert.Fail("Expected AuthenticationFailureException");
             }
             catch (AuthenticationFailureException e)
             {
@@ -517,7 +520,7 @@ public class TestService
             }
             catch (Exception e)
             {
-                Assert.True(false, string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
+                Assert.Fail(string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
             }
         }
     }
@@ -549,7 +552,7 @@ public class TestService
             }
             catch (Exception e)
             {
-                Assert.True(false, string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
+                Assert.Fail(string.Format("Expected: No exception, Actual: {0}", e.GetType().FullName));
             }
         }
     }
@@ -627,7 +630,7 @@ public class TestService
             try
             {
                 await twitterApp.GetAsync();
-                Assert.False(true, "Expected ResourceNotFoundException");
+                Assert.Fail("Expected ResourceNotFoundException");
             }
             catch (ResourceNotFoundException)
             { }
@@ -703,7 +706,7 @@ public class TestService
         try
         {
             await templatedApp.GetAsync();
-            Assert.False(true, "Expected ResourceNotFoundException");
+            Assert.Fail("Expected ResourceNotFoundException");
         }
         catch (ResourceNotFoundException)
         { }
@@ -1796,7 +1799,7 @@ public class TestService
         if (!task.IsCompleted)
         {
             Console.WriteLine("timeout !!!!{0}", task.Status);
-            Assert.True(false, "test failed due to timeout");
+            Assert.Fail("test failed due to timeout");
         }
 
         await Task.Delay(2000);

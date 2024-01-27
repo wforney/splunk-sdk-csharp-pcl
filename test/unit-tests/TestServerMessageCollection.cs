@@ -14,6 +14,7 @@
  * under the License.
  */
 
+using Splunk.Client.Settings;
 using Xunit;
 
 namespace Splunk.Client.UnitTests;
